@@ -1,4 +1,4 @@
-import { logger } from './logger'
+import { logger } from '../logger'
 import { v4 as uuid } from 'uuid'
 
 
@@ -224,5 +224,5 @@ export const couch = new CouchDB({
   password: process.env.password,
   host: process.env.host,
   port: process.env.port,
-  defaultDB: "zahltag"
+  defaultDB: "nbb"
 });
