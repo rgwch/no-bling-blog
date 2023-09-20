@@ -1,7 +1,7 @@
 type post = {
     id: string
     heading: string
-    shorttext: string
+    teaser: string
     fulltext: string
     keywords: string
     category: string
