@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import {IDatabase} from './db.interface'
 import {post} from '../types'
 
-export class CouchDB implements IDatabase<post>{
+export class CouchDB implements IDatabase{
   private url
   private auth: string = ""
   constructor(private options: any) {

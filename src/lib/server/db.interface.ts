@@ -1,10 +1,10 @@
-export interface IDatabase<T>{
+export interface IDatabase{
   /**
    * Connect to the database driver
    * @param options implementation specific options
    * @returns true on success 
    */
-    connect(options:any):Promise<boolean>
+    connect(options?:any):Promise<boolean>
     /**
      * Check if the database is connected and ready
      */
@@ -25,19 +25,19 @@ export interface IDatabase<T>{
      * @returns The Element with the given id
      * @throws NotFoundException if the element doesnt exist
      */
-    get(id:string,options?:any):Promise<T>
+    get(id:string,options?:any):Promise<any>
     /**
      * Find all elements matching the given criteria
      * @param params criteria to match
      * @returns a list of found elements (which can be empty)
      */
-    find(params: any):Promise<Array<T>>
+    find(params: any):Promise<Array<any>>
     /**
      * create a new element
      * @param element 
      * @param params 
      */
-    create(element:T, params?:any):Promise<T>
+    create(element:any, params?:any):Promise<any>
     /**
      * Update an existing element
      * @param id id of the existing element
@@ -45,12 +45,12 @@ export interface IDatabase<T>{
      * @returns the updated element
      * @throws NotFoundException if the element does not exist
      */
-    update(id:string,element:T):Promise<T>
+    update(id:string,element:any):Promise<any>
     /**
      * remove an element from the database
      * @param id of the element to remove
      * @param params 
      * @returns the removed element or null if no such element exists
      */
-    remove(id:string,params?:any):Promise<T>
+    remove(id:string,params?:any):Promise<any>
 }
