@@ -27,23 +27,23 @@ export class NeDB implements IDatabase {
     return true;
   }
   async listDatabases(): Promise<string[]> {
-    const ret=[]
-    for(const db in this.dbs){
+    const ret = []
+    for (const db in this.dbs) {
       ret.push(db)
     }
     return ret
   }
   async createDatabase(name: string, options?: any): Promise<boolean> {
-    if(options?.filename){
-      this.dbs[name]=new Datastore({filename:options.filename,autoload:true})
-    }else{
-      this.dbs[name]=new Datastore();
+    if (options?.filename) {
+      this.dbs[name] = new Datastore({ filename: options.filename, autoload: true })
+    } else {
+      this.dbs[name] = new Datastore();
     }
     return true
   }
   async get(id: string, options?: any): Promise<any> {
     return new Promise<post>((resolve, reject) => {
-      const db=options?.database||this.defaultdb
+      const db = options?.database || this.defaultdb
       this.dbs[db].findOne({ '_id': id }, (err, result) => {
         if (err) {
           reject(err)
@@ -54,8 +54,10 @@ export class NeDB implements IDatabase {
   }
   find(params: any): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      const db=options?.database||this.defaultdb
-      this.db?.find(params, (err: Error, result: any) => {
+
+      const db = params?.database || this.defaultdb
+      delete params.database
+      this.dbs[db].find(params, (err: Error, result: any) => {
         if (err) {
           reject(err)
         }
@@ -64,13 +66,38 @@ export class NeDB implements IDatabase {
     })
   }
   create(element: post, params?: any): Promise<any> {
-    throw new Error('Method not implemented.')
+    return new Promise((resolve, reject) => {
+      const db = params?.database || this.defaultdb
+      this.dbs[db].insert(element, (err, result) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(result)
+      })
+    });
   }
-  update(id: string, element: post): Promise<any> {
-    throw new Error('Method not implemented.')
+
+  update(id: string, element: any, options?: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const db = options?.database || this.defaultdb
+      this.dbs[db].update({ _id: id }, element, {}, (err, result) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(result)
+      })
+    });
   }
   remove(id: string, params?: any): Promise<any> {
-    throw new Error('Method not implemented.')
+    return new Promise((resolve, reject) => {
+      const db = params?.database || this.defaultdb
+      this.dbs[db].remove({ _id: id }, {}, (err, result) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(result)
+      })
+    })
   }
 
 }
