@@ -28,6 +28,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@types/nedb": "^1.8.13",
     "@types/uuid": "^9.0.4",
     "nedb": "^1.8.0",
     "uuid": "^9.0.1",

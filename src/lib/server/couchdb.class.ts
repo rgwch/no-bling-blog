@@ -1,8 +1,9 @@
 import { logger } from '../logger'
 import { v4 as uuid } from 'uuid'
+import {IDatabase} from './db.interface'
+import {post} from '../types'
 
-
-export class CouchDB {
+export class CouchDB implements IDatabase<post>{
   private url
   private auth: string = ""
   constructor(private options: any) {

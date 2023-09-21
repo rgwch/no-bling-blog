@@ -1,4 +1,4 @@
-type post = {
+export type post = {
     id: string
     heading: string
     teaser: string
