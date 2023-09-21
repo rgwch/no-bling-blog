@@ -1,28 +1,24 @@
 import { logger } from '../logger'
 import { v4 as uuid } from 'uuid'
 import { IDatabase } from './db.interface'
-import { post } from '../types'
 import Datastore from 'nedb'
 
 export class NeDB implements IDatabase {
   private dbs: { [name: string]: Datastore } = {}
-  private defaultdb = "default";
 
-  async connect(options?: any): Promise<boolean> {
-    this.defaultdb = options?.default || "default"
-    if (!options) {
-      this.dbs[this.defaultdb] = new Datastore()
-      return true;
-    } else {
-      this.defaultdb = options.defaultDB || "default"
-      if (options.filename) {
-        this.dbs[this.defaultdb] = new Datastore({ filename: options.filename, autoload: true })
-        return true;
-      } else {
-        return false;
-      }
-    }
+  constructor(private defaultdb = "default") {
+
   }
+  async connect(options?: any): Promise<boolean> {
+    const db = options?.default || this.defaultdb
+    if (options?.filename) {
+      this.dbs[db] = new Datastore({ filename: options.filename, autoload: true })
+    } else {
+      this.dbs[db] = new Datastore()
+    }
+    return true;
+  }
+
   async checkInstance(): Promise<boolean> {
     return true;
   }
@@ -42,7 +38,7 @@ export class NeDB implements IDatabase {
     return true
   }
   async get(id: string, options?: any): Promise<any> {
-    return new Promise<post>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       const db = options?.database || this.defaultdb
       this.dbs[db].findOne({ '_id': id }, (err, result) => {
         if (err) {
@@ -65,7 +61,7 @@ export class NeDB implements IDatabase {
       })
     })
   }
-  create(element: post, params?: any): Promise<any> {
+  create(element: any, params?: any): Promise<any> {
     return new Promise((resolve, reject) => {
       const db = params?.database || this.defaultdb
       this.dbs[db].insert(element, (err, result) => {

@@ -221,9 +221,9 @@ export class CouchDB implements IDatabase{
 }
 
 export const couch = new CouchDB({
-  username: process.env.username,
-  password: process.env.password,
-  host: process.env.host,
-  port: process.env.port,
+  username: process.env.couch_username,
+  password: process.env.couch_password,
+  host: process.env.couch_host,
+  port: process.env.couch_port,
   defaultDB: "nbb"
 });
