@@ -2,6 +2,8 @@ import { logger } from '../logger'
 import { v4 as uuid } from 'uuid'
 import { IDatabase } from './db.interface'
 import Datastore from 'nedb'
+import fs from 'fs'
+import path from 'path'
 
 export class NeDB implements IDatabase {
   private dbs: { [name: string]: Datastore } = {}
@@ -9,10 +11,15 @@ export class NeDB implements IDatabase {
   constructor(private defaultdb = "default") {
 
   }
+
+  private makefile(fn:string):string{
+    const ret= path.join(__dirname,process.env.nedb_dir || "data",fn)
+    return ret
+  }
   async connect(options?: any): Promise<boolean> {
-    const db = options?.default || this.defaultdb
+    const db = options?.database || options?.default || this.defaultdb
     if (options?.filename) {
-      this.dbs[db] = new Datastore({ filename: options.filename, autoload: true })
+      this.dbs[db] = new Datastore({ filename: this.makefile(options.filename), autoload: true })
     } else {
       this.dbs[db] = new Datastore()
     }
@@ -31,7 +38,7 @@ export class NeDB implements IDatabase {
   }
   async createDatabase(name: string, options?: any): Promise<boolean> {
     if (options?.filename) {
-      this.dbs[name] = new Datastore({ filename: options.filename, autoload: true })
+      this.dbs[name] = new Datastore({ filename: this.makefile(options.filename), autoload: true })
     } else {
       this.dbs[name] = new Datastore();
     }
@@ -40,6 +47,9 @@ export class NeDB implements IDatabase {
   async get(id: string, options?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       const db = options?.database || this.defaultdb
+      if(!this.dbs[db]){
+        throw new Error("no database found:"+db)
+      }
       this.dbs[db].findOne({ '_id': id }, (err, result) => {
         if (err) {
           reject(err)
