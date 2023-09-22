@@ -17,5 +17,12 @@ test("create and use database",async()=>{
       e:"f"
     }
   }
-  expect(await db.create(test)).toHaveProperty("_id")
+  const id=(await db.create(test))._id
+  expect(id).toBeDefined()
+  expect(()=>db.get(id)).not.toThrow();
+  expect(()=>db.get("xyz")).toThrow()
+  const retr=await db.find({})
+  expect(retr).toBeArray()
+  expect(retr).toHaveLength(1)
+  
 })

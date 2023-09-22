@@ -44,6 +44,9 @@ export class NeDB implements IDatabase {
         if (err) {
           reject(err)
         }
+        if (result == null) {
+          reject("NotFound")
+        }
         resolve(result)
       })
     })
