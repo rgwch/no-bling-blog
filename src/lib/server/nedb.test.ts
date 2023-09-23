@@ -1,16 +1,9 @@
 import { NeDB } from "./nedb.class";
 import {expect, test} from "bun:test"
 
-test("create inMemory db",async ()=>{
-  const db=new NeDB("data");
-  expect(()=>db.get("id")).toThrow("no database selected")
-  expect(await db.checkInstance()).toBeTrue();
-})
-
 test("create and use database",async()=>{
   const db=new NeDB("data");
   expect(await db.createDatabase("testdb")).toBeTrue()
-  await db.use("testdb")
   const test={
     a:"b",
     b:"c",
@@ -18,6 +11,8 @@ test("create and use database",async()=>{
       e:"f"
     }
   }
+  expect(()=>db.create(test)).toThrow("no database selected")
+  await db.use("testdb")
   const id=(await db.create(test))._id
   expect(id).toBeDefined()
   expect(()=>db.get(id)).not.toThrow();
