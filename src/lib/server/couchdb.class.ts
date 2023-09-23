@@ -1,16 +1,23 @@
 import { logger } from '../logger'
 import { v4 as uuid } from 'uuid'
-import {IDatabase} from './db.interface'
-import {post} from '../types'
+import { IDatabase } from './db.interface'
 
-export class CouchDB implements IDatabase{
+export class CouchDB implements IDatabase {
+  private using: string = "default"
   private url
   private auth: string = ""
   constructor(private options: any) {
     this.url = `http://${options.host}:${options.port}/`
   }
 
-  public async connect(): Promise<boolean> {
+  private checkUsing() {
+    if (!this.using) {
+      throw new Error("no database selected");
+    }
+  }
+  public async use(name: string, params?: any): Promise<boolean> {
+    this.using = name;
+    this.checkUsing()
     const options = {
       method: "POST",
       headers: {
@@ -35,8 +42,8 @@ export class CouchDB implements IDatabase{
 
     return true;
   }
-  private async request(addr: string, database: string, method: "get" | "put" | "post" | "delete" = "get", body?: any): Promise<any> {
-
+  private async request(addr: string, method: "get" | "put" | "post" | "delete" = "get", body?: any): Promise<any> {
+    this.checkUsing()
     const options: any = {
       method,
       headers: this.makeHeaders()
@@ -44,7 +51,7 @@ export class CouchDB implements IDatabase{
     if (body) {
       options.body = JSON.stringify(body)
     }
-    const result = await fetch(this.url + database + "/" + addr, options)
+    const result = await fetch(this.url + this.using + "/" + addr, options)
     return await result.json()
   }
 
@@ -113,22 +120,19 @@ export class CouchDB implements IDatabase{
   /**
    * Retrieve an object by its id
    * @param id id of the object to find
-   * @param params params.query.database: Database to consider
+   * @param implementation specific 
    * @returns the object
    * @throws "not_found" if no object with the given id exists
    */
   async get(id: string, params?: any): Promise<any> {
-    const db = params?.database || this.options.defaultDB || "defaultDB"
-    const result = await this.request(id, db)
+    const result = await this.request(id)
     if (result.error) {
       throw new Error(result.error)
     }
     return result
   }
   async find(params: any): Promise<any> {
-    const db = params.database || this.options.defaultDB || "defaultDB"
-    delete params.database;
-    const result = await this.request("_find", db, "post", { selector: params })
+    const result = await this.request("_find", "post", { selector: params })
     if (result.error) {
       throw new Error(result.error)
     }
@@ -137,19 +141,18 @@ export class CouchDB implements IDatabase{
   /**
    * create a new entry. If object woth the same obj.id exists,throw error.
    * @param obj The object to store
-   * @param params params.query.database: Database where it should be stored
    * @returns the newly created object
    */
   async create(obj: any, params?: any): Promise<any> {
-    const db = params?.database || this.options.defaultDB || "defaultDB"
+    this.checkUsing()
     const dbs: Array<string> = await this.listDatabases()
-    if (!dbs.includes(db)) {
-      const ndb = await this.createDatabase(db)
+    if (!dbs.includes(this.using)) {
+      const ndb = await this.createDatabase(this.using)
     }
     if (!obj._id) {
       obj._id = obj.id || uuid()
     }
-    const result = await this.request(obj._id, db, "put", obj)
+    const result = await this.request(obj._id, "put", obj)
     if (result.error) {
       logger.warn(result.error)
       throw new Error(result.error)
@@ -168,11 +171,10 @@ export class CouchDB implements IDatabase{
    * @returns the updated or newly created object
    */
   async update(id: string, data: any, params?: any) {
-    const db = params?.database || this.options.defaultDB || "defaultDB"
     try {
       const obj = await this.get(id, params)
       data._rev = obj._rev
-      const result = await this.request(id + "?rev=" + obj._rev, db, "put", data)
+      const result = await this.request(id + "?rev=" + obj._rev, "put", data)
       if (result.error) {
         logger.error("CouchDB update: " + JSON.stringify(result))
         throw new Error(result.reason)
@@ -199,11 +201,10 @@ export class CouchDB implements IDatabase{
    * @returns the newly deleted object
    */
   async remove(id: string, params?: any): Promise<any> {
-    const db = params?.database || this.options.defaultDB || "defaultDB"
     if (id !== "!database!") {
       // delete document
       const obj = await this.get(id, params)
-      const result = await this.request(id + "?rev=" + obj._rev, db, "delete")
+      const result = await this.request(id + "?rev=" + obj._rev, "delete")
       if (result.ok) {
         return obj
       } else {
@@ -212,18 +213,10 @@ export class CouchDB implements IDatabase{
       }
     } else {
       // delete database
-      const result = await fetch(this.url + "/" + db, { method: "delete" })
+      const result = await fetch(this.url + "/" + this.using, { method: "delete" })
       const ans = await result.json()
       return ans
     }
   }
 
 }
-
-export const couch = new CouchDB({
-  username: process.env.couch_username,
-  password: process.env.couch_password,
-  host: process.env.couch_host,
-  port: process.env.couch_port,
-  defaultDB: "nbb"
-});

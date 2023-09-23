@@ -7,21 +7,25 @@ import path from 'path'
 
 export class NeDB implements IDatabase {
   private dbs: { [name: string]: Datastore } = {}
+  private using:string=""
 
-  constructor(private defaultdb = "default") {
+  constructor(private datadir:string) {}
 
+  private checkUsing(){
+    if(!this.using.length){
+      throw new Error("no database selected")
+    }
   }
-
   private makefile(fn:string):string{
-    const ret= path.join(__dirname,process.env.nedb_dir || "data",fn)
+    const ret= path.join(__dirname,this.datadir || "data",fn)
     return ret
   }
-  async connect(options?: any): Promise<boolean> {
-    const db = options?.database || options?.default || this.defaultdb
+  async use(name: string, options?: any): Promise<boolean> {
+    this.using=name
     if (options?.filename) {
-      this.dbs[db] = new Datastore({ filename: this.makefile(options.filename), autoload: true })
+      this.dbs[this.using] = new Datastore({ filename: this.makefile(this.using), autoload: true })
     } else {
-      this.dbs[db] = new Datastore()
+      this.dbs[this.using] = new Datastore()
     }
     return true;
   }
@@ -37,20 +41,17 @@ export class NeDB implements IDatabase {
     return ret
   }
   async createDatabase(name: string, options?: any): Promise<boolean> {
-    if (options?.filename) {
-      this.dbs[name] = new Datastore({ filename: this.makefile(options.filename), autoload: true })
+    if (!options?.imMemory) {
+      this.dbs[name] = new Datastore({ filename: this.makefile(name), autoload: true })
     } else {
       this.dbs[name] = new Datastore();
     }
     return true
   }
   async get(id: string, options?: any): Promise<any> {
+    this.checkUsing()
     return new Promise<any>((resolve, reject) => {
-      const db = options?.database || this.defaultdb
-      if(!this.dbs[db]){
-        throw new Error("no database found:"+db)
-      }
-      this.dbs[db].findOne({ '_id': id }, (err, result) => {
+      this.dbs[this.using].findOne({ '_id': id }, (err, result) => {
         if (err) {
           reject(err)
         }
@@ -62,11 +63,10 @@ export class NeDB implements IDatabase {
     })
   }
   find(params: any): Promise<any[]> {
+    this.checkUsing()
     return new Promise((resolve, reject) => {
-
-      const db = params?.database || this.defaultdb
       delete params.database
-      this.dbs[db].find(params, (err: Error, result: any) => {
+      this.dbs[this.using].find(params, (err: Error, result: any) => {
         if (err) {
           reject(err)
         }
@@ -75,9 +75,9 @@ export class NeDB implements IDatabase {
     })
   }
   create(element: any, params?: any): Promise<any> {
+    this.checkUsing()
     return new Promise((resolve, reject) => {
-      const db = params?.database || this.defaultdb
-      this.dbs[db].insert(element, (err, result) => {
+      this.dbs[this.using].insert(element, (err, result) => {
         if (err) {
           reject(err)
         }
@@ -87,9 +87,9 @@ export class NeDB implements IDatabase {
   }
 
   update(id: string, element: any, options?: any): Promise<any> {
+    this.checkUsing()
     return new Promise((resolve, reject) => {
-      const db = options?.database || this.defaultdb
-      this.dbs[db].update({ _id: id }, element, {}, (err, result) => {
+      this.dbs[this.using].update({ _id: id }, element, {}, (err, result) => {
         if (err) {
           reject(err)
         }
@@ -98,9 +98,9 @@ export class NeDB implements IDatabase {
     });
   }
   remove(id: string, params?: any): Promise<any> {
+    this.checkUsing()
     return new Promise((resolve, reject) => {
-      const db = params?.database || this.defaultdb
-      this.dbs[db].remove({ _id: id }, {}, (err, result) => {
+      this.dbs[this.using].remove({ _id: id }, {}, (err, result) => {
         if (err) {
           reject(err)
         }

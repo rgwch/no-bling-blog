@@ -1,10 +1,11 @@
 export interface IDatabase{
   /**
-   * Connect to the database driver
+   * set databse for the following operations
+   * @database: name of the database to use
    * @param options implementation specific options
-   * @returns true on success 
+   * @throws id database not found or error on access
    */
-    connect(options?:any):Promise<boolean>
+    use(database:string,options?:any):void
     /**
      * Check if the database is connected and ready
      */

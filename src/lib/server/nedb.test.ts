@@ -2,14 +2,15 @@ import { NeDB } from "./nedb.class";
 import {expect, test} from "bun:test"
 
 test("create inMemory db",async ()=>{
-  const db=new NeDB();
-  expect(await db.connect()).toBeTrue();
+  const db=new NeDB("data");
+  expect(()=>db.get("id")).toThrow("no database selected")
   expect(await db.checkInstance()).toBeTrue();
 })
 
 test("create and use database",async()=>{
-  const db=new NeDB("testdb");
-  expect(await db.createDatabase("testdb")).toBeTrue();
+  const db=new NeDB("data");
+  expect(await db.createDatabase("testdb")).toBeTrue()
+  await db.use("testdb")
   const test={
     a:"b",
     b:"c",
