@@ -17,7 +17,7 @@ export class NeDB implements IDatabase {
     }
   }
   private makefile(fn:string):string{
-    const ret= path.join(__dirname,this.datadir || "data",fn)
+    const ret= path.join(this.datadir || "data",fn)
     return ret
   }
   async use(name: string, options?: any): Promise<boolean> {
