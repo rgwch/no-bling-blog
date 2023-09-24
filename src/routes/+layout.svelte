@@ -3,6 +3,7 @@
 </script>
 
 <h1>The No-Bling Blog</h1>
+<slot></slot>
 
 <style>
     .response {
