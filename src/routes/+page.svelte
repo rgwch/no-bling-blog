@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { stringify } from "postcss";
-
   export let data:Array<any>=[];
   
 </script>

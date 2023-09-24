@@ -1,9 +1,12 @@
 <script>
     import "../app.css";
+ 
 </script>
 
-<h1>The No-Bling Blog</h1>
-<slot></slot>
+<div class="w-full">
+    <h1>The No-Bling Blog</h1>
+    <slot />
+</div>
 
 <style>
     .response {
