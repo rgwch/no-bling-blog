@@ -1,15 +1,12 @@
-<script>
-    import "../app.css";
- 
+<script lang="ts">
+  import "$lib/types"
+  export let post:post
 </script>
-
-<div class="w-full">
-    <h1>The No-Bling Blog</h1>
-    <slot />
-</div>
+<h1>{post.heading}</h1>
+<p>{post.teaser}</p>
 
 <style>
-    .response {
+   .response {
         margin-top: 100px;
         width: 100%;
         display: flex;
