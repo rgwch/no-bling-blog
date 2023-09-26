@@ -1,0 +1,27 @@
+{
+    "openapi":"3.0.2",
+    "info": {
+      "title":"NoBlingBlog Server",
+      "version":"1.0"
+    },
+    "servers": [
+      {"url":"https://api.server.test/v1"}
+    ],
+    "paths": {
+        "/summary": {
+            "get": {
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "get/:category":{
+                
+            }
+        },
+     
+    }
+  }

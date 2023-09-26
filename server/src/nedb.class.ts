@@ -1,4 +1,4 @@
-import { logger } from '../logger'
+import { logger } from './logger'
 import { v4 as uuid } from 'uuid'
 import type { IDatabase } from './db.interface'
 import Datastore from 'nedb'
@@ -17,7 +17,7 @@ export class NeDB implements IDatabase {
     }
   }
   private makefile(fn:string):string{
-    const ret= path.join(this.datadir || "data",fn)
+    const ret= path.join(__dirname, this.datadir || "data",fn)
     return ret
   }
   async use(name: string, options?: any): Promise<boolean> {
