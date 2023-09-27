@@ -18,7 +18,8 @@ export const getDatabase = (): IDatabase => {
         break;
       case "filebased":
         console.log("fileDB")
-        db = new FileDB("../data")
+        db = new FileDB(process.env.filebased_basedir || "../data")
+        break;
       default:
         throw new Error("No Datastore defined in .env")
     }

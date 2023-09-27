@@ -62,33 +62,35 @@ export class FileDB implements IDatabase {
                     reject(err)
                 } else {
                     if (Object.keys(params).length == 0) {
-                        resolve(files)
+                        resolve(files.map(fn => {
+                            const cont = fs.readFileSync(this.makepath(fn))
+                            return JSON.parse(cont.toString())
+                        }))
                     } else {
-                        resolve(files.filter((el) => this.doMatch(params, el)))
+                        const ret = []
+                        for (const file of files) {
+                            try {
+                                const cont = fs.readFileSync(this.makepath(file))
+                                const js = JSON.parse(cont.toString())
+
+                                for (const attr in params) {
+                                    const hit: string = js[attr]
+                                    const elem: string = params[attr]
+                                    if (hit.match(elem)) {
+                                        ret.push(js)
+                                    }
+                                }
+                            } catch (err) {
+                                console.log(err)
+                            }
+                        }
                     }
                 }
             })
         })
     }
 
-    private doMatch(params: any, el: string): boolean {
-        try {
-            const cont = fs.readFileSync(this.makepath(el))
-            const js = JSON.parse(cont.toString())
-            for (const attr in params) {
-                const hit: string = js[attr]
-                const elem: string = params[attr]
-                if (hit.match(elem)) {
-                    return true
-                }
-            }
-            return false;
 
-        } catch (err) {
-            console.log(err)
-            return false;
-        }
-    }
     create(element: any, params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!element._id) {
@@ -118,5 +120,10 @@ export class FileDB implements IDatabase {
             })
         })
     }
-
+    private ok(result: any) {
+        return {
+            status: "ok",
+            result
+        }
+    }
 }

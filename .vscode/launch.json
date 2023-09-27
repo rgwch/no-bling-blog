@@ -6,6 +6,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug Server",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "dev"
+            ],
+            "cwd":"${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
             "name": "Debug Tests",
             "request": "launch",
             "cwd":"${workspaceFolder}/server",
