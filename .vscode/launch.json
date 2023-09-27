@@ -20,11 +20,9 @@
             "type": "bun",
             "internalConsoleOptions": "neverOpen",
             "request": "launch",
-            "name": "Run File",
+            "name": "Debug File",
             "program": "${file}",
-            "cwd": "${workspaceFolder}",
-            "noDebug": true,
-            "watchMode": false
+            "cwd": "${workspaceFolder}/server",
         },
         {
             "type": "bun",

@@ -6,6 +6,7 @@
     "@hono/node-server": "^1.2.0",
     "hono": "^3.7.2",
     "nedb": "^1.8.0",
+    "solr-client": "^0.10.0-rc10",
     "uuid": "^9.0.1",
     "winston": "^3.10.0"
   },
