@@ -2,28 +2,51 @@
 import { IDatabase } from "./db.interface";
 import fs from 'fs'
 import path from 'path'
+import { v4 as uuid } from 'uuid'
 
 export class FileDB implements IDatabase {
-    private dir: string=".";
+    private basedir: string;
+    private using="";
+
+    constructor(basedir?: string) {
+        this.basedir = basedir || "data"
+        if (!fs.existsSync(this.basedir)) {
+            fs.mkdirSync(this.basedir, { recursive: true })
+        }
+    }
+
+    private checkUsing() {
+        if (!this.using) {
+            throw new Error("No database selected")
+        }
+    }
+    private makepath(name: string) : string{
+        this.checkUsing()
+        return path.join(this.using!, name)
+    }
     use(database: string, options?: any): void {
-        this.dir = database
-        if(!fs.existsSync(this.dir)){
-            fs.mkdirSync(this.dir,{recursive:true})
+        const fullpath = path.join(this.basedir, database)
+        this.using = fullpath
+        if (!fs.existsSync(fullpath)) {
+            fs.mkdirSync(fullpath, { recursive: true })
         }
     }
     async checkInstance(): Promise<boolean> {
         return true
     }
     async listDatabases(): Promise<string[]> {
-        return [this.dir]
+        return [this.basedir]
     }
     async createDatabase(name: string, options?: any): Promise<boolean> {
-        fs.mkdirSync(name)
+        const fullpath = path.join(this.basedir,name) 
+        if(!fs.existsSync(fullpath)){
+            fs.mkdirSync(fullpath,{recursive:true})
+        }
         return true;
     }
     get(id: string, options?: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            fs.readFile(path.join(this.dir, id), (err, cnt) => {
+            fs.readFile(this.makepath(id), (err, cnt) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -34,7 +57,7 @@ export class FileDB implements IDatabase {
     }
     find(params: any): Promise<any[]> {
         return new Promise((resolve, reject) => {
-            fs.readdir(this.dir, (err, files) => {
+            fs.readdir(this.using, (err, files) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -46,7 +69,7 @@ export class FileDB implements IDatabase {
 
     private doMatch(params: any, el: string): boolean {
         try {
-            const cont = fs.readFileSync(path.join(this.dir, el))
+            const cont = fs.readFileSync(this.makepath(el))
             const json = JSON.stringify(cont.toString())
             for (const attr in params) {
                 const hit: string = json[attr]
@@ -64,7 +87,10 @@ export class FileDB implements IDatabase {
     }
     create(element: any, params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            fs.writeFile(path.join(this.dir, element.id), JSON.stringify(element), (err) => {
+            if(!element.id){
+                element.id=uuid();
+            }
+            fs.writeFile(this.makepath(element.id), JSON.stringify(element), (err) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -79,7 +105,7 @@ export class FileDB implements IDatabase {
     }
     remove(id: string, params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            fs.rm(path.join(this.dir, id), (err) => {
+            fs.rm(this.makepath(id), (err) => {
                 if (err) {
                     reject(err)
                 } else {
