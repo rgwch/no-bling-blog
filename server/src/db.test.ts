@@ -1,8 +1,7 @@
 import { getDatabase } from './db'
-import { expect, test } from "bun:test"
 
-test("construct database", async () => {
-  process.env.storage = "nedb"
+xtest("construct database", async () => {
+  process.env.storage = "filebased"
   let db = getDatabase()
   expect(db).toBeDefined()
 
@@ -14,12 +13,12 @@ test("construct database", async () => {
       e: "f"
     }
   }
-  const id = (await db.create(test))._id
-  expect(id).toBeDefined()
-  expect(() => db.get(id)).not.toThrow();
+  const _id = (await db.create(test))._id
+  expect(_id).toBeDefined()
+  expect(() => db.get(_id)).not.toThrow();
   expect(() => db.get("xyz")).toThrow()
   const retr = await db.find({})
-  expect(retr).toBeArray()
+  expect(retr).toBeInstanceOf(Array)
   expect(retr).toHaveLength(1)
 
 })

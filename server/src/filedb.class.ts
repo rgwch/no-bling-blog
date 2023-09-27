@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid'
 
 export class FileDB implements IDatabase {
     private basedir: string;
-    private using="";
+    private using = "";
 
     constructor(basedir?: string) {
         this.basedir = basedir || "data"
@@ -17,10 +17,10 @@ export class FileDB implements IDatabase {
 
     private checkUsing() {
         if (!this.using) {
-            throw new Error("No database selected")
+            throw new Error("no database selected")
         }
     }
-    private makepath(name: string) : string{
+    private makepath(name: string): string {
         this.checkUsing()
         return path.join(this.using!, name)
     }
@@ -38,9 +38,9 @@ export class FileDB implements IDatabase {
         return [this.basedir]
     }
     async createDatabase(name: string, options?: any): Promise<boolean> {
-        const fullpath = path.join(this.basedir,name) 
-        if(!fs.existsSync(fullpath)){
-            fs.mkdirSync(fullpath,{recursive:true})
+        const fullpath = path.join(this.basedir, name)
+        if (!fs.existsSync(fullpath)) {
+            fs.mkdirSync(fullpath, { recursive: true })
         }
         return true;
     }
@@ -61,7 +61,11 @@ export class FileDB implements IDatabase {
                 if (err) {
                     reject(err)
                 } else {
-                    resolve(files.filter((el) => this.doMatch(params, el)))
+                    if (Object.keys(params).length == 0) {
+                        resolve(files)
+                    } else {
+                        resolve(files.filter((el) => this.doMatch(params, el)))
+                    }
                 }
             })
         })
@@ -70,9 +74,9 @@ export class FileDB implements IDatabase {
     private doMatch(params: any, el: string): boolean {
         try {
             const cont = fs.readFileSync(this.makepath(el))
-            const json = JSON.stringify(cont.toString())
+            const js = JSON.parse(cont.toString())
             for (const attr in params) {
-                const hit: string = json[attr]
+                const hit: string = js[attr]
                 const elem: string = params[attr]
                 if (hit.match(elem)) {
                     return true
@@ -87,10 +91,10 @@ export class FileDB implements IDatabase {
     }
     create(element: any, params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            if(!element.id){
-                element.id=uuid();
+            if (!element._id) {
+                element._id = uuid();
             }
-            fs.writeFile(this.makepath(element.id), JSON.stringify(element), (err) => {
+            fs.writeFile(this.makepath(element._id), JSON.stringify(element), (err) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -100,7 +104,7 @@ export class FileDB implements IDatabase {
         })
     }
     update(id: string, element: any): Promise<any> {
-        element.id = id
+        element._id = id
         return this.create(element)
     }
     remove(id: string, params?: any): Promise<any> {

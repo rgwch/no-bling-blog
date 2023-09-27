@@ -118,14 +118,14 @@ export class CouchDB implements IDatabase {
   }
 
   /**
-   * Retrieve an object by its id
-   * @param id id of the object to find
+   * Retrieve an object by its _id
+   * @param _id _id of the object to find
    * @param implementation specific 
    * @returns the object
-   * @throws "not_found" if no object with the given id exists
+   * @throws "not_found" if no object with the given _id exists
    */
-  async get(id: string, params?: any): Promise<any> {
-    const result = await this.request(id)
+  async get(_id: string, params?: any): Promise<any> {
+    const result = await this.request(_id)
     if (result.error) {
       throw new Error(result.error)
     }
@@ -139,7 +139,7 @@ export class CouchDB implements IDatabase {
     return result.docs
   }
   /**
-   * create a new entry. If object woth the same obj.id exists,throw error.
+   * create a new entry. If object woth the same obj._id exists,throw error.
    * @param obj The object to store
    * @returns the newly created object
    */
@@ -150,7 +150,7 @@ export class CouchDB implements IDatabase {
       const ndb = await this.createDatabase(this.using)
     }
     if (!obj._id) {
-      obj._id = obj.id || uuid()
+      obj._id = obj._id || uuid()
     }
     const result = await this.request(obj._id, "put", obj)
     if (result.error) {
@@ -165,16 +165,16 @@ export class CouchDB implements IDatabase {
    * Update existing object. If no object with the given ID exists:
    * create new entry, if params.query.upsert is true, throw not_found otherwise.
    *
-   * @param id id of the object to update
+   * @param _id _id of the object to update
    * @param data the object
    * @param params,database, params params.upsert,
    * @returns the updated or newly created object
    */
-  async update(id: string, data: any, params?: any) {
+  async update(_id: string, data: any, params?: any) {
     try {
-      const obj = await this.get(id, params)
+      const obj = await this.get(_id, params)
       data._rev = obj._rev
-      const result = await this.request(id + "?rev=" + obj._rev, "put", data)
+      const result = await this.request(_id + "?rev=" + obj._rev, "put", data)
       if (result.error) {
         logger.error("CouchDB update: " + JSON.stringify(result))
         throw new Error(result.reason)
@@ -195,16 +195,16 @@ export class CouchDB implements IDatabase {
   }
 
   /**
-   * Remove an object by its id or delete a database
-   * @param id id of the object to remove. If id is "!database!": Delete the database in params.query.database
+   * Remove an object by its _id or delete a database
+   * @param _id _id of the object to remove. If _id is "!database!": Delete the database in params.query.database
    * @param params params.query.database: Database where the object is located
    * @returns the newly deleted object
    */
-  async remove(id: string, params?: any): Promise<any> {
-    if (id !== "!database!") {
+  async remove(_id: string, params?: any): Promise<any> {
+    if (_id !== "!database!") {
       // delete document
-      const obj = await this.get(id, params)
-      const result = await this.request(id + "?rev=" + obj._rev, "delete")
+      const obj = await this.get(_id, params)
+      const result = await this.request(_id + "?rev=" + obj._rev, "delete")
       if (result.ok) {
         return obj
       } else {

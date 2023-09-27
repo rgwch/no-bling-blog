@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Solr managed schema - automatically generated - DO NOT EDIT -->
 <schema name="default-config" version="1.6">
-  <uniqueKey>id</uniqueKey>
+  <uniqueKey>_id</uniqueKey>
   <fieldType name="_nest_path_" class="solr.NestPathField" maxCharsForDocValues="-1" omitNorms="true" omitTermFreqAndPositions="true" stored="false" multiValued="false"/>
   <fieldType name="ancestor_path" class="solr.TextField">
     <analyzer type="index">
@@ -541,8 +541,8 @@
   <field name="Message_Raw-Header_IronPort-SDR" type="text_general"/>
   <field name="Message_Raw-Header_MIME-Version" type="pdoubles"/>
   <field name="Message_Raw-Header_MIME-version" type="pdoubles"/>
-  <field name="Message_Raw-Header_Message-ID" type="text_general"/>
-  <field name="Message_Raw-Header_Message-Id" type="text_general"/>
+  <field name="Message_Raw-Header_Message-_id" type="text_general"/>
+  <field name="Message_Raw-Header_Message-_id" type="text_general"/>
   <field name="Message_Raw-Header_Mime-Version" type="text_general"/>
   <field name="Message_Raw-Header_Received" type="text_general"/>
   <field name="Message_Raw-Header_Received-SPF" type="text_general"/>

@@ -44,10 +44,10 @@ export class NeDB implements IDatabase {
     }
     return true
   }
-  async get(id: string, options?: any): Promise<any> {
+  async get(_id: string, options?: any): Promise<any> {
     this.checkUsing()
     return new Promise<any>((resolve, reject) => {
-      this.dbs[this.using].findOne({ '_id': id }, (err: Error, result) => {
+      this.dbs[this.using].findOne({ '_id': _id }, (err: Error | null, result) => {
         if (err) {
           reject(err)
         }
@@ -82,10 +82,10 @@ export class NeDB implements IDatabase {
     });
   }
 
-  update(id: string, element: any, options?: any): Promise<any> {
+  update(_id: string, element: any, options?: any): Promise<any> {
     this.checkUsing()
     return new Promise((resolve, reject) => {
-      this.dbs[this.using].update({ _id: id }, element, {}, (err, result) => {
+      this.dbs[this.using].update({ _id: _id }, element, {}, (err, result) => {
         if (err) {
           reject(err)
         }
@@ -93,11 +93,11 @@ export class NeDB implements IDatabase {
       })
     });
   }
-  
-  remove(id: string, params?: any): Promise<any> {
+
+  remove(_id: string, params?: any): Promise<any> {
     this.checkUsing()
     return new Promise((resolve, reject) => {
-      this.dbs[this.using].remove({ _id: id }, {}, (err, result) => {
+      this.dbs[this.using].remove({ _id: _id }, {}, (err, result) => {
         if (err) {
           reject(err)
         }

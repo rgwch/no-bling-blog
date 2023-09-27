@@ -9,7 +9,7 @@
   });
   async function create() {
     const post = {
-      id: "nummeroUno",
+      _id: "nummeroUno",
       heading: "My first Posting",
       teaser: "This is an example of an nbb post",
       fulltext: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec maximus est, ac scelerisque tellus. Morbi efficitur venenatis dolor, eu semper leo finibus feugiat. Nam bibendum quam elementum nibh laoreet ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas semper sed quam eget volutpat. Duis pretium ipsum in tempus hendrerit. Ut egestas enim at scelerisque dapibus. Donec vehicula turpis tellus, eget consectetur quam tincidunt at. Suspendisse potenti. Suspendisse id nisl ac tortor fermentum faucibus. Aenean et cursus orci. Donec augue dui, posuere vitae ex sed, sollicitudin luctus nunc. Nulla consequat augue id volutpat porttitor.

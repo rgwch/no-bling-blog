@@ -6,31 +6,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "bun",
-            "internalConsoleOptions": "neverOpen",
+            "name": "Debug Tests",
             "request": "launch",
-            "name": "Debug Server",
-            "program": "src/index.ts",
-            "cwd": "${workspaceFolder}/server",
-            "env": {"storage": "nedb"},
-            "stopOnEntry": false,
-            "watchMode": false
-        },
-        {
-            "type": "bun",
-            "internalConsoleOptions": "neverOpen",
-            "request": "launch",
-            "name": "Debug File",
-            "program": "${file}",
-            "cwd": "${workspaceFolder}/server",
-        },
-        {
-            "type": "bun",
-            "internalConsoleOptions": "neverOpen",
-            "request": "attach",
-            "name": "Attach Bun",
-            "url": "ws://localhost:6499/",
-            "stopOnEntry": false
+            "cwd":"${workspaceFolder}/server",
+            "runtimeArgs": [
+                "run-script",
+                "test"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
         }
+    
+        
     ]
 }

@@ -1,5 +1,5 @@
 export type post = {
-    id: string
+    _id: string
     heading: string
     teaser: string
     fulltext: string
