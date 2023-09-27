@@ -7,26 +7,22 @@ import path from 'path'
 
 export class NeDB implements IDatabase {
   private dbs: { [name: string]: Datastore } = {}
-  private using:string=""
+  private using: string = ""
 
-  constructor(private datadir:string) {}
+  constructor(private datadir: string) { }
 
-  private checkUsing(){
-    if(!this.using.length){
+  private checkUsing() {
+    if (!this.using.length) {
       throw new Error("no database selected")
     }
   }
-  private makefile(fn:string):string{
-    const ret= path.join(__dirname, this.datadir || "data",fn)
+  private makefile(fn: string): string {
+    const ret = path.join((this.datadir || "../../data"), fn)
     return ret
   }
-  async use(name: string, options?: any): Promise<boolean> {
-    this.using=name
-    if (options?.filename) {
-      this.dbs[this.using] = new Datastore({ filename: this.makefile(this.using), autoload: true })
-    } else {
-      this.dbs[this.using] = new Datastore()
-    }
+  use(name: string, options?: any): boolean {
+    this.using = name
+    this.dbs[this.using] = new Datastore({ filename: this.makefile(this.using), autoload: true })
     return true;
   }
 
@@ -51,7 +47,7 @@ export class NeDB implements IDatabase {
   async get(id: string, options?: any): Promise<any> {
     this.checkUsing()
     return new Promise<any>((resolve, reject) => {
-      this.dbs[this.using].findOne({ '_id': id }, (err, result) => {
+      this.dbs[this.using].findOne({ '_id': id }, (err: Error, result) => {
         if (err) {
           reject(err)
         }
@@ -97,6 +93,7 @@ export class NeDB implements IDatabase {
       })
     });
   }
+  
   remove(id: string, params?: any): Promise<any> {
     this.checkUsing()
     return new Promise((resolve, reject) => {

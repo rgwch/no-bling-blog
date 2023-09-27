@@ -4,9 +4,10 @@ import {cors} from 'hono/cors'
 import { getDatabase } from './db'
 const prefix = "/api/1.0/"
 const db = getDatabase()
-db.createDatabase("nbb")
 db.use("nbb")
+setTimeout(()=>undefined,1000);
 const app = new Hono()
+
 
 app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix+"*",cors())

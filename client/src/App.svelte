@@ -1,7 +1,4 @@
 <script lang="ts">
-  import svelteLogo from "./assets/svelte.svg";
-  import viteLogo from "/vite.svg";
-  import Counter from "./lib/Counter.svelte";
   const prefix = "/api/1.0/";
   let posts = [];
   fetch(`http://localhost:3000${prefix}summary`).then(async (result) => {
@@ -35,9 +32,10 @@ Sed et viverra dui. Sed congue diam lectus, at semper ex condimentum lobortis. M
 </script>
 
 <main>
-  <div>
+  <div class="response">
     {#each posts as post}
-      {JSON.stringify(post)}
+      <div>{post.heading}</div>
+      <div>{post.teaser}</div>
     {/each}
   </div>
   <button role="button" on:click={create}>Send</button>

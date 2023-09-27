@@ -10,8 +10,8 @@
             "internalConsoleOptions": "neverOpen",
             "request": "launch",
             "name": "Debug Server",
-            "program": "index.ts",
-            "cwd": "${workspaceFolder}/server/src",
+            "program": "src/index.ts",
+            "cwd": "${workspaceFolder}/server",
             "env": {"storage": "nedb"},
             "stopOnEntry": false,
             "watchMode": false

@@ -5,9 +5,12 @@
   "dependencies": {
     "@hono/node-server": "^1.2.0",
     "hono": "^3.7.2",
-    "uuid": "^9.0.1"
+    "nedb": "^1.8.0",
+    "uuid": "^9.0.1",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
+    "@types/nedb": "^1.8.14",
     "@types/uuid": "^9.0.4",
     "bun-types": "^0.6.2"
   }
