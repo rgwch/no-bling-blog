@@ -1,0 +1,1313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Solr managed schema - automatically generated - DO NOT EDIT -->
+<schema name="default-config" version="1.6">
+  <uniqueKey>id</uniqueKey>
+  <fieldType name="_nest_path_" class="solr.NestPathField" maxCharsForDocValues="-1" omitNorms="true" omitTermFreqAndPositions="true" stored="false" multiValued="false"/>
+  <fieldType name="ancestor_path" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.PathHierarchyTokenizerFactory" delimiter="/"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="binary" class="solr.BinaryField"/>
+  <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+  <fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
+  <fieldType name="delimited_payloads_float" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="float"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="delimited_payloads_int" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="integer"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="delimited_payloads_string" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="identity"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="descendent_path" class="solr.TextField">
+    <analyzer type="index">
+      <tokenizer class="solr.PathHierarchyTokenizerFactory" delimiter="/"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="ignored" class="solr.StrField" indexed="false" stored="false" multiValued="true"/>
+  <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
+  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" maxDistErr="0.001" distErrPct="0.025" distanceUnits="kilometers"/>
+  <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+  <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
+  <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
+  <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
+  <fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
+  <fieldType name="pfloats" class="solr.FloatPointField" docValues="true" multiValued="true"/>
+  <fieldType name="phonetic_en" class="solr.TextField" indexed="true" stored="false">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.DoubleMetaphoneFilterFactory" inject="false"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="pint" class="solr.IntPointField" docValues="true"/>
+  <fieldType name="pints" class="solr.IntPointField" docValues="true" multiValued="true"/>
+  <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+  <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
+  <fieldType name="point" class="solr.PointType" subFieldSuffix="_d" dimension="2"/>
+  <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
+  <fieldType name="text_ar" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_ar.txt"/>
+      <filter class="solr.ArabicNormalizationFilterFactory"/>
+      <filter class="solr.ArabicStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_bg" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_bg.txt"/>
+      <filter class="solr.BulgarianStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ca" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.ElisionFilterFactory" ignoreCase="true" articles="lang/contractions_ca.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_ca.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Catalan"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_cjk" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.CJKWidthFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.CJKBigramFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_cz" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_cz.txt"/>
+      <filter class="solr.CzechStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_da" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_da.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Danish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_de" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_de.txt"/>
+      <filter class="solr.GermanNormalizationFilterFactory"/>
+      <filter class="solr.GermanLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_el" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.GreekLowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="false" words="lang/stopwords_el.txt"/>
+      <filter class="solr.GreekStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_en_splitting" class="solr.TextField" autoGeneratePhraseQueries="true" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" splitOnCaseChange="1" catenateNumbers="1" catenateWords="1" generateNumberParts="1" generateWordParts="1" catenateAll="0"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+      <filter class="solr.FlattenGraphFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" splitOnCaseChange="1" catenateNumbers="0" catenateWords="0" generateNumberParts="1" generateWordParts="1" catenateAll="0"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_en_splitting_tight" class="solr.TextField" autoGeneratePhraseQueries="true" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="false" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateAll="0" generateWordParts="0" catenateNumbers="1" catenateWords="1" generateNumberParts="0"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.EnglishMinimalStemFilterFactory"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      <filter class="solr.FlattenGraphFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="false" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory" catenateAll="0" generateWordParts="0" catenateNumbers="1" catenateWords="1" generateNumberParts="0"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
+      <filter class="solr.EnglishMinimalStemFilterFactory"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_es" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_es.txt"/>
+      <filter class="solr.SpanishLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_et" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_et.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Estonian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_eu" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_eu.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Basque"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_fa" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <charFilter class="solr.PersianCharFilterFactory"/>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ArabicNormalizationFilterFactory"/>
+      <filter class="solr.PersianNormalizationFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_fa.txt"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_fi" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_fi.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Finnish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_fr" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.ElisionFilterFactory" ignoreCase="true" articles="lang/contractions_fr.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_fr.txt"/>
+      <filter class="solr.FrenchLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ga" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.ElisionFilterFactory" ignoreCase="true" articles="lang/contractions_ga.txt"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/hyphenations_ga.txt"/>
+      <filter class="solr.IrishLowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_ga.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Irish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_general_rev" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ReversedWildcardFilterFactory" withOriginal="true" maxPosAsterisk="3" maxFractionAsterisk="0.33" maxPosQuestion="2"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_gl" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_gl.txt"/>
+      <filter class="solr.GalicianStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_hi" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.IndicNormalizationFilterFactory"/>
+      <filter class="solr.HindiNormalizationFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_hi.txt"/>
+      <filter class="solr.HindiStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_hu" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_hu.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Hungarian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_hy" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_hy.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Armenian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_id" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_id.txt"/>
+      <filter class="solr.IndonesianStemFilterFactory" stemDerivational="true"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_it" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.ElisionFilterFactory" ignoreCase="true" articles="lang/contractions_it.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_it.txt"/>
+      <filter class="solr.ItalianLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ja" class="solr.TextField" autoGeneratePhraseQueries="false" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.JapaneseTokenizerFactory" mode="search"/>
+      <filter class="solr.JapaneseBaseFormFilterFactory"/>
+      <filter class="solr.JapanesePartOfSpeechStopFilterFactory" tags="lang/stoptags_ja.txt"/>
+      <filter class="solr.CJKWidthFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_ja.txt"/>
+      <filter class="solr.JapaneseKatakanaStemFilterFactory" minimumLength="4"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ko" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.KoreanTokenizerFactory" decompoundMode="discard" outputUnknownUnigrams="false"/>
+      <filter class="solr.KoreanPartOfSpeechStopFilterFactory"/>
+      <filter class="solr.KoreanReadingFormFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_lv" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_lv.txt"/>
+      <filter class="solr.LatvianStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_nl" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_nl.txt"/>
+      <filter class="solr.StemmerOverrideFilterFactory" ignoreCase="false" dictionary="lang/stemdict_nl.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Dutch"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_no" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_no.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Norwegian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_pt" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_pt.txt"/>
+      <filter class="solr.PortugueseLightStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ro" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_ro.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Romanian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ru" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_ru.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Russian"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_sv" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" format="snowball" ignoreCase="true" words="lang/stopwords_sv.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Swedish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_th" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.ThaiTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_th.txt"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_tr" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.TurkishLowerCaseFilterFactory"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="false" words="lang/stopwords_tr.txt"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="Turkish"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
+  <field name="AcquID" type="text_general"/>
+  <field name="AcquStart" type="text_general"/>
+  <field name="AcquType" type="text_general"/>
+  <field name="Application-Name" type="text_general"/>
+  <field name="Application-Version" type="pdoubles"/>
+  <field name="Author" type="text_general"/>
+  <field name="Bezeichnung" type="text_general"/>
+  <field name="Caption_Digest" type="text_general"/>
+  <field name="Character-Count-With-Spaces" type="plongs"/>
+  <field name="Character_Count" type="plongs"/>
+  <field name="Comments" type="text_general"/>
+  <field name="Company" type="text_general"/>
+  <field name="Component_1" type="text_general"/>
+  <field name="Component_2" type="text_general"/>
+  <field name="Component_3" type="text_general"/>
+  <field name="Compression_Type" type="text_general"/>
+  <field name="Content-Encoding" type="text_general"/>
+  <field name="Content-Language" type="text_general"/>
+  <field name="Content-Type" type="text_general"/>
+  <field name="Content-Type-Hint" type="text_general"/>
+  <field name="Content-type" type="text_general"/>
+  <field name="CreatedWith" type="text_general"/>
+  <field name="Creation-Date" type="pdates"/>
+  <field name="CreationDate--Text" type="text_general"/>
+  <field name="CreatorTool" type="text_general"/>
+  <field name="DA" type="text_general"/>
+  <field name="Data_Precision" type="text_general"/>
+  <field name="DokNummer" type="text_general"/>
+  <field name="Edit-Time" type="text_general"/>
+  <field name="Exif_IFD0_Bits_Per_Sample" type="text_general"/>
+  <field name="Exif_IFD0_Compression" type="text_general"/>
+  <field name="Exif_IFD0_Fill_Order" type="text_general"/>
+  <field name="Exif_IFD0_Image_Height" type="text_general"/>
+  <field name="Exif_IFD0_Image_Width" type="text_general"/>
+  <field name="Exif_IFD0_New_Subfile_Type" type="text_general"/>
+  <field name="Exif_IFD0_Orientation" type="text_general"/>
+  <field name="Exif_IFD0_Photometric_Interpretation" type="text_general"/>
+  <field name="Exif_IFD0_Resolution_Unit" type="text_general"/>
+  <field name="Exif_IFD0_Rows_Per_Strip" type="text_general"/>
+  <field name="Exif_IFD0_Samples_Per_Pixel" type="text_general"/>
+  <field name="Exif_IFD0_Strip_Byte_Counts" type="text_general"/>
+  <field name="Exif_IFD0_Strip_Offsets" type="plongs"/>
+  <field name="Exif_IFD0_X_Resolution" type="text_general"/>
+  <field name="Exif_IFD0_Y_Resolution" type="text_general"/>
+  <field name="Exif_SubIFD_Color_Space" type="text_general"/>
+  <field name="Exif_SubIFD_Exif_Image_Height" type="text_general"/>
+  <field name="Exif_SubIFD_Exif_Image_Width" type="text_general"/>
+  <field name="FEE" type="text_general"/>
+  <field name="Fields" type="text_general"/>
+  <field name="File_Modified_Date" type="pdates"/>
+  <field name="File_Name" type="text_general"/>
+  <field name="File_Size" type="text_general"/>
+  <field name="GTS_PDFXConformance" type="text_general"/>
+  <field name="GTS_PDFXVersion" type="text_general"/>
+  <field name="Hauptkapitel" type="text_general"/>
+  <field name="Image-Count" type="plongs"/>
+  <field name="Image_Height" type="text_general"/>
+  <field name="Image_Width" type="text_general"/>
+  <field name="Keywords" type="text_general"/>
+  <field name="Last-Author" type="text_general"/>
+  <field name="Last-Modified" type="pdates" multiValued="false"/>
+  <field name="Last-Printed" type="pdates"/>
+  <field name="Last-Save-Date" type="pdates"/>
+  <field name="LastSavedBy" type="text_general"/>
+  <field name="Line-Count" type="plongs"/>
+  <field name="Lucinda_ImportedAt" type="string" multiValued="false" indexed="false" stored="true"/>
+  <field name="Lucinda_from" type="text_general"/>
+  <field name="ManagementSystem" type="text_general"/>
+  <field name="Message-Cc" type="text_general"/>
+  <field name="Message-From" type="text_general"/>
+  <field name="Message-Recipient-Address" type="text_general"/>
+  <field name="Message-To" type="text_general"/>
+  <field name="Message_From-Email" type="text_general"/>
+  <field name="Message_From-Name" type="text_general"/>
+  <field name="Message_Raw-Header_ARC-Authentication-Results" type="text_general"/>
+  <field name="Message_Raw-Header_ARC-Message-Signature" type="text_general"/>
+  <field name="Message_Raw-Header_ARC-Seal" type="text_general"/>
+  <field name="Message_Raw-Header_Accept-Language" type="text_general"/>
+  <field name="Message_Raw-Header_Authentication-Results" type="text_general"/>
+  <field name="Message_Raw-Header_Content-Language" type="text_general"/>
+  <field name="Message_Raw-Header_Content-Transfer-Encoding" type="text_general"/>
+  <field name="Message_Raw-Header_Content-Type" type="text_general"/>
+  <field name="Message_Raw-Header_Content-class" type="text_general"/>
+  <field name="Message_Raw-Header_DKIM-Signature" type="text_general"/>
+  <field name="Message_Raw-Header_Date" type="text_general"/>
+  <field name="Message_Raw-Header_Delivered-To" type="text_general"/>
+  <field name="Message_Raw-Header_From" type="text_general"/>
+  <field name="Message_Raw-Header_Importance" type="text_general"/>
+  <field name="Message_Raw-Header_In-Reply-To" type="text_general"/>
+  <field name="Message_Raw-Header_IronPort-Data" type="text_general"/>
+  <field name="Message_Raw-Header_IronPort-HdrOrdr" type="text_general"/>
+  <field name="Message_Raw-Header_IronPort-PHdr" type="text_general"/>
+  <field name="Message_Raw-Header_IronPort-SDR" type="text_general"/>
+  <field name="Message_Raw-Header_MIME-Version" type="pdoubles"/>
+  <field name="Message_Raw-Header_MIME-version" type="pdoubles"/>
+  <field name="Message_Raw-Header_Message-ID" type="text_general"/>
+  <field name="Message_Raw-Header_Message-Id" type="text_general"/>
+  <field name="Message_Raw-Header_Mime-Version" type="text_general"/>
+  <field name="Message_Raw-Header_Received" type="text_general"/>
+  <field name="Message_Raw-Header_Received-SPF" type="text_general"/>
+  <field name="Message_Raw-Header_References" type="text_general"/>
+  <field name="Message_Raw-Header_Return-Path" type="text_general"/>
+  <field name="Message_Raw-Header_Subject" type="text_general"/>
+  <field name="Message_Raw-Header_Thread-Index" type="text_general"/>
+  <field name="Message_Raw-Header_Thread-Topic" type="text_general"/>
+  <field name="Message_Raw-Header_To" type="text_general"/>
+  <field name="Message_Raw-Header_User-Agent" type="text_general"/>
+  <field name="Message_Raw-Header_X-ASG-Debug-ID" type="text_general"/>
+  <field name="Message_Raw-Header_X-ASG-Orig-Subj" type="text_general"/>
+  <field name="Message_Raw-Header_X-Account-Key" type="text_general"/>
+  <field name="Message_Raw-Header_X-Antivirus" type="text_general"/>
+  <field name="Message_Raw-Header_X-Antivirus-Status" type="text_general"/>
+  <field name="Message_Raw-Header_X-Auth-ID" type="text_general"/>
+  <field name="Message_Raw-Header_X-BTI-AntiSpam" type="text_general"/>
+  <field name="Message_Raw-Header_X-Barracuda-Apparent-Source-IP" type="text_general"/>
+  <field name="Message_Raw-Header_X-Barracuda-BRTS-Status" type="plongs"/>
+  <field name="Message_Raw-Header_X-Barracuda-Bayes" type="text_general"/>
+  <field name="Message_Raw-Header_X-Barracuda-Connect" type="text_general"/>
+  <field name="Message_Raw-Header_X-Barracuda-Encrypted" type="text_general"/>
+  <field name="Message_Raw-Header_X-Barracuda-Envelope-From" type="text_general"/>
+  <field name="Message_Raw-Header_X-Barracuda-Spam-Report" type="text_general"/>
+  <field name="Message_Raw-Header_X-Barracuda-Spam-Score" type="pdoubles"/>
+  <field name="Message_Raw-Header_X-Barracuda-Spam-Status" type="text_general"/>
+  <field name="Message_Raw-Header_X-Barracuda-Start-Time" type="plongs"/>
+  <field name="Message_Raw-Header_X-Barracuda-URL" type="text_general"/>
+  <field name="Message_Raw-Header_X-Classification-ID" type="text_general"/>
+  <field name="Message_Raw-Header_X-Gm-Message-State" type="text_general"/>
+  <field name="Message_Raw-Header_X-Google-DKIM-Signature" type="text_general"/>
+  <field name="Message_Raw-Header_X-HIN-Message-ID" type="text_general"/>
+  <field name="Message_Raw-Header_X-IPAS-Result" type="text_general"/>
+  <field name="Message_Raw-Header_X-IronPort-AV" type="text_general"/>
+  <field name="Message_Raw-Header_X-IronPort-Anti-Spam-Filtered" type="booleans"/>
+  <field name="Message_Raw-Header_X-IronPort-Anti-Spam-Result" type="text_general"/>
+  <field name="Message_Raw-Header_X-MGA-submission" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-CrossTenant-AuthAs" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-CrossTenant-AuthSource" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-CrossTenant-Network-Message-Id" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-CrossTenant-fromentityheader" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-CrossTenant-id" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-CrossTenant-originalarrivaltime" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-CrossTenant-rms-persistedconsumerorg" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-Organization-AVStamp-Mailbox" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-Organization-AuthAs" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-Organization-AuthMechanism" type="plongs"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-Organization-AuthSource" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-Organization-Network-Message-Id" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Exchange-Transport-CrossTenantHeadersStamped" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-Has-Attach" type="text_general"/>
+  <field name="Message_Raw-Header_X-MS-TNEF-Correlator" type="text_general"/>
+  <field name="Message_Raw-Header_X-Mailer" type="text_general"/>
+  <field name="Message_Raw-Header_X-MimeOLE" type="text_general"/>
+  <field name="Message_Raw-Header_X-Mozilla-Keys" type="text_general"/>
+  <field name="Message_Raw-Header_X-Mozilla-Status" type="plongs"/>
+  <field name="Message_Raw-Header_X-Mozilla-Status2" type="plongs"/>
+  <field name="Message_Raw-Header_X-Original-To" type="text_general"/>
+  <field name="Message_Raw-Header_X-OriginatorOrg" type="text_general"/>
+  <field name="Message_Raw-Header_X-Priority" type="plongs"/>
+  <field name="Message_Raw-Header_X-Received" type="text_general"/>
+  <field name="Message_Raw-Header_X-STA-Metric" type="text_general"/>
+  <field name="Message_Raw-Header_X-STA-NotSpam" type="text_general"/>
+  <field name="Message_Raw-Header_X-STA-Spam" type="text_general"/>
+  <field name="Message_Raw-Header_X-Scanned-By" type="text_general"/>
+  <field name="Message_Raw-Header_X-Talos-CUID" type="text_general"/>
+  <field name="Message_Raw-Header_X-Talos-MUID" type="text_general"/>
+  <field name="Message_Raw-Header_X-Type" type="text_general"/>
+  <field name="Message_Raw-Header_X-UIDL" type="text_general"/>
+  <field name="Message_Raw-Header_X-Universally-Unique-Identifier" type="text_general"/>
+  <field name="Message_Raw-Header_X-Virus-Scanned" type="text_general"/>
+  <field name="Message_Raw-Header_acceptlanguage" type="text_general"/>
+  <field name="Message_Raw-Header_thread-index" type="text_general"/>
+  <field name="Message_Raw-Header_x-eopattributedmessage" type="plongs"/>
+  <field name="Message_Raw-Header_x-incomingheadercount" type="plongs"/>
+  <field name="Message_Raw-Header_x-incomingtopheadermarker" type="text_general"/>
+  <field name="Message_Raw-Header_x-microsoft-antispam" type="text_general"/>
+  <field name="Message_Raw-Header_x-microsoft-antispam-message-info" type="text_general"/>
+  <field name="Message_Raw-Header_x-ms-exchange-antispam-messagedata" type="text_general"/>
+  <field name="Message_Raw-Header_x-ms-exchange-antispam-messagedata-0" type="text_general"/>
+  <field name="Message_Raw-Header_x-ms-exchange-antispam-messagedata-chunkcount" type="plongs"/>
+  <field name="Message_Raw-Header_x-ms-exchange-messagesentrepresentingtype" type="plongs"/>
+  <field name="Message_Raw-Header_x-ms-exchange-transport-forked" type="booleans"/>
+  <field name="Message_Raw-Header_x-ms-exchange-transport-fromentityheader" type="text_general"/>
+  <field name="Message_Raw-Header_x-ms-office365-filtering-correlation-id" type="text_general"/>
+  <field name="Message_Raw-Header_x-ms-publictraffictype" type="text_general"/>
+  <field name="Message_Raw-Header_x-ms-traffictypediagnostic" type="text_general"/>
+  <field name="Message_Raw-Header_x-originating-ip" type="text_general"/>
+  <field name="Message_Raw-Header_x-tm-snts-smtp" type="text_general"/>
+  <field name="Message_Raw-Header_x-tmn" type="text_general"/>
+  <field name="Message_To-Display-Name" type="text_general"/>
+  <field name="Message_To-Email" type="text_general"/>
+  <field name="Message_To-Name" type="text_general"/>
+  <field name="MetadataDate" type="text_general"/>
+  <field name="Multipart-Boundary" type="text_general"/>
+  <field name="Multipart-Subtype" type="text_general"/>
+  <field name="Nr1" type="plongs"/>
+  <field name="Nr2" type="plongs"/>
+  <field name="Nr3" type="plongs"/>
+  <field name="Nr4" type="plongs"/>
+  <field name="NrPrefix" type="text_general"/>
+  <field name="Number_of_Components" type="plongs"/>
+  <field name="Number_of_Tables" type="text_general"/>
+  <field name="Object-Count" type="plongs"/>
+  <field name="PDFVersion" type="pdoubles"/>
+  <field name="Page-Count" type="plongs"/>
+  <field name="Paragraph-Count" type="plongs"/>
+  <field name="PatientNb" type="plongs"/>
+  <field name="Resolution_Units" type="text_general"/>
+  <field name="Revision-Number" type="plongs"/>
+  <field name="Revisionsdatum" type="text_general"/>
+  <field name="Revisionsnummer" type="plongs"/>
+  <field name="Security" type="plongs"/>
+  <field name="SigFlags" type="text_general"/>
+  <field name="SourceModified" type="text_general"/>
+  <field name="Sprache" type="text_general"/>
+  <field name="Table-Count" type="plongs"/>
+  <field name="Template" type="text_general"/>
+  <field name="TestID" type="text_general"/>
+  <field name="TestProcedureID" type="text_general"/>
+  <field name="TestProcedureName" type="text_general"/>
+  <field name="Thumbnail_Height_Pixels" type="plongs"/>
+  <field name="Thumbnail_Width_Pixels" type="plongs"/>
+  <field name="Unterkapitel" type="text_general"/>
+  <field name="Word-Count" type="plongs" multiValued="false"/>
+  <field name="X-Parsed-By" type="text_general"/>
+  <field name="X-TIKA_EXCEPTION_warn" type="text_general"/>
+  <field name="X-TIKA_origResourceName" type="text_general"/>
+  <field name="X-UA-Compatible" type="text_general"/>
+  <field name="X_Resolution" type="text_general"/>
+  <field name="Y_Resolution" type="text_general"/>
+  <field name="_AdHocReviewCycleID" type="plongs"/>
+  <field name="_AuthorEmail" type="text_general"/>
+  <field name="_AuthorEmailDisplayName" type="text_general"/>
+  <field name="_nest_path_" type="_nest_path_"/>
+  <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
+  <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
+  <field name="_version_" type="plong" multiValued="false" indexed="false" stored="false"/>
+  <field name="access_permission_assemble_document" type="booleans"/>
+  <field name="access_permission_can_modify" type="booleans"/>
+  <field name="access_permission_can_print" type="booleans"/>
+  <field name="access_permission_can_print_degraded" type="booleans"/>
+  <field name="access_permission_extract_content" type="booleans"/>
+  <field name="access_permission_extract_for_accessibility" type="booleans"/>
+  <field name="access_permission_fill_in_form" type="booleans"/>
+  <field name="access_permission_modify_annotations" type="booleans"/>
+  <field name="addressee" type="text_general" indexed="true" stored="true"/>
+  <field name="author" type="text_general" indexed="true" stored="true"/>
+  <field name="birthdate" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="categories" type="text_general" indexed="true" stored="true"/>
+  <field name="channels" type="plongs"/>
+  <field name="checksum" type="string" multiValued="false" indexed="false" stored="true"/>
+  <field name="comment" type="text_general"/>
+  <field name="concern" type="text_general" multiValued="false" indexed="true" stored="true"/>
+  <field name="contents" type="text_general" uninvertible="false" multiValued="false" indexed="true" stored="false"/>
+  <field name="cp_revision" type="plongs"/>
+  <field name="cp_subject" type="text_general"/>
+  <field name="created" type="pdates"/>
+  <field name="creator" type="text_general"/>
+  <field name="custom_AppVersion" type="pdoubles"/>
+  <field name="custom_Company" type="text_general"/>
+  <field name="custom_DMS_DokTyp" type="text_general"/>
+  <field name="custom_DocSecurity" type="plongs"/>
+  <field name="custom_FSC_COOELAK_1.1001_CreatedAt" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_Department" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_FileRefBarCode" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_FileRefOU" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_FileRefOrdinal" type="plongs"/>
+  <field name="custom_FSC_COOELAK_1.1001_FileRefYear" type="plongs"/>
+  <field name="custom_FSC_COOELAK_1.1001_FileReference" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_OU" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_ObjBarCode" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_Owner" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_OwnerExtension" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_OwnerFaxExtension" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_RefBarCode" type="text_general"/>
+  <field name="custom_FSC_COOELAK_1.1001_Subject" type="text_general"/>
+  <field name="custom_FSC_COOSYSTEM_1.1_Container" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_DocumentID" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_DossierBarCode" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_Dossierref" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespEmail" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespFax" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespHome" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespOrg" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespOrgShortname" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespStreet" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespTel" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespZipCode" type="plongs"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileResponsible" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_FileRespshortsign" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_PositionNumber" type="pdoubles"/>
+  <field name="custom_FSC_EVDCFG_15.1400_SalutationEnglish" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_SalutationFrench" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_SalutationFrenchUser" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_SalutationGerman" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_SalutationGermanUser" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_SalutationItalian" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_SalutationItalianUser" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_SubDossierBarCode" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_Subject" type="text_general"/>
+  <field name="custom_FSC_EVDCFG_15.1400_Title" type="text_general"/>
+  <field name="custom_HyperlinksChanged" type="booleans"/>
+  <field name="custom_LinksUpToDate" type="booleans"/>
+  <field name="custom_ScaleCrop" type="booleans"/>
+  <field name="custom_ShareDoc" type="booleans"/>
+  <field name="custom_Version" type="pdoubles"/>
+  <field name="custom_dvAmt" type="text_general"/>
+  <field name="custom_dvBereich" type="text_general"/>
+  <field name="custom_dvGrussformel" type="text_general"/>
+  <field name="custom_dvName" type="text_general"/>
+  <field name="custom_dvRessort" type="text_general"/>
+  <field name="custom_dvVorname" type="text_general"/>
+  <field name="custom_dvpers_nlich" type="text_general"/>
+  <field name="custom_saphir_ARCHIV" type="booleans"/>
+  <field name="date" type="pdates" multiValued="false"/>
+  <field name="dc_creator" type="text_general"/>
+  <field name="dc_description" type="text_general"/>
+  <field name="dc_format" type="text_general"/>
+  <field name="dc_language" type="text_general"/>
+  <field name="dc_publisher" type="text_general"/>
+  <field name="dc_subject" type="text_general"/>
+  <field name="dc_title" type="text_general" multiValued="false"/>
+  <field name="dcterms_created" type="pdates"/>
+  <field name="dcterms_modified" type="pdates"/>
+  <field name="deleted" type="string" uninvertible="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="description" type="text_general"/>
+  <field name="editing-cycles" type="plongs"/>
+  <field name="erstellt" type="text_general"/>
+  <field name="extended-properties_AppVersion" type="pdoubles"/>
+  <field name="extended-properties_Application" type="text_general"/>
+  <field name="extended-properties_Company" type="text_general"/>
+  <field name="extended-properties_DocSecurity" type="plongs"/>
+  <field name="extended-properties_Template" type="text_general"/>
+  <field name="filename" type="text_general" multiValued="false" indexed="false" stored="true"/>
+  <field name="filepath" type="text_general"/>
+  <field name="firstname" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="format" type="text_general"/>
+  <field name="genehmigt" type="text_general"/>
+  <field name="generator" type="text_general" multiValued="false"/>
+  <field name="hasSignature" type="booleans"/>
+  <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="initial-creator" type="text_general"/>
+  <field name="language" type="text_general"/>
+  <field name="lastname" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="lastupdate" type="plongs" multiValued="false"/>
+  <field name="loc" type="string" indexed="false" stored="true"/>
+  <field name="lucinda_doctype" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="machine_architectureBits" type="plongs"/>
+  <field name="machine_endian" type="text_general"/>
+  <field name="machine_machineType" type="text_general"/>
+  <field name="machine_platform" type="text_general"/>
+  <field name="meta_author" type="text_general"/>
+  <field name="meta_character-count" type="plongs"/>
+  <field name="meta_character-count-with-spaces" type="plongs"/>
+  <field name="meta_creation-date" type="pdates"/>
+  <field name="meta_image-count" type="plongs"/>
+  <field name="meta_initial-author" type="text_general"/>
+  <field name="meta_keyword" type="text_general"/>
+  <field name="meta_last-author" type="text_general"/>
+  <field name="meta_line-count" type="plongs"/>
+  <field name="meta_mapi-from-representing-email" type="text_general"/>
+  <field name="meta_mapi-from-representing-name" type="text_general"/>
+  <field name="meta_mapi-message-class" type="text_general"/>
+  <field name="meta_mapi-sent-by-server-type" type="text_general"/>
+  <field name="meta_object-count" type="plongs"/>
+  <field name="meta_page-count" type="plongs"/>
+  <field name="meta_paragraph-count" type="plongs"/>
+  <field name="meta_print-date" type="pdates"/>
+  <field name="meta_save-date" type="pdates"/>
+  <field name="meta_table-count" type="plongs"/>
+  <field name="meta_word-count" type="plongs"/>
+  <field name="modified" type="pdates"/>
+  <field name="name" type="text_general" indexed="true" stored="true"/>
+  <field name="nbCharacter" type="plongs"/>
+  <field name="nbImg" type="plongs"/>
+  <field name="nbObject" type="plongs"/>
+  <field name="nbPage" type="plongs"/>
+  <field name="nbPara" type="plongs"/>
+  <field name="nbTab" type="plongs"/>
+  <field name="nbWord" type="plongs"/>
+  <field name="pdf_PDFExtensionVersion" type="text_general"/>
+  <field name="pdf_PDFVersion" type="pdoubles"/>
+  <field name="pdf_charsPerPage" type="plongs"/>
+  <field name="pdf_docinfo_created" type="pdates"/>
+  <field name="pdf_docinfo_creator" type="text_general"/>
+  <field name="pdf_docinfo_creator_tool" type="text_general"/>
+  <field name="pdf_docinfo_custom_AcquID" type="text_general"/>
+  <field name="pdf_docinfo_custom_AcquStart" type="text_general"/>
+  <field name="pdf_docinfo_custom_AcquType" type="text_general"/>
+  <field name="pdf_docinfo_custom_Bezeichnung" type="text_general"/>
+  <field name="pdf_docinfo_custom_Comments" type="text_general"/>
+  <field name="pdf_docinfo_custom_Company" type="text_general"/>
+  <field name="pdf_docinfo_custom_CreatedWith" type="text_general"/>
+  <field name="pdf_docinfo_custom_CreationDate--Text" type="text_general"/>
+  <field name="pdf_docinfo_custom_CreatorTool" type="text_general"/>
+  <field name="pdf_docinfo_custom_DA" type="text_general"/>
+  <field name="pdf_docinfo_custom_DokNummer" type="text_general"/>
+  <field name="pdf_docinfo_custom_FEE" type="text_general"/>
+  <field name="pdf_docinfo_custom_Fields" type="text_general"/>
+  <field name="pdf_docinfo_custom_GTS_PDFXConformance" type="text_general"/>
+  <field name="pdf_docinfo_custom_GTS_PDFXVersion" type="text_general"/>
+  <field name="pdf_docinfo_custom_Hauptkapitel" type="text_general"/>
+  <field name="pdf_docinfo_custom_LastSavedBy" type="text_general"/>
+  <field name="pdf_docinfo_custom_ManagementSystem" type="text_general"/>
+  <field name="pdf_docinfo_custom_MetadataDate" type="text_general"/>
+  <field name="pdf_docinfo_custom_Nr1" type="plongs"/>
+  <field name="pdf_docinfo_custom_Nr2" type="plongs"/>
+  <field name="pdf_docinfo_custom_Nr3" type="plongs"/>
+  <field name="pdf_docinfo_custom_Nr4" type="plongs"/>
+  <field name="pdf_docinfo_custom_NrPrefix" type="text_general"/>
+  <field name="pdf_docinfo_custom_PDFVersion" type="pdoubles"/>
+  <field name="pdf_docinfo_custom_PatientNb" type="plongs"/>
+  <field name="pdf_docinfo_custom_Revisionsdatum" type="text_general"/>
+  <field name="pdf_docinfo_custom_Revisionsnummer" type="plongs"/>
+  <field name="pdf_docinfo_custom_SigFlags" type="text_general"/>
+  <field name="pdf_docinfo_custom_SourceModified" type="text_general"/>
+  <field name="pdf_docinfo_custom_Sprache" type="text_general"/>
+  <field name="pdf_docinfo_custom_TestID" type="text_general"/>
+  <field name="pdf_docinfo_custom_TestProcedureID" type="text_general"/>
+  <field name="pdf_docinfo_custom_TestProcedureName" type="text_general"/>
+  <field name="pdf_docinfo_custom_Unterkapitel" type="text_general"/>
+  <field name="pdf_docinfo_custom__AdHocReviewCycleID" type="plongs"/>
+  <field name="pdf_docinfo_custom__AuthorEmail" type="text_general"/>
+  <field name="pdf_docinfo_custom__AuthorEmailDisplayName" type="text_general"/>
+  <field name="pdf_docinfo_custom_concern" type="text_general"/>
+  <field name="pdf_docinfo_custom_erstellt" type="text_general"/>
+  <field name="pdf_docinfo_custom_genehmigt" type="text_general"/>
+  <field name="pdf_docinfo_custom_viewport" type="text_general"/>
+  <field name="pdf_docinfo_keywords" type="text_general"/>
+  <field name="pdf_docinfo_modified" type="pdates"/>
+  <field name="pdf_docinfo_producer" type="text_general"/>
+  <field name="pdf_docinfo_subject" type="text_general"/>
+  <field name="pdf_docinfo_title" type="text_general"/>
+  <field name="pdf_docinfo_trapped" type="booleans"/>
+  <field name="pdf_encrypted" type="booleans"/>
+  <field name="pdf_hasAcroFormFields" type="booleans"/>
+  <field name="pdf_hasMarkedContent" type="booleans"/>
+  <field name="pdf_hasXFA" type="booleans"/>
+  <field name="pdf_hasXMP" type="booleans"/>
+  <field name="pdf_unmappedUnicodeCharsPerPage" type="plongs"/>
+  <field name="pdfa_PDFVersion" type="text_general"/>
+  <field name="pdfaid_conformance" type="text_general"/>
+  <field name="pdfaid_part" type="plongs"/>
+  <field name="producer" type="text_general"/>
+  <field name="protected" type="booleans"/>
+  <field name="publisher" type="text_general"/>
+  <field name="samplerate" type="plongs"/>
+  <field name="subject" type="text_general"/>
+  <field name="template" type="string" multiValued="false"/>
+  <field name="tiff_BitsPerSample" type="plongs"/>
+  <field name="tiff_ImageLength" type="plongs"/>
+  <field name="tiff_ImageWidth" type="plongs"/>
+  <field name="tiff_Orientation" type="plongs"/>
+  <field name="tiff_ResolutionUnit" type="text_general"/>
+  <field name="tiff_SamplesPerPixel" type="plongs"/>
+  <field name="tiff_XResolution" type="pdoubles"/>
+  <field name="tiff_YResolution" type="pdoubles"/>
+  <field name="title" type="text_general" multiValued="false" indexed="true" stored="true"/>
+  <field name="trapped" type="booleans"/>
+  <field name="url" type="string" multiValued="false" indexed="false" stored="true"/>
+  <field name="version" type="text_general"/>
+  <field name="viewport" type="text_general"/>
+  <field name="w_comments" type="text_general"/>
+  <field name="xmpDM_album" type="text_general"/>
+  <field name="xmpDM_albumArtist" type="text_general"/>
+  <field name="xmpDM_artist" type="text_general"/>
+  <field name="xmpDM_audioChannelType" type="text_general"/>
+  <field name="xmpDM_audioCompressor" type="text_general"/>
+  <field name="xmpDM_audioSampleRate" type="plongs"/>
+  <field name="xmpDM_duration" type="pdoubles"/>
+  <field name="xmpDM_releaseDate" type="plongs"/>
+  <field name="xmpMM_DerivedFrom_DocumentID" type="text_general"/>
+  <field name="xmpMM_DerivedFrom_InstanceID" type="text_general"/>
+  <field name="xmpMM_DocumentID" type="text_general"/>
+  <field name="xmpMM_History_Action" type="text_general"/>
+  <field name="xmpMM_History_InstanceID" type="text_general"/>
+  <field name="xmpMM_History_SoftwareAgent" type="text_general"/>
+  <field name="xmpMM_History_When" type="pdates"/>
+  <field name="xmpTPg_NPages" type="plongs"/>
+  <field name="xmp_CreatorTool" type="text_general"/>
+  <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
+  <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
+  <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_en_split" type="text_en_splitting" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_sort" type="text_gen_sort" indexed="true" stored="true"/>
+  <dynamicField name="ignored_*" type="ignored"/>
+  <dynamicField name="*_txt_rev" type="text_general_rev" indexed="true" stored="true"/>
+  <dynamicField name="*_phon_en" type="phonetic_en" indexed="true" stored="true"/>
+  <dynamicField name="*_s_lower" type="lowercase" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_cjk" type="text_cjk" indexed="true" stored="true"/>
+  <dynamicField name="random_*" type="random"/>
+  <dynamicField name="*_t_sort" type="text_gen_sort" multiValued="false" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_en" type="text_en" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ar" type="text_ar" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_bg" type="text_bg" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ca" type="text_ca" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_cz" type="text_cz" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_da" type="text_da" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_de" type="text_de" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_el" type="text_el" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_es" type="text_es" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_et" type="text_et" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_eu" type="text_eu" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_fa" type="text_fa" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_fi" type="text_fi" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_fr" type="text_fr" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ga" type="text_ga" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_gl" type="text_gl" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_hi" type="text_hi" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_hu" type="text_hu" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_hy" type="text_hy" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_id" type="text_id" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_it" type="text_it" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ja" type="text_ja" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ko" type="text_ko" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_lv" type="text_lv" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_nl" type="text_nl" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_no" type="text_no" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_pt" type="text_pt" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ro" type="text_ro" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_ru" type="text_ru" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_sv" type="text_sv" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_th" type="text_th" indexed="true" stored="true"/>
+  <dynamicField name="*_txt_tr" type="text_tr" indexed="true" stored="true"/>
+  <dynamicField name="*_point" type="point" indexed="true" stored="true"/>
+  <dynamicField name="*_srpt" type="location_rpt" indexed="true" stored="true"/>
+  <dynamicField name="attr_*" type="text_general" multiValued="true" indexed="true" stored="true"/>
+  <dynamicField name="*_txt" type="text_general" indexed="true" stored="true"/>
+  <dynamicField name="*_str" type="strings" docValues="true" indexed="false" stored="false" useDocValuesAsStored="false"/>
+  <dynamicField name="*_dts" type="pdate" multiValued="true" indexed="true" stored="true"/>
+  <dynamicField name="*_dpf" type="delimited_payloads_float" indexed="true" stored="true"/>
+  <dynamicField name="*_dpi" type="delimited_payloads_int" indexed="true" stored="true"/>
+  <dynamicField name="*_dps" type="delimited_payloads_string" indexed="true" stored="true"/>
+  <dynamicField name="*_is" type="pints" indexed="true" stored="true"/>
+  <dynamicField name="*_ss" type="strings" indexed="true" stored="true"/>
+  <dynamicField name="*_ls" type="plongs" indexed="true" stored="true"/>
+  <dynamicField name="*_bs" type="booleans" indexed="true" stored="true"/>
+  <dynamicField name="*_fs" type="pfloats" indexed="true" stored="true"/>
+  <dynamicField name="*_ds" type="pdoubles" indexed="true" stored="true"/>
+  <dynamicField name="*_dt" type="pdate" indexed="true" stored="true"/>
+  <dynamicField name="*_ws" type="text_ws" indexed="true" stored="true"/>
+  <dynamicField name="*_i" type="pint" indexed="true" stored="true"/>
+  <dynamicField name="*_s" type="string" indexed="true" stored="true"/>
+  <dynamicField name="*_l" type="plong" indexed="true" stored="true"/>
+  <dynamicField name="*_t" type="text_general" multiValued="false" indexed="true" stored="true"/>
+  <dynamicField name="*_b" type="boolean" indexed="true" stored="true"/>
+  <dynamicField name="*_f" type="pfloat" indexed="true" stored="true"/>
+  <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
+  <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
+  <copyField source="pdf_docinfo_title" dest="pdf_docinfo_title_str" maxChars="256"/>
+  <copyField source="Content-Type" dest="Content-Type_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_creator_tool" dest="pdf_docinfo_creator_tool_str" maxChars="256"/>
+  <copyField source="pdfa_PDFVersion" dest="pdfa_PDFVersion_str" maxChars="256"/>
+  <copyField source="xmpMM_DocumentID" dest="xmpMM_DocumentID_str" maxChars="256"/>
+  <copyField source="xmp_CreatorTool" dest="xmp_CreatorTool_str" maxChars="256"/>
+  <copyField source="pdfaid_conformance" dest="pdfaid_conformance_str" maxChars="256"/>
+  <copyField source="dc_format" dest="dc_format_str" maxChars="256"/>
+  <copyField source="producer" dest="producer_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_producer" dest="pdf_docinfo_producer_str" maxChars="256"/>
+  <copyField source="creator" dest="creator_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_creator" dest="pdf_docinfo_creator_str" maxChars="256"/>
+  <copyField source="Author" dest="Author_str" maxChars="256"/>
+  <copyField source="dc_creator" dest="dc_creator_str" maxChars="256"/>
+  <copyField source="cp_subject" dest="cp_subject_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_subject" dest="pdf_docinfo_subject_str" maxChars="256"/>
+  <copyField source="dc_description" dest="dc_description_str" maxChars="256"/>
+  <copyField source="meta_author" dest="meta_author_str" maxChars="256"/>
+  <copyField source="extended-properties_Company" dest="extended-properties_Company_str" maxChars="256"/>
+  <copyField source="Edit-Time" dest="Edit-Time_str" maxChars="256"/>
+  <copyField source="dc_language" dest="dc_language_str" maxChars="256"/>
+  <copyField source="X-TIKA_EXCEPTION_warn" dest="X-TIKA_EXCEPTION_warn_str" maxChars="256"/>
+  <copyField source="Image_Height" dest="Image_Height_str" maxChars="256"/>
+  <copyField source="File_Name" dest="File_Name_str" maxChars="256"/>
+  <copyField source="Resolution_Units" dest="Resolution_Units_str" maxChars="256"/>
+  <copyField source="Y_Resolution" dest="Y_Resolution_str" maxChars="256"/>
+  <copyField source="Data_Precision" dest="Data_Precision_str" maxChars="256"/>
+  <copyField source="Component_1" dest="Component_1_str" maxChars="256"/>
+  <copyField source="File_Size" dest="File_Size_str" maxChars="256"/>
+  <copyField source="X_Resolution" dest="X_Resolution_str" maxChars="256"/>
+  <copyField source="Image_Width" dest="Image_Width_str" maxChars="256"/>
+  <copyField source="Component_3" dest="Component_3_str" maxChars="256"/>
+  <copyField source="Component_2" dest="Component_2_str" maxChars="256"/>
+  <copyField source="Number_of_Tables" dest="Number_of_Tables_str" maxChars="256"/>
+  <copyField source="Compression_Type" dest="Compression_Type_str" maxChars="256"/>
+  <copyField source="meta_last-author" dest="meta_last-author_str" maxChars="256"/>
+  <copyField source="Company" dest="Company_str" maxChars="256"/>
+  <copyField source="Keywords" dest="Keywords_str" maxChars="256"/>
+  <copyField source="Application-Name" dest="Application-Name_str" maxChars="256"/>
+  <copyField source="meta_keyword" dest="meta_keyword_str" maxChars="256"/>
+  <copyField source="Last-Author" dest="Last-Author_str" maxChars="256"/>
+  <copyField source="dc_subject" dest="dc_subject_str" maxChars="256"/>
+  <copyField source="extended-properties_Application" dest="extended-properties_Application_str" maxChars="256"/>
+  <copyField source="Template" dest="Template_str" maxChars="256"/>
+  <copyField source="extended-properties_Template" dest="extended-properties_Template_str" maxChars="256"/>
+  <copyField source="meta_initial-author" dest="meta_initial-author_str" maxChars="256"/>
+  <copyField source="initial-creator" dest="initial-creator_str" maxChars="256"/>
+  <copyField source="Content-Type-Hint" dest="Content-Type-Hint_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_GTS_PDFXConformance" dest="pdf_docinfo_custom_GTS_PDFXConformance_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_GTS_PDFXVersion" dest="pdf_docinfo_custom_GTS_PDFXVersion_str" maxChars="256"/>
+  <copyField source="GTS_PDFXVersion" dest="GTS_PDFXVersion_str" maxChars="256"/>
+  <copyField source="pdf_PDFExtensionVersion" dest="pdf_PDFExtensionVersion_str" maxChars="256"/>
+  <copyField source="xmpMM_DerivedFrom_InstanceID" dest="xmpMM_DerivedFrom_InstanceID_str" maxChars="256"/>
+  <copyField source="GTS_PDFXConformance" dest="GTS_PDFXConformance_str" maxChars="256"/>
+  <copyField source="xmpMM_DerivedFrom_DocumentID" dest="xmpMM_DerivedFrom_DocumentID_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_MetadataDate" dest="pdf_docinfo_custom_MetadataDate_str" maxChars="256"/>
+  <copyField source="MetadataDate" dest="MetadataDate_str" maxChars="256"/>
+  <copyField source="dc_publisher" dest="dc_publisher_str" maxChars="256"/>
+  <copyField source="publisher" dest="publisher_str" maxChars="256"/>
+  <copyField source="_AuthorEmail" dest="_AuthorEmail_str" maxChars="256"/>
+  <copyField source="SourceModified" dest="SourceModified_str" maxChars="256"/>
+  <copyField source="_AuthorEmailDisplayName" dest="_AuthorEmailDisplayName_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom__AuthorEmail" dest="pdf_docinfo_custom__AuthorEmail_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_SourceModified" dest="pdf_docinfo_custom_SourceModified_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_Company" dest="pdf_docinfo_custom_Company_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom__AuthorEmailDisplayName" dest="pdf_docinfo_custom__AuthorEmailDisplayName_str" maxChars="256"/>
+  <copyField source="custom_Company" dest="custom_Company_str" maxChars="256"/>
+  <copyField source="xmpMM_History_InstanceID" dest="xmpMM_History_InstanceID_str" maxChars="256"/>
+  <copyField source="xmpMM_History_Action" dest="xmpMM_History_Action_str" maxChars="256"/>
+  <copyField source="xmpMM_History_SoftwareAgent" dest="xmpMM_History_SoftwareAgent_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_keywords" dest="pdf_docinfo_keywords_str" maxChars="256"/>
+  <copyField source="X-TIKA_origResourceName" dest="X-TIKA_origResourceName_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Received" dest="Message_Raw-Header_Received_str" maxChars="256"/>
+  <copyField source="Message_From-Email" dest="Message_From-Email_str" maxChars="256"/>
+  <copyField source="Message-To" dest="Message-To_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Delivered-To" dest="Message_Raw-Header_Delivered-To_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Received" dest="Message_Raw-Header_X-Received_str" maxChars="256"/>
+  <copyField source="Multipart-Boundary" dest="Multipart-Boundary_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Message-ID" dest="Message_Raw-Header_Message-ID_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Return-Path" dest="Message_Raw-Header_Return-Path_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Importance" dest="Message_Raw-Header_Importance_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Antivirus-Status" dest="Message_Raw-Header_X-Antivirus-Status_str" maxChars="256"/>
+  <copyField source="Message_From-Name" dest="Message_From-Name_str" maxChars="256"/>
+  <copyField source="Multipart-Subtype" dest="Multipart-Subtype_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Gm-Message-State" dest="Message_Raw-Header_X-Gm-Message-State_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Google-DKIM-Signature" dest="Message_Raw-Header_X-Google-DKIM-Signature_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_DKIM-Signature" dest="Message_Raw-Header_DKIM-Signature_str" maxChars="256"/>
+  <copyField source="Message-From" dest="Message-From_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Antivirus" dest="Message_Raw-Header_X-Antivirus_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Original-To" dest="Message_Raw-Header_X-Original-To_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-HIN-Message-ID" dest="Message_Raw-Header_X-HIN-Message-ID_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Content-Transfer-Encoding" dest="Message_Raw-Header_Content-Transfer-Encoding_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Virus-Scanned" dest="Message_Raw-Header_X-Virus-Scanned_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-STA-NotSpam" dest="Message_Raw-Header_X-STA-NotSpam_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-UIDL" dest="Message_Raw-Header_X-UIDL_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Thread-Index" dest="Message_Raw-Header_Thread-Index_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_References" dest="Message_Raw-Header_References_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Mozilla-Keys" dest="Message_Raw-Header_X-Mozilla-Keys_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Content-Type" dest="Message_Raw-Header_Content-Type_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Content-Language" dest="Message_Raw-Header_Content-Language_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-IronPort-AV" dest="Message_Raw-Header_X-IronPort-AV_str" maxChars="256"/>
+  <copyField source="Message-Cc" dest="Message-Cc_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_acceptlanguage" dest="Message_Raw-Header_acceptlanguage_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_In-Reply-To" dest="Message_Raw-Header_In-Reply-To_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-STA-Metric" dest="Message_Raw-Header_X-STA-Metric_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-STA-Spam" dest="Message_Raw-Header_X-STA-Spam_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Account-Key" dest="Message_Raw-Header_X-Account-Key_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-BTI-AntiSpam" dest="Message_Raw-Header_X-BTI-AntiSpam_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Accept-Language" dest="Message_Raw-Header_Accept-Language_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Thread-Topic" dest="Message_Raw-Header_Thread-Topic_str" maxChars="256"/>
+  <copyField source="Message_To-Display-Name" dest="Message_To-Display-Name_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Barracuda-Connect" dest="Message_Raw-Header_X-Barracuda-Connect_str" maxChars="256"/>
+  <copyField source="Message_To-Email" dest="Message_To-Email_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-Organization-AVStamp-Mailbox" dest="Message_Raw-Header_X-MS-Exchange-Organization-AVStamp-Mailbox_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_From" dest="Message_Raw-Header_From_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_To" dest="Message_Raw-Header_To_str" maxChars="256"/>
+  <copyField source="meta_mapi-message-class" dest="meta_mapi-message-class_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-Organization-AuthAs" dest="Message_Raw-Header_X-MS-Exchange-Organization-AuthAs_str" maxChars="256"/>
+  <copyField source="meta_mapi-sent-by-server-type" dest="meta_mapi-sent-by-server-type_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Barracuda-Spam-Status" dest="Message_Raw-Header_X-Barracuda-Spam-Status_str" maxChars="256"/>
+  <copyField source="meta_mapi-from-representing-name" dest="meta_mapi-from-representing-name_str" maxChars="256"/>
+  <copyField source="Message-Recipient-Address" dest="Message-Recipient-Address_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Barracuda-Apparent-Source-IP" dest="Message_Raw-Header_X-Barracuda-Apparent-Source-IP_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Barracuda-URL" dest="Message_Raw-Header_X-Barracuda-URL_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Subject" dest="Message_Raw-Header_Subject_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Mailer" dest="Message_Raw-Header_X-Mailer_str" maxChars="256"/>
+  <copyField source="meta_mapi-from-representing-email" dest="meta_mapi-from-representing-email_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-ASG-Orig-Subj" dest="Message_Raw-Header_X-ASG-Orig-Subj_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Date" dest="Message_Raw-Header_Date_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-ASG-Debug-ID" dest="Message_Raw-Header_X-ASG-Debug-ID_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Barracuda-Envelope-From" dest="Message_Raw-Header_X-Barracuda-Envelope-From_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-Organization-AuthSource" dest="Message_Raw-Header_X-MS-Exchange-Organization-AuthSource_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Barracuda-Encrypted" dest="Message_Raw-Header_X-Barracuda-Encrypted_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Barracuda-Spam-Report" dest="Message_Raw-Header_X-Barracuda-Spam-Report_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Barracuda-Bayes" dest="Message_Raw-Header_X-Barracuda-Bayes_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-originating-ip" dest="Message_Raw-Header_x-originating-ip_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MGA-submission" dest="Message_Raw-Header_X-MGA-submission_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-IronPort-Anti-Spam-Result" dest="Message_Raw-Header_X-IronPort-Anti-Spam-Result_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_IronPort-PHdr" dest="Message_Raw-Header_IronPort-PHdr_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-IPAS-Result" dest="Message_Raw-Header_X-IPAS-Result_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-ms-exchange-transport-fromentityheader" dest="Message_Raw-Header_x-ms-exchange-transport-fromentityheader_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_User-Agent" dest="Message_Raw-Header_User-Agent_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Has-Attach" dest="Message_Raw-Header_X-MS-Has-Attach_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-TNEF-Correlator" dest="Message_Raw-Header_X-MS-TNEF-Correlator_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MimeOLE" dest="Message_Raw-Header_X-MimeOLE_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Content-class" dest="Message_Raw-Header_Content-class_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_thread-index" dest="Message_Raw-Header_thread-index_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Message-Id" dest="Message_Raw-Header_Message-Id_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Mime-Version" dest="Message_Raw-Header_Mime-Version_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Received-SPF" dest="Message_Raw-Header_Received-SPF_str" maxChars="256"/>
+  <copyField source="Lucinda_from" dest="Lucinda_from_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Universally-Unique-Identifier" dest="Message_Raw-Header_X-Universally-Unique-Identifier_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Type" dest="Message_Raw-Header_X-Type_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Classification-ID" dest="Message_Raw-Header_X-Classification-ID_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Auth-ID" dest="Message_Raw-Header_X-Auth-ID_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_IronPort-SDR" dest="Message_Raw-Header_IronPort-SDR_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_Comments" dest="pdf_docinfo_custom_Comments_str" maxChars="256"/>
+  <copyField source="Comments" dest="Comments_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_CreationDate--Text" dest="pdf_docinfo_custom_CreationDate--Text_str" maxChars="256"/>
+  <copyField source="CreationDate--Text" dest="CreationDate--Text_str" maxChars="256"/>
+  <copyField source="Message_To-Name" dest="Message_To-Name_str" maxChars="256"/>
+  <copyField source="AcquType" dest="AcquType_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_TestProcedureName" dest="pdf_docinfo_custom_TestProcedureName_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_AcquID" dest="pdf_docinfo_custom_AcquID_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_CreatedWith" dest="pdf_docinfo_custom_CreatedWith_str" maxChars="256"/>
+  <copyField source="TestProcedureName" dest="TestProcedureName_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_AcquType" dest="pdf_docinfo_custom_AcquType_str" maxChars="256"/>
+  <copyField source="TestID" dest="TestID_str" maxChars="256"/>
+  <copyField source="AcquID" dest="AcquID_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_AcquStart" dest="pdf_docinfo_custom_AcquStart_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_TestProcedureID" dest="pdf_docinfo_custom_TestProcedureID_str" maxChars="256"/>
+  <copyField source="CreatedWith" dest="CreatedWith_str" maxChars="256"/>
+  <copyField source="TestProcedureID" dest="TestProcedureID_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_TestID" dest="pdf_docinfo_custom_TestID_str" maxChars="256"/>
+  <copyField source="AcquStart" dest="AcquStart_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-Organization-Network-Message-Id" dest="Message_Raw-Header_X-MS-Exchange-Organization-Network-Message-Id_str" maxChars="256"/>
+  <copyField source="LastSavedBy" dest="LastSavedBy_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_LastSavedBy" dest="pdf_docinfo_custom_LastSavedBy_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-ms-exchange-antispam-messagedata-0" dest="Message_Raw-Header_x-ms-exchange-antispam-messagedata-0_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg" dest="Message_Raw-Header_X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-CrossTenant-id" dest="Message_Raw-Header_X-MS-Exchange-CrossTenant-id_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-ms-publictraffictype" dest="Message_Raw-Header_x-ms-publictraffictype_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-CrossTenant-AuthAs" dest="Message_Raw-Header_X-MS-Exchange-CrossTenant-AuthAs_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-Transport-CrossTenantHeadersStamped" dest="Message_Raw-Header_X-MS-Exchange-Transport-CrossTenantHeadersStamped_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-incomingtopheadermarker" dest="Message_Raw-Header_x-incomingtopheadermarker_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_ARC-Authentication-Results" dest="Message_Raw-Header_ARC-Authentication-Results_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-CrossTenant-rms-persistedconsumerorg" dest="Message_Raw-Header_X-MS-Exchange-CrossTenant-rms-persistedconsumerorg_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-CrossTenant-Network-Message-Id" dest="Message_Raw-Header_X-MS-Exchange-CrossTenant-Network-Message-Id_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-ms-office365-filtering-correlation-id" dest="Message_Raw-Header_x-ms-office365-filtering-correlation-id_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-microsoft-antispam-message-info" dest="Message_Raw-Header_x-microsoft-antispam-message-info_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-OriginatorOrg" dest="Message_Raw-Header_X-OriginatorOrg_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-ms-traffictypediagnostic" dest="Message_Raw-Header_x-ms-traffictypediagnostic_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-CrossTenant-fromentityheader" dest="Message_Raw-Header_X-MS-Exchange-CrossTenant-fromentityheader_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-tmn" dest="Message_Raw-Header_x-tmn_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-CrossTenant-AuthSource" dest="Message_Raw-Header_X-MS-Exchange-CrossTenant-AuthSource_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-microsoft-antispam" dest="Message_Raw-Header_x-microsoft-antispam_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-MS-Exchange-CrossTenant-originalarrivaltime" dest="Message_Raw-Header_X-MS-Exchange-CrossTenant-originalarrivaltime_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_ARC-Seal" dest="Message_Raw-Header_ARC-Seal_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_ARC-Message-Signature" dest="Message_Raw-Header_ARC-Message-Signature_str" maxChars="256"/>
+  <copyField source="CreatorTool" dest="CreatorTool_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_CreatorTool" dest="pdf_docinfo_custom_CreatorTool_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_IronPort-Data" dest="Message_Raw-Header_IronPort-Data_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-tm-snts-smtp" dest="Message_Raw-Header_x-tm-snts-smtp_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_Authentication-Results" dest="Message_Raw-Header_Authentication-Results_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_IronPort-HdrOrdr" dest="Message_Raw-Header_IronPort-HdrOrdr_str" maxChars="256"/>
+  <copyField source="format" dest="format_str" maxChars="256"/>
+  <copyField source="X-UA-Compatible" dest="X-UA-Compatible_str" maxChars="256"/>
+  <copyField source="viewport" dest="viewport_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Color_Space" dest="Exif_SubIFD_Color_Space_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Orientation" dest="Exif_IFD0_Orientation_str" maxChars="256"/>
+  <copyField source="Caption_Digest" dest="Caption_Digest_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Exif_Image_Height" dest="Exif_SubIFD_Exif_Image_Height_str" maxChars="256"/>
+  <copyField source="Exif_SubIFD_Exif_Image_Width" dest="Exif_SubIFD_Exif_Image_Width_str" maxChars="256"/>
+  <copyField source="Revisionsdatum" dest="Revisionsdatum_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_ManagementSystem" dest="pdf_docinfo_custom_ManagementSystem_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_genehmigt" dest="pdf_docinfo_custom_genehmigt_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_erstellt" dest="pdf_docinfo_custom_erstellt_str" maxChars="256"/>
+  <copyField source="FEE" dest="FEE_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_DokNummer" dest="pdf_docinfo_custom_DokNummer_str" maxChars="256"/>
+  <copyField source="Hauptkapitel" dest="Hauptkapitel_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_NrPrefix" dest="pdf_docinfo_custom_NrPrefix_str" maxChars="256"/>
+  <copyField source="NrPrefix" dest="NrPrefix_str" maxChars="256"/>
+  <copyField source="Unterkapitel" dest="Unterkapitel_str" maxChars="256"/>
+  <copyField source="Bezeichnung" dest="Bezeichnung_str" maxChars="256"/>
+  <copyField source="genehmigt" dest="genehmigt_str" maxChars="256"/>
+  <copyField source="erstellt" dest="erstellt_str" maxChars="256"/>
+  <copyField source="ManagementSystem" dest="ManagementSystem_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_Revisionsdatum" dest="pdf_docinfo_custom_Revisionsdatum_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_FEE" dest="pdf_docinfo_custom_FEE_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_Unterkapitel" dest="pdf_docinfo_custom_Unterkapitel_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_Hauptkapitel" dest="pdf_docinfo_custom_Hauptkapitel_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_Bezeichnung" dest="pdf_docinfo_custom_Bezeichnung_str" maxChars="256"/>
+  <copyField source="DokNummer" dest="DokNummer_str" maxChars="256"/>
+  <copyField source="Sprache" dest="Sprache_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_Sprache" dest="pdf_docinfo_custom_Sprache_str" maxChars="256"/>
+  <copyField source="comment" dest="comment_str" maxChars="256"/>
+  <copyField source="w_comments" dest="w_comments_str" maxChars="256"/>
+  <copyField source="xmpDM_albumArtist" dest="xmpDM_albumArtist_str" maxChars="256"/>
+  <copyField source="xmpDM_audioChannelType" dest="xmpDM_audioChannelType_str" maxChars="256"/>
+  <copyField source="Fields" dest="Fields_str" maxChars="256"/>
+  <copyField source="SigFlags" dest="SigFlags_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_DA" dest="pdf_docinfo_custom_DA_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_Fields" dest="pdf_docinfo_custom_Fields_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_SigFlags" dest="pdf_docinfo_custom_SigFlags_str" maxChars="256"/>
+  <copyField source="DA" dest="DA_str" maxChars="256"/>
+  <copyField source="xmpDM_audioCompressor" dest="xmpDM_audioCompressor_str" maxChars="256"/>
+  <copyField source="xmpDM_artist" dest="xmpDM_artist_str" maxChars="256"/>
+  <copyField source="xmpDM_album" dest="xmpDM_album_str" maxChars="256"/>
+  <copyField source="version" dest="version_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_FileRefBarCode" dest="custom_FSC_COOELAK_1.1001_FileRefBarCode_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_SalutationFrench" dest="custom_FSC_EVDCFG_15.1400_SalutationFrench_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_RefBarCode" dest="custom_FSC_COOELAK_1.1001_RefBarCode_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_Subject" dest="custom_FSC_EVDCFG_15.1400_Subject_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileResponsible" dest="custom_FSC_EVDCFG_15.1400_FileResponsible_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_Subject" dest="custom_FSC_COOELAK_1.1001_Subject_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_SalutationFrenchUser" dest="custom_FSC_EVDCFG_15.1400_SalutationFrenchUser_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_FileRefOU" dest="custom_FSC_COOELAK_1.1001_FileRefOU_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileRespshortsign" dest="custom_FSC_EVDCFG_15.1400_FileRespshortsign_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_FileReference" dest="custom_FSC_COOELAK_1.1001_FileReference_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_ObjBarCode" dest="custom_FSC_COOELAK_1.1001_ObjBarCode_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileRespHome" dest="custom_FSC_EVDCFG_15.1400_FileRespHome_str" maxChars="256"/>
+  <copyField source="custom_dvpers_nlich" dest="custom_dvpers_nlich_str" maxChars="256"/>
+  <copyField source="custom_dvBereich" dest="custom_dvBereich_str" maxChars="256"/>
+  <copyField source="custom_DMS_DokTyp" dest="custom_DMS_DokTyp_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_CreatedAt" dest="custom_FSC_COOELAK_1.1001_CreatedAt_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_DocumentID" dest="custom_FSC_EVDCFG_15.1400_DocumentID_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_Dossierref" dest="custom_FSC_EVDCFG_15.1400_Dossierref_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_SalutationGermanUser" dest="custom_FSC_EVDCFG_15.1400_SalutationGermanUser_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_SalutationItalian" dest="custom_FSC_EVDCFG_15.1400_SalutationItalian_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_SalutationGerman" dest="custom_FSC_EVDCFG_15.1400_SalutationGerman_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_SubDossierBarCode" dest="custom_FSC_EVDCFG_15.1400_SubDossierBarCode_str" maxChars="256"/>
+  <copyField source="custom_dvGrussformel" dest="custom_dvGrussformel_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileRespEmail" dest="custom_FSC_EVDCFG_15.1400_FileRespEmail_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileRespOrgShortname" dest="custom_FSC_EVDCFG_15.1400_FileRespOrgShortname_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_Owner" dest="custom_FSC_COOELAK_1.1001_Owner_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOSYSTEM_1.1_Container" dest="custom_FSC_COOSYSTEM_1.1_Container_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_OwnerExtension" dest="custom_FSC_COOELAK_1.1001_OwnerExtension_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_Title" dest="custom_FSC_EVDCFG_15.1400_Title_str" maxChars="256"/>
+  <copyField source="custom_dvName" dest="custom_dvName_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileRespStreet" dest="custom_FSC_EVDCFG_15.1400_FileRespStreet_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_OU" dest="custom_FSC_COOELAK_1.1001_OU_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_SalutationEnglish" dest="custom_FSC_EVDCFG_15.1400_SalutationEnglish_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_Department" dest="custom_FSC_COOELAK_1.1001_Department_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileRespTel" dest="custom_FSC_EVDCFG_15.1400_FileRespTel_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_DossierBarCode" dest="custom_FSC_EVDCFG_15.1400_DossierBarCode_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileRespFax" dest="custom_FSC_EVDCFG_15.1400_FileRespFax_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_SalutationItalianUser" dest="custom_FSC_EVDCFG_15.1400_SalutationItalianUser_str" maxChars="256"/>
+  <copyField source="custom_FSC_EVDCFG_15.1400_FileRespOrg" dest="custom_FSC_EVDCFG_15.1400_FileRespOrg_str" maxChars="256"/>
+  <copyField source="custom_FSC_COOELAK_1.1001_OwnerFaxExtension" dest="custom_FSC_COOELAK_1.1001_OwnerFaxExtension_str" maxChars="256"/>
+  <copyField source="custom_dvAmt" dest="custom_dvAmt_str" maxChars="256"/>
+  <copyField source="custom_dvVorname" dest="custom_dvVorname_str" maxChars="256"/>
+  <copyField source="custom_dvRessort" dest="custom_dvRessort_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_concern" dest="pdf_docinfo_custom_concern_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_X_Resolution" dest="Exif_IFD0_X_Resolution_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Rows_Per_Strip" dest="Exif_IFD0_Rows_Per_Strip_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Strip_Byte_Counts" dest="Exif_IFD0_Strip_Byte_Counts_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Image_Width" dest="Exif_IFD0_Image_Width_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Resolution_Unit" dest="Exif_IFD0_Resolution_Unit_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Image_Height" dest="Exif_IFD0_Image_Height_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Y_Resolution" dest="Exif_IFD0_Y_Resolution_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Samples_Per_Pixel" dest="Exif_IFD0_Samples_Per_Pixel_str" maxChars="256"/>
+  <copyField source="tiff_ResolutionUnit" dest="tiff_ResolutionUnit_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_New_Subfile_Type" dest="Exif_IFD0_New_Subfile_Type_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Photometric_Interpretation" dest="Exif_IFD0_Photometric_Interpretation_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Bits_Per_Sample" dest="Exif_IFD0_Bits_Per_Sample_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Compression" dest="Exif_IFD0_Compression_str" maxChars="256"/>
+  <copyField source="Exif_IFD0_Fill_Order" dest="Exif_IFD0_Fill_Order_str" maxChars="256"/>
+  <copyField source="pdf_docinfo_custom_viewport" dest="pdf_docinfo_custom_viewport_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_x-ms-exchange-antispam-messagedata" dest="Message_Raw-Header_x-ms-exchange-antispam-messagedata_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Scanned-By" dest="Message_Raw-Header_X-Scanned-By_str" maxChars="256"/>
+  <copyField source="machine_endian" dest="machine_endian_str" maxChars="256"/>
+  <copyField source="machine_machineType" dest="machine_machineType_str" maxChars="256"/>
+  <copyField source="machine_platform" dest="machine_platform_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Talos-MUID" dest="Message_Raw-Header_X-Talos-MUID_str" maxChars="256"/>
+  <copyField source="Message_Raw-Header_X-Talos-CUID" dest="Message_Raw-Header_X-Talos-CUID_str" maxChars="256"/>
+  <copyField source="filepath" dest="filepath_str" maxChars="256"/>
+</schema>
