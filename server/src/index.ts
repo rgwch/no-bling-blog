@@ -14,9 +14,16 @@ const app = new Hono()
 // app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix + "*", cors())
 app.get(prefix + 'summary', async (c) => {
-
-    const posts = await db.find({})
-    posts.push("Ha")
+    const query: any = {}
+    const cat = c.req.query('category')
+    if (cat) {
+        query.category = cat
+    }
+    const matcher = c.req.query('matching')
+    if (matcher) {
+        query.fulltext = matcher
+    }
+    const posts = await db.find(query)
     return c.json({ status: "ok", result: posts })
 })
 

@@ -1,41 +1,64 @@
 <script lang="ts">
-  import type { post } from "./lib/types";
-  import Post from "./lib/components/Post.svelte";
-  const prefix = "/api/1.0/";
+  import type { post } from './lib/types';
+  import env from './lib/environment';
+  import Post from './lib/components/Post.svelte';
   let posts: Array<post> = [];
-  let categories: Array<string>=[]  
-  fetch(`http://localhost:3000${prefix}summary`).then(async (result) => {
+  let categories: Array<string> = [];
+  let currentCategory = '';
+  let filter = '';
+  fetch(env.url + 'summary').then(async (result) => {
     if (result.ok) {
       const ans = await result.json();
-      if (ans.status == "ok") posts = ans.result;
-      const cats=posts.map(post=>post.category)
-      categories=[...new Set(cats)]
+      if (ans.status == 'ok') {
+        posts = ans.result;
+        const cats = posts.map((post) => post.category);
+        categories = [...new Set(cats)];
+      }
     }
   });
   async function create(p: post) {
-    fetch(`http://localhost:3000${prefix}add`, {
-      method: "POST",
+    fetch(env.url + 'add', {
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify(p),
     });
   }
-  async function changeCat(event:any){
-    
+  async function changeCat() {
+    const result = await fetch(env.url + 'summary?category=' + currentCategory);
+    if (result.ok) {
+      const retval = await result.json();
+      if (retval.status == 'ok') {
+        posts = retval.result;
+      }
+    }
+  }
+  async function doFilter() {
+    const result = await fetch(env.url + 'summary?matching=' + filter);
+    if (result.ok) {
+      const retval = await result.json();
+      if (retval.status == 'ok') {
+        posts = retval.result;
+      }
+    }
   }
 </script>
 
 <main>
   <div class="w-full m-5 p-5">
-    <select on:change={changeCat}>
+    <select bind:value={currentCategory} on:change={changeCat}>
       {#each categories as cat}
         <option value={cat}>{cat}</option>
       {/each}
     </select>
-    <input type="text" placeholder="Filtern">
+    <input
+      type="text"
+      placeholder="Filtern"
+      bind:value={filter}
+      on:focusout={doFilter} />
   </div>
-<div class="response">
+  <div class="response">
     {#each posts as post}
       <Post item={post} />
     {/each}
@@ -52,7 +75,6 @@
     flex-wrap: wrap;
   }
 
- 
   .logo {
     height: 6em;
     padding: 1.5em;
