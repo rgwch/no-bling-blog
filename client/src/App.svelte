@@ -2,6 +2,7 @@
   import type { post } from './lib/types';
   import env from './lib/environment';
   import Post from './lib/components/Post.svelte';
+  import Filter from './lib/components/Filter.svelte';
   let posts: Array<post> = [];
   let categories: Array<string> = [];
   let currentCategory = '';
@@ -46,18 +47,15 @@
 </script>
 
 <main>
-  <div class="w-full m-5 p-5">
-    <select bind:value={currentCategory} on:change={changeCat}>
-      {#each categories as cat}
-        <option value={cat}>{cat}</option>
-      {/each}
-    </select>
-    <input
-      type="text"
-      placeholder="Filtern"
-      bind:value={filter}
-      on:focusout={doFilter} />
+  <div class="flex flex-row m-5 p-5 border-blue-400 rounded-md border-2">
+    <Filter
+      caption="Kategorie"
+      choices={categories}
+      bind:val={currentCategory}
+      on:changed={changeCat} />
+    <Filter caption="Volltext" bind:val={filter} on:changed={doFilter} />
   </div>
+
   <div class="response">
     {#each posts as post}
       <Post item={post} />
@@ -73,21 +71,5 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-  }
-
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
   }
 </style>
