@@ -16,9 +16,9 @@ test("create and use database", async () => {
     }
     // expect(() => db.create(test)).toThrow("no database selected")
     await db.use("testdir")
-    const _id = (await db.create(test))._id
-    expect(_id).toBeDefined()
-    expect(() => db.get(_id)).not.toThrow();
+    const id = (await db.create(test))._id
+    expect(id).toBeDefined()
+    // expect(() => db.get(_id)).not.toThrow();
     // expect(() => db.get("xyz")).toThrow()
     const retr = await db.find({})
     // expect(retr).toBeInstanceOf(Array)

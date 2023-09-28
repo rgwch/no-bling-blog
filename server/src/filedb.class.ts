@@ -84,6 +84,7 @@ export class FileDB implements IDatabase {
                                 console.log(err)
                             }
                         }
+                        resolve(ret)
                     }
                 }
             })
