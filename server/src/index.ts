@@ -11,9 +11,10 @@ db.use("nbb")
 const app = new Hono()
 
 
-app.use("/static/", serveStatic({ path: "./" }))
+// app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix + "*", cors())
 app.get(prefix + 'summary', async (c) => {
+
     const posts = await db.find({})
     posts.push("Ha")
     return c.json({ status: "ok", result: posts })

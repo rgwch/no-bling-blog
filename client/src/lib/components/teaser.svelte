@@ -1,9 +1,9 @@
 <script lang="ts">
-  import "$lib/types"
-  export let post:post
+  import type {post} from "../types"
+  export let item:post
 </script>
-<h1>{post.heading}</h1>
-<p>{post.teaser}</p>
+<h1>{item.heading}</h1>
+<p>{item.teaser}</p>
 
 <style>
    .response {
