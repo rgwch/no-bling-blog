@@ -10,14 +10,15 @@ console.log(process.cwd())
 
 const docs = new Documents(process.env.documents, process.env.index)
 parseFile("../data/sample.html", "ein erster Test").then(async t => {
+    const tokens:Array<string>=t.tokens
     for (let i = 0; i < 100; i++) {
         const p: post = {
             _id: uuid(),
-            heading: getWords(t.tokens, 5),
-            teaser: getWords(t.tokens, 20),
-            fulltext: getWords(t.tokens, 100),
+            heading: getWords(tokens, 5),
+            teaser: getWords(tokens, 20),
+            fulltext: getWords(tokens, 100),
             keywords: "",
-            category: getWords(t.tokens, 1),
+            category: getWords(tokens.slice(800,810), 1),
             author: "gerry",
             created: new Date(),
             modified: new Date(),

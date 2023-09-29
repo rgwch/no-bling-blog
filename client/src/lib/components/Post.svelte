@@ -25,6 +25,6 @@
         justify-content: space-around;
         align-items: center;
         text-align: center;
-        width: 25%;
+        width: 350px;
     }
 </style>

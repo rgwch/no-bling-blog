@@ -60,7 +60,7 @@
 </script>
 
 <main>
-  <div class="flex flex-row m-5 p-5 border-blue-400 rounded-md border-2">
+  <div class="flex flex-row flex-nowrap m-5 p-5 border-blue-400 rounded-md border-2">
     <Filter
       caption="Kategorie"
       choices={categories}
@@ -70,7 +70,7 @@
     <Filter caption="Volltext" bind:val={filterFulltext} on:changed={doFilter} />
   </div>
 
-  <div class="response">
+  <div class="flex flex-row m-5 flex-wrap justify-center">
     {#each posts as post}
       <Post item={post} />
     {/each}
