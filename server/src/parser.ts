@@ -7,7 +7,7 @@ const db=getDatabase()
 
 function makeFilename(title: string): string {
     const fname = title.toLocaleLowerCase().replace(/[^\w]+/g, "_")
-    let basedir = process.env.documents || "documents"
+    let basedir = process.env.documents || "../data/documents"
     if (!fs.existsSync(basedir)) {
         fs.mkdirSync(basedir, { recursive: true })
     }
@@ -57,9 +57,3 @@ export async function parseString(input: string, title: string): Promise<any> {
     })
 }
 
-export async function store(p:post): Promise<any>{
-    const tokenized=await parseString(p.fulltext,p.heading)
-    p.fulltext=tokenized.filename
-    const result=await(db.create(p))
-    return result
-}

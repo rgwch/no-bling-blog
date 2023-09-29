@@ -5,9 +5,9 @@ import { FileDB } from "./filedb.class";
 
 let db: IDatabase
 export const getDatabase = (): IDatabase => {
-
+  const storage=process.env.storage ?? "filebased"
   if (!db) {
-    switch (process.env.storage) {
+    switch (storage) {
       case "nedb":
         console.log("NeDB")
         db = new NeDB(process.env.nedb_datadir || "../data")

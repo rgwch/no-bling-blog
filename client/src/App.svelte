@@ -6,14 +6,15 @@
   let posts: Array<post> = [];
   let categories: Array<string> = [];
   let currentCategory = '';
-  let filter = '';
+  let filterFulltext = '';
+  let filterSummary=""
   fetch(env.url + 'summary').then(async (result) => {
     if (result.ok) {
       const ans = await result.json();
       if (ans.status == 'ok') {
         posts = ans.result;
         const cats = posts.map((post) => post.category);
-        categories = [...new Set(cats)];
+        categories = ["",...new Set(cats)];
       }
     }
   });
@@ -36,7 +37,19 @@
     }
   }
   async function doFilter() {
-    const result = await fetch(env.url + 'summary?matching=' + filter);
+    let filters=""
+    if(filterFulltext.length){
+      filters="?fulltext="+filterFulltext
+    }
+    if(filterSummary.length){
+      if(filters.length){
+        filters+=`&summary=${filterSummary}`
+      }else{
+        filters+=`?summary=${filterSummary}`
+      }
+    }
+
+    const result = await fetch(env.url + 'summary'+filters);
     if (result.ok) {
       const retval = await result.json();
       if (retval.status == 'ok') {
@@ -53,7 +66,8 @@
       choices={categories}
       bind:val={currentCategory}
       on:changed={changeCat} />
-    <Filter caption="Volltext" bind:val={filter} on:changed={doFilter} />
+    <Filter caption="Zusammenfassung" bind:val={filterSummary} on:changed={doFilter}></Filter>
+    <Filter caption="Volltext" bind:val={filterFulltext} on:changed={doFilter} />
   </div>
 
   <div class="response">
