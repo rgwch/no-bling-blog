@@ -4,6 +4,8 @@ import { serve } from '@hono/node-server'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { cors } from 'hono/cors'
 import { getDatabase } from './db'
+import { post } from "./types"
+import { store } from './parser'
 
 const prefix = "/api/1.0/"
 const db = getDatabase()
@@ -28,10 +30,11 @@ app.get(prefix + 'summary', async (c) => {
 })
 
 app.post(prefix + "add", async c => {
-    const contents = await c.req.json()
-    const result = await db.create(contents)
+    const contents: post = await c.req.json()
+    const document = contents.fulltext
+    const stored = await store(contents)
     c.status(201)
-    return c.json({ status: "ok" })
+    return c.json({ status: "ok", result: stored })
 })
 console.log("Hono serving at port 3000")
 serve(app)
