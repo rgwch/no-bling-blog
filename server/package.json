@@ -1,6 +1,7 @@
 {
   "scripts": {
     "dev": "tsc && node dest/index.js",
+    "bunner": "bun src/index.ts",
     "test": "jest"
   },
   "dependencies": {

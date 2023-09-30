@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { Hono } from 'hono'
-import { serve } from '@hono/node-server'
-import { serveStatic } from '@hono/node-server/serve-static'
+// import { serve } from '@hono/node-server'
+// import { serveStatic } from '@hono/node-server/serve-static'
 import { cors } from 'hono/cors'
 import { getDatabase } from './db'
 import { post } from './types'
@@ -59,4 +59,6 @@ app.post(prefix + "add", async c => {
     return c.json({ status: "ok", result: stored })
 })
 console.log("Hono serving at port 3000")
-serve(app)
+
+// serve(app)
+export default app
