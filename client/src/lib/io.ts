@@ -19,10 +19,12 @@ export async function request(url: string, query: Array<string> = []): Promise<a
     return undefined
 }
 
-export async function login(user: string, password: string) {
+export async function login(user: string, password: string): Promise<boolean> {
     const result = await request(`login/${user}/${password}`)
     if (result) {
         currentJWT.set(result.jwt)
         currentRole.set(result.role)
+        return true
     }
+    return false
 }
