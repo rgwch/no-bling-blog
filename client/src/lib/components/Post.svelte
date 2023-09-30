@@ -1,9 +1,11 @@
 <script lang="ts">
+    import{createEventDispatcher} from 'svelte'
     import type { post } from "../types";
     export let item: post;
+    const dispatch=createEventDispatcher()
 </script>
 
-<div class="data">
+<div class="data" on:click={()=>dispatch("load",item._id)}>
     <h1 class="text-blue-300 font-semibold text-lg mx-5">{item.heading}</h1>
     <p class="mx-6">
         <span class="p-2">Kategorie:</span><span>{item.category}</span>

@@ -72,7 +72,7 @@
 
   <div class="flex flex-row m-5 flex-wrap justify-center">
     {#each posts as post}
-      <Post item={post} />
+      <Post item={post} on:load={()=>alert(post._id)}/>
     {/each}
   </div>
   <!-- button on:click={()=>create(null)}>Send</button -->
