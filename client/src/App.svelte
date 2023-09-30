@@ -6,8 +6,8 @@
 </script>
 
 <main>
-  <div class="bg-green-200 flex flex-row flex-nowrap">
-    <h1>The No Bling Blog</h1>
+  <div class="bg-blue-200 flex flex-row flex-nowrap mx-5 px-5">
+    <h1 class="text-lg">The No Bling Blog</h1>
     <div class="flex-1" />
     <Login />
   </div>

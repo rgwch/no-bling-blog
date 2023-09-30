@@ -19,6 +19,23 @@ export async function request(url: string, query: Array<string> = []): Promise<a
     return undefined
 }
 
+export async function write(url: string, body: any): Promise<any> {
+    const headers = {
+        "content-type": "application/json"
+    }
+    const options = {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body)
+    }
+    const answer = await fetch(url, options)
+    if (answer.ok) {
+        const result = await answer.json()
+        return result
+    }
+    return undefined
+}
+
 export async function login(user: string, password: string): Promise<boolean> {
     const result = await request(`login/${user}/${password}`)
     if (result) {

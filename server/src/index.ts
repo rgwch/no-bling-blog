@@ -73,7 +73,7 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
         user.exp = Math.round(new Date().getTime() / 1000 + 60)
         const token = await sign(user, process.env.jwt_secret)
         tokens.push(token)
-        return c.json({ status: "ok", jwt: token, role: user.role })
+        return c.json({ status: "ok", result: { jwt: token, role: user.role } })
     }
     return c.json({ status: "fail", message: "bad credentials" })
 })
@@ -89,6 +89,14 @@ app.post(prefix + "add", async c => {
     c.status(201)
     return c.json({ status: "ok", result: stored })
 })
+
+app.post(prefix + "updatemeta", async c => {
+    const contents: post = await c.req.json()
+    contents.modified = new Date()
+    const result = await db.update(contents._id, contents)
+    return c.json({ status: "ok", result })
+})
+
 console.log("Hono serving at port 3000")
 
 if (process.env.runner != 'bun') {

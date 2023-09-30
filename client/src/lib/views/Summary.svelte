@@ -48,7 +48,7 @@
 </script>
 
 <div
-    class="flex flex-row flex-nowrap m-5 p-5 border-blue-400 rounded-md border-2">
+    class="flex flex-row flex-nowrap mx-5 m-2 p-1 text-sm border-blue-400 rounded-md border-2">
     <Filter
         caption="Kategorie"
         choices={categories}

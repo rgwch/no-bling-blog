@@ -10,9 +10,13 @@
             errmsg = 'fehler';
         }
     }
+    async function doLogout() {
+        $currentJWT = '';
+        $currentRole = 'visitor';
+    }
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-row">
     {#if $currentRole == 'visitor' || $currentRole == undefined}
         {#if errmsg}
             <span class="text-red-600">{errmsg}</span>
@@ -27,9 +31,10 @@
             type="password"
             placeholder="passwort"
             bind:value={password} />
-        <button class="text-sm" on:click={() => login(username, password)}
-            >Login</button>
+        <button
+            class="text-sm px-3 hover:text-blue-500"
+            on:click={() => login(username, password)}>Login</button>
     {:else}
-        <p>{$currentRole}</p>
+        <span on:click={doLogout}>{$currentRole}</span>
     {/if}
 </div>
