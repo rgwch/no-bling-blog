@@ -18,6 +18,9 @@ test("create and use database", async () => {
     await db.use("testdir")
     const id = (await db.create(test))._id
     expect(id).toBeDefined()
+    const got = await db.get(id)
+    expect(got).toBeDefined()
+    expect(got.c.e).toEqual("f")
     // expect(() => db.get(_id)).not.toThrow();
     // expect(() => db.get("xyz")).toThrow()
     const retr = await db.find({})

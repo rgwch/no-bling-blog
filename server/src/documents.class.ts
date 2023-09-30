@@ -47,7 +47,7 @@ export class Documents {
     public async loadContents(entry: post): Promise<post> {
         const filename = entry.fulltext
         if (!filename) {
-            throw new Error("No filename supplied")
+            throw new Error("No filename supplied " + JSON.stringify(entry))
         }
         const contents = await fs.readFile(path.join(this.basedir, filename), "utf-8")
         entry.fulltext = contents

@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "dev": "tsc && node dest/index.js",
-    "bunner": "bun src/index.ts",
+    "dev": "runner=bun bun src/index.ts",
+    "node_dev": "tsc && node dest/index.js",
     "test": "jest"
   },
   "dependencies": {

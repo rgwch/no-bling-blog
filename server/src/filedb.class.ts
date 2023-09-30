@@ -46,11 +46,11 @@ export class FileDB implements IDatabase {
     }
     get(id: string, options?: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            fs.readFile(this.makepath(id), (err, cnt) => {
+            fs.readFile(this.makepath(id), "utf-8", (err, cnt) => {
                 if (err) {
                     reject(err)
                 } else {
-                    resolve(cnt)
+                    resolve(JSON.parse(cnt))
                 }
             })
         })
