@@ -34,7 +34,7 @@ let currentUser;
 app.use(prefix + "*", cors())
 app.use(prefix + "*", async (c, next) => {
     let jwt = c.req.query("jwt")
-    currentUser = { "visitor": { role: "visitor" } }
+    currentUser = { name: "visitor", role: "visitor" }
     if (!jwt) {
         const bearer = c.req.header("Authorization")
         if (bearer?.startsWith("Bearer ")) {
@@ -59,7 +59,7 @@ function hasAccess(post: post): boolean {
         return true
     }
     if (currentUser.role == "editor") {
-        if (post.author == Object.keys(currentUser)[0]) {
+        if (post.author == currentUser.name) {
             return true
         }
     }
@@ -129,10 +129,10 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
     const hashed = hash.digest().toString("base64")
     const usersfile = await fs.readFile(process.env.users, "utf-8")
     const users = JSON.parse(usersfile)
-    const user = users[cred.user]
+    const user = users.find(u => u.name == cred.user)
     if (user?.pass === hashed) {
         // login ok
-        user.exp = Math.round(new Date().getTime() / 1000 + 60)
+        user.exp = Math.round(new Date().getTime() / 1000 + 120)
         if (!process.env.jwt_secret) {
             console.log("No JWT Secret found. ")
         }
@@ -165,6 +165,7 @@ app.post(prefix + "add", async c => {
         delete contents.fulltext
         const stored = await docs.addToIndex(contents._id, document, contents.heading)
         contents.filename = stored.filename
+        contents.author = Object.keys(currentUser)[0]
         contents.created = new Date()
         contents.modified = new Date()
         await db.create(contents)

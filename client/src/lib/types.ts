@@ -1,13 +1,13 @@
 export type post = {
-    _id: string
+    _id?: string
     heading: string
     teaser: string
     fulltext: string
-    keywords: string
+    keywords?: string
     category: string
     author: string
-    created: Date
-    modified: Date
+    created?: Date
+    modified?: Date
     published: boolean
-    filename:string
+    filename?:string
 }

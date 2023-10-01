@@ -3,7 +3,7 @@
     import type { post } from "../types";
     import Post from "../components/Post.svelte";
     import Filter from "../components/Filter.svelte";
-    import {DateTime} from 'luxon'
+    import Edit from "./Edit.svelte"
     import { currentView, currentPost } from "../store";
     import { request } from "../io";
     import Single from "../views/Single.svelte";
@@ -65,7 +65,6 @@
         posts = await request("summary", filters);
 
         const cats = posts.map((post) => {
-            // if(post.created.substring(0, 4)
             return post.category;
         });
         categories = ["", ...new Set(cats)];
@@ -73,6 +72,18 @@
     function load(p: post) {
         $currentPost = p;
         $currentView = Single;
+    }
+    function createNew(){
+        const np:post={
+            heading: "",
+            teaser: "",
+            fulltext: "",
+            category: "",
+            author: "",
+            published: false
+        }
+        $currentPost=np
+        $currentView=Edit
     }
 </script>
 
@@ -102,7 +113,7 @@
         caption="Volltext"
         bind:val={filterFulltext}
         on:changed={doFilter} />
-    <a href={env.url + "login/admin/secret"}>{role}</a>
+    <button on:click={createNew}>Neu...</button>
 </div>
 
 <div class="flex flex-row m-5 flex-wrap justify-center">
