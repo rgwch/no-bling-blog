@@ -75,7 +75,7 @@ app.get(prefix + "read/:id", async (c) => {
     const params = c.req.param()
     if (params["id"]) {
         const entry = await db.get(params["id"])
-        const processed = await docs.loadContents(entry)
+        const processed = await docs.loadContents(entry, c.req.query("raw") == "true")
         return c.json({ status: "ok", role: currentUser?.role, result: processed })
     } else {
         throw new Error("no id supplied")
@@ -116,6 +116,13 @@ app.post(prefix + "add", async c => {
     await db.create(contents)
     c.status(201)
     return c.json({ status: "ok", role: currentUser.role, result: stored })
+})
+
+app.post(prefix + "update", async c => {
+    const contents: post = await c.req.json()
+    const document = contents.fulltext
+    delete contents.fulltext
+    const stored = await docs.addToIndex(contents._id, document, contents.heading, true)
 })
 
 app.post(prefix + "updatemeta", async c => {

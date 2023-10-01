@@ -1,22 +1,38 @@
 <script lang="ts">
-    import env from "../environment";
-    import { currentView, currentPost, currentRole } from "../store";
-    import type { post } from "../types";
-    import { request, write } from "../io";
-    import Summary from "./Summary.svelte";
+    import env from '../environment';
+    import { currentView, currentPost, currentRole } from '../store';
+    import type { post } from '../types';
+    import { request, write } from '../io';
+    import Summary from './Summary.svelte';
     let post: post;
-    request("read/" + $currentPost._id).then(async (result) => {
-        if (result) {
-            post = result;
-        }
-    });
+    let editmode = false;
+    $: editortext = editmode ? 'Speichern' : 'Bearbeiten';
+
+    reload();
+
+    async function reload() {
+        request('read/' + $currentPost._id, [`raw=${editmode}`]).then(
+            async (result) => {
+                if (result) {
+                    post = result;
+                }
+            }
+        );
+    }
     function back() {
         $currentView = Summary;
     }
     function doDelete() {}
-    function doEdit() {}
+    async function doEdit() {
+        editmode = !editmode;
+        if (editmode) {
+            await reload();
+        } else {
+            await write();
+        }
+    }
     async function doSave() {
-        await write("updatemeta", post);
+        await write('updatemeta', post);
     }
 </script>
 
@@ -26,15 +42,15 @@
         <div class="text-blue-800 font-bold text-lg mb-4 text-center">
             {post.heading}
         </div>
-        <div>{@html post.fulltext}</div>
+        <div contenteditable={editmode}>{@html post.fulltext}</div>
     </div>
-    {#if $currentRole == "admin"}
+    {#if $currentRole == 'admin'}
         <button
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
             on:click={doDelete}>Löschen</button>
         <button
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
-            on:click={doEdit}>Bearbeiten</button>
+            on:click={doEdit}>{editortext}</button>
         <span
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md">
             <span>Publiziert: </span>
