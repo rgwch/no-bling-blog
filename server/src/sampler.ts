@@ -20,7 +20,7 @@ docs.parseFile("../data/sample.html", "ein erster Test").then(async t => {
             keywords: "",
             category: getWords(tokens.slice(800,810), 1),
             author: "gerry",
-            created: new Date(),
+            created: getRandomDate(new Date('2018-02-12T01:57:45.271Z'), new Date('2023-09-30T01:57:45.271Z')),
             modified: new Date(),
             published: true
         }
@@ -40,3 +40,8 @@ function getWords(tokens: Array<string>, num: number): string {
     return ret
 }
 
+function getRandomDate(from: Date, to: Date) {
+    const fromTime = from.getTime();
+    const toTime = to.getTime();
+    return new Date(fromTime + Math.random() * (toTime - fromTime));
+}

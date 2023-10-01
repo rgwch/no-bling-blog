@@ -10,6 +10,9 @@
     let posts: Array<post> = [];
     let filterSummary = '';
     let currentCategory = '';
+    let currentYear=''
+    let yearFrom=""
+    let yearUntil=""
     let filterFulltext = '';
     let role = '';
     doFilter();
@@ -38,7 +41,10 @@
 
         posts = await request('summary', filters);
 
-        const cats = posts.map((post) => post.category);
+        const cats = posts.map((post) => {
+            // if(post.created.substring(0, 4)
+            return post.category
+        });
         categories = ['', ...new Set(cats)];
     }
     function load(p: post) {

@@ -109,6 +109,9 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
     if (user?.pass === hashed) {
         // login ok
         user.exp = Math.round(new Date().getTime() / 1000 + 60)
+        if(!process.env.jwt_secret) {
+            console.log("No JWT Secret found. ")
+        }
         const token = await sign(user, process.env.jwt_secret)
         tokens.push(token)
         return c.json({ status: "ok", result: { jwt: token, role: user.role } })

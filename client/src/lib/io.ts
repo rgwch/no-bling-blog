@@ -14,7 +14,9 @@ function setRole(role: string) {
     }
 }
 export async function request(url: string, query: Array<string> = []): Promise<any> {
-    query.push("jwt=" + jwt)
+    if (jwt?.length > 5) {
+        query.push("jwt=" + jwt)
+    }
     const answer = await fetch(env.url + url + "?" + query.join("&"))
     if (answer.ok) {
         if (answer.status == 401) {
@@ -29,14 +31,20 @@ export async function request(url: string, query: Array<string> = []): Promise<a
         }
     }
     alert(answer.status + ", " + answer.statusText)
+    if(answer.status==401){
+        setRole("visitor")
+    }
     return undefined
 }
 
 export async function write(url: string, body: any): Promise<any> {
-    const headers = {
+    const headers: any = {
         "content-type": "application/json",
-        "Authorization": "Bearer " + jwt
     }
+    if (jwt?.length > 5) {
+        headers["Authorization"] = "Bearer " + jwt
+    }
+
     const options = {
         method: "POST",
         headers,
@@ -49,6 +57,9 @@ export async function write(url: string, body: any): Promise<any> {
         return result
     } else {
         alert(answer.status + ", " + answer.statusText)
+        if(answer.status==401){
+            setRole("visitor")
+        }    
         return undefined
     }
 

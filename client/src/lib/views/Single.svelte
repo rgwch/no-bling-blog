@@ -95,7 +95,7 @@
                 <input
                     type="checkbox"
                     bind:checked={post.published}
-                    on:click={doSaveMeta} />
+                    on:change={doSaveMeta} />
             </span>
         {/if}
     {/if}
