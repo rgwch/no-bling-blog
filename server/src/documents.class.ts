@@ -99,7 +99,10 @@ export class Documents {
      */
     private async makeFilename(title: string, overwrite = false): Promise<string> {
         const fname = title.toLocaleLowerCase().replace(/[^\w]+/g, "_")
-        let fullpath = path.join(this.basedir, fname).slice(0, -1)
+        let fullpath = path.join(this.basedir, fname)
+        if (fullpath.endsWith("_")) {
+            fullpath = fullpath.slice(0, -1)
+        } 
         if (!overwrite) {
             do {
                 try {

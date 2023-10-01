@@ -165,7 +165,7 @@ app.post(prefix + "add", async c => {
         delete contents.fulltext
         const stored = await docs.addToIndex(contents._id, document, contents.heading)
         contents.filename = stored.filename
-        contents.author = Object.keys(currentUser)[0]
+        contents.author = currentUser.name
         contents.created = new Date()
         contents.modified = new Date()
         await db.create(contents)
