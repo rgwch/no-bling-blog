@@ -3,6 +3,7 @@
     import type { post } from "../types";
     import Post from "../components/Post.svelte";
     import Filter from "../components/Filter.svelte";
+    import {DateTime} from 'luxon'
     import { currentView, currentPost } from "../store";
     import { request } from "../io";
     import Single from "../views/Single.svelte";
@@ -16,6 +17,17 @@
     let yearUntil = "";
     let filterFulltext = "";
     let role = "";
+    request("stats").then(result=>{
+        const dt=new Date(result.startdate)
+        const now=new Date().getTime()
+        while(dt.getTime() <= now){
+            const year=dt.getFullYear()
+            years.push(year.toString())        
+            dt.setFullYear(year+1)
+        }
+        years.push("")
+        years=years
+    })
     doFilter();
     async function changeCat() {
         const result = await fetch(

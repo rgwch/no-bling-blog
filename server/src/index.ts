@@ -79,17 +79,18 @@ app.get(prefix + 'summary', async (c) => {
     if (sum) {
         query.teaser = new RegExp(sum)
     }
-    const from=c.req.query("from")
-    if(from){
-        query.created={$gte:new Date(from+"-01-01")}
+    const from = c.req.query("from")
+    if (from) {
+        query.created = { $gte: new Date(from + "-01-01") }
     }
-    const until=c.req.query("until")
-    if(until){
-        query.created={$lte:new Date(until+"12-31")}
+    const until = c.req.query("until")
+    if (until) {
+        query.created = { $lte: new Date(until + "-12-31") }
     }
-    const between=c.req.query("between")
-    if(between){
-        query.$and=[{created: {$gte:from}},{created: {$lte:until}}]
+    const between = c.req.query("between")
+    if (between) {
+        const cr = between.split(/[,\-]/)
+        query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
     }
     let posts: Array<post> = await db.find(query)
     const matcher = c.req.query('fulltext')
@@ -140,6 +141,16 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
     }
     c.status(401)
     return c.json({ status: "fail", message: "bad credentials" })
+})
+
+app.get(prefix + "stats", async (c) => {
+    return c.json({
+        status: "ok",
+        result: {
+            startdate: dateFrom,
+            categories
+        }
+    })
 })
 /**
  * Add a new Post
