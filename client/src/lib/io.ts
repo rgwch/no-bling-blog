@@ -5,23 +5,37 @@ currentJWT.subscribe(n => {
     jwt = n
 })
 
+function setRole(role: string) {
+    if (!role || role == "visitor") {
+        currentRole.set("visitor")
+        currentJWT.set("")
+    } else {
+        currentRole.set(role)
+    }
+}
 export async function request(url: string, query: Array<string> = []): Promise<any> {
     query.push("jwt=" + jwt)
     const answer = await fetch(env.url + url + "?" + query.join("&"))
     if (answer.ok) {
+        if (answer.status == 401) {
+            alert("unauthorized")
+        }
         const result = await answer.json()
         if (result.status == "ok") {
+            setRole(result.role)
             return result.result
         } else {
             alert(result.status + ": " + result.message)
         }
     }
+    alert(answer.status + ", " + answer.statusText)
     return undefined
 }
 
 export async function write(url: string, body: any): Promise<any> {
     const headers = {
-        "content-type": "application/json"
+        "content-type": "application/json",
+        "Authorization": "Bearer " + jwt
     }
     const options = {
         method: "POST",
@@ -31,9 +45,13 @@ export async function write(url: string, body: any): Promise<any> {
     const answer = await fetch(env.url + url, options)
     if (answer.ok) {
         const result = await answer.json()
+        setRole(result.role)
         return result
+    } else {
+        alert(answer.status + ", " + answer.statusText)
+        return undefined
     }
-    return undefined
+
 }
 
 export async function login(user: string, password: string): Promise<boolean> {

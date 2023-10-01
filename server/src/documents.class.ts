@@ -44,6 +44,19 @@ export class Documents {
         }
         return parsed
     }
+    /**
+     * Replace existing document: Remove all index entries an d the file and write it new
+     * @param id 
+     * @param contents 
+     * @param title 
+     * @returns 
+     */
+    public async replaceDocument(id: string, contents: string, title: string): Promise<analyzed> {
+        await this.removeFromIndex(id)
+        const filename = await this.makeFilename(title, true)
+        await fs.rm(filename)
+        return await this.addToIndex(id, contents, title)
+    }
 
     /**
      * Remove a post rference from the index
@@ -53,10 +66,13 @@ export class Documents {
         const kws = await fs.readdir(this.indexdir)
         for (const file of kws) {
             try {
-
+                const cont = await fs.readFile(path.join(this.indexdir, file), "utf-8")
+                const modified = cont.replaceAll(id + "\n", "")
+                await fs.writeFile(path.join(this.indexdir, file), modified)
+            } catch (err) {
+                // not found
             }
         }
-
     }
     /**
      * Lod the contents of a document in the post structure

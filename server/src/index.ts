@@ -22,8 +22,14 @@ let currentUser;
 // app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix + "*", cors())
 app.use(prefix + "*", async (c, next) => {
-    const jwt = c.req.query("jwt")
+    let jwt = c.req.query("jwt")
     currentUser = { "visitor": { role: "visitor" } }
+    if (!jwt) {
+        const bearer = c.req.header("Authorization")
+        if (bearer?.startsWith("Bearer ")) {
+            jwt = bearer.substring(7)
+        }
+    }
     if (jwt) {
         try {
             const user = await verify(jwt, process.env.jwt_secret)
@@ -37,6 +43,17 @@ app.use(prefix + "*", async (c, next) => {
     }
     await next()
 })
+function hasAccess(post: post): boolean {
+    if (currentUser.role == "admin") {
+        return true
+    }
+    if (currentUser.role == "editor") {
+        if (post.author == Object.keys(currentUser)[0]) {
+            return true
+        }
+    }
+    return false;
+}
 /**
  * Find all posts matching given criteria 
  */
@@ -57,10 +74,7 @@ app.get(prefix + 'summary', async (c) => {
         posts = await docs.filter(posts, matcher)
     }
     posts = posts.filter(post => {
-        if (currentUser.role == "admin") {
-            return true;
-        }
-        if (post.author === Object.keys(currentUser)[0]) {
+        if (hasAccess(post)) {
             return true
         }
         return post.published;
@@ -99,38 +113,66 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
         tokens.push(token)
         return c.json({ status: "ok", result: { jwt: token, role: user.role } })
     }
+    c.status(401)
     return c.json({ status: "fail", message: "bad credentials" })
 })
 /**
  * Add a new Post
  */
 app.post(prefix + "add", async c => {
-    const contents: post = await c.req.json()
-    const document = contents.fulltext
-    if (!contents._id) {
-        contents._id = uuid()
+    if (currentUser.role == "admin" || currentUser.role == "editor") {
+        const contents: post = await c.req.json()
+        const document = contents.fulltext
+        if (!contents._id) {
+            contents._id = uuid()
+        }
+        delete contents.fulltext
+        const stored = await docs.addToIndex(contents._id, document, contents.heading)
+        contents.filename = stored.filename
+        contents.created = new Date()
+        contents.modified = new Date()
+        await db.create(contents)
+        c.status(201)
+        return c.json({ status: "ok", role: currentUser.role, result: stored })
+    } else {
+        c.status(401)
+        return c.json({ status: "fail", message: "not authorized" })
     }
-    delete contents.fulltext
-    const stored = await docs.addToIndex(contents._id, document, contents.heading)
-    contents.filename = stored.filename
-    await db.create(contents)
-    c.status(201)
-    return c.json({ status: "ok", role: currentUser.role, result: stored })
 })
 
+/**
+ * Update post
+ */
 app.post(prefix + "update", async c => {
+
     const contents: post = await c.req.json()
-    const document = contents.fulltext
-    delete contents.fulltext
-    const stored = await docs.addToIndex(contents._id, document, contents.heading, true)
+    if (hasAccess(contents)) {
+        const document = contents.fulltext
+        delete contents.fulltext
+        contents.modified = new Date()
+        await db.update(contents._id, contents)
+        const stored = await docs.replaceDocument(contents._id, document, contents.heading)
+        return c.json({ status: "ok", role: currentUser.role, stored })
+    } else {
+        c.status(401)
+        return c.json({ "status": "fail", message: " not authorized" })
+    }
 })
 
+/**
+ * update only metadata of a post
+ */
 app.post(prefix + "updatemeta", async c => {
     const contents: post = await c.req.json()
-    contents.modified = new Date()
-    delete contents.fulltext
-    const result = await db.update(contents._id, contents)
-    return c.json({ status: "ok", role: currentUser.role, result })
+    if (hasAccess(contents)) {
+        contents.modified = new Date()
+        delete contents.fulltext
+        const result = await db.update(contents._id, contents)
+        return c.json({ status: "ok", role: currentUser.role, result })
+    } else {
+        c.status(401)
+        return c.json({ "status": "fail", message: " not authorized" })
+    }
 })
 
 console.log("Hono serving at port 3000")
