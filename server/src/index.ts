@@ -18,22 +18,31 @@ const app = new Hono()
 const docs = new Documents(process.env.documents, process.env.index)
 const tokens: Array<string> = []
 // console.log(process.env)
-
+let currentUser;
 // app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix + "*", cors())
+app.use(prefix + "*", async (c, next) => {
+    const jwt = c.req.query("jwt")
+    currentUser = { "visitor": { role: "visitor" } }
+    if (jwt) {
+        try {
+            const user = await verify(jwt, process.env.jwt_secret)
+            if (user) {
+                currentUser = user
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+    await next()
+})
 /**
  * Find all posts matching given criteria 
  */
 app.get(prefix + 'summary', async (c) => {
     const query: any = {}
-    const jwt = c.req.query("jwt")
-    let role = "visitor"
-    if (jwt) {
-        const user = verify(jwt, process.env.jwt_secret)
-        if (user) {
-            role = user["role"]
-        }
-    }
+
     const cat = c.req.query('category')
     if (cat) {
         query.category = cat
@@ -47,8 +56,16 @@ app.get(prefix + 'summary', async (c) => {
     if (matcher) {
         posts = await docs.filter(posts, matcher)
     }
-
-    return c.json({ status: "ok", role, result: posts })
+    posts = posts.filter(post => {
+        if (currentUser.role == "admin") {
+            return true;
+        }
+        if (post.author === Object.keys(currentUser)[0]) {
+            return true
+        }
+        return post.published;
+    })
+    return c.json({ status: "ok", role: currentUser?.role, result: posts })
 })
 
 /**
@@ -59,7 +76,7 @@ app.get(prefix + "read/:id", async (c) => {
     if (params["id"]) {
         const entry = await db.get(params["id"])
         const processed = await docs.loadContents(entry)
-        return c.json({ status: "ok", result: processed })
+        return c.json({ status: "ok", role: currentUser?.role, result: processed })
     } else {
         throw new Error("no id supplied")
     }
@@ -98,7 +115,7 @@ app.post(prefix + "add", async c => {
     contents.filename = stored.filename
     await db.create(contents)
     c.status(201)
-    return c.json({ status: "ok", result: stored })
+    return c.json({ status: "ok", role: currentUser.role, result: stored })
 })
 
 app.post(prefix + "updatemeta", async c => {
@@ -106,7 +123,7 @@ app.post(prefix + "updatemeta", async c => {
     contents.modified = new Date()
     delete contents.fulltext
     const result = await db.update(contents._id, contents)
-    return c.json({ status: "ok", result })
+    return c.json({ status: "ok", role: currentUser.role, result })
 })
 
 console.log("Hono serving at port 3000")
