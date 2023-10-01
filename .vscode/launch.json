@@ -49,7 +49,7 @@
             "request": "launch",
             "runtimeArgs": [
                 "run-script",
-                "node_dev"
+                "dev"
             ],
             "cwd":"${workspaceFolder}/server",
             "runtimeExecutable": "npm",

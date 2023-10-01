@@ -12,11 +12,22 @@ import { createHash } from 'node:crypto'
 import fs from 'fs/promises'
 
 const prefix = "/api/1.0/"
+const categories = new Set<string>()
+let dateFrom = new Date()
 const db = getDatabase()
 db.use("nbb")
 const app = new Hono()
 const docs = new Documents(process.env.documents, process.env.index)
-const tokens: Array<string> = []
+db.find({}).then((posts: Array<post>) => {
+    for (const p of posts) {
+        categories.add(p.category)
+        const d: Date = new Date(p.created)
+        if (d.getTime() < dateFrom.getTime()) {
+            dateFrom = d
+        }
+    }
+})
+
 // console.log(process.env)
 let currentUser;
 // app.use("/static/", serveStatic({ path: "./" }))
@@ -66,7 +77,19 @@ app.get(prefix + 'summary', async (c) => {
     }
     const sum = c.req.query('summary')
     if (sum) {
-        query.teaser = sum
+        query.teaser = new RegExp(sum)
+    }
+    const from=c.req.query("from")
+    if(from){
+        query.created={$gte:new Date(from+"-01-01")}
+    }
+    const until=c.req.query("until")
+    if(until){
+        query.created={$lte:new Date(until+"12-31")}
+    }
+    const between=c.req.query("between")
+    if(between){
+        query.$and=[{created: {$gte:from}},{created: {$lte:until}}]
     }
     let posts: Array<post> = await db.find(query)
     const matcher = c.req.query('fulltext')
@@ -109,11 +132,10 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
     if (user?.pass === hashed) {
         // login ok
         user.exp = Math.round(new Date().getTime() / 1000 + 60)
-        if(!process.env.jwt_secret) {
+        if (!process.env.jwt_secret) {
             console.log("No JWT Secret found. ")
         }
         const token = await sign(user, process.env.jwt_secret)
-        tokens.push(token)
         return c.json({ status: "ok", result: { jwt: token, role: user.role } })
     }
     c.status(401)
@@ -135,6 +157,7 @@ app.post(prefix + "add", async c => {
         contents.created = new Date()
         contents.modified = new Date()
         await db.create(contents)
+        categories.add(contents.category)
         c.status(201)
         return c.json({ status: "ok", role: currentUser.role, result: stored })
     } else {
@@ -155,6 +178,7 @@ app.post(prefix + "update", async c => {
         contents.modified = new Date()
         await db.update(contents._id, contents)
         const stored = await docs.replaceDocument(contents._id, document, contents.heading)
+        categories.add(contents.category)
         return c.json({ status: "ok", role: currentUser.role, stored })
     } else {
         c.status(401)

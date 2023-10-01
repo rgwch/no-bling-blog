@@ -1,28 +1,29 @@
 <script lang="ts">
-    import env from '../environment';
-    import type { post } from '../types';
-    import Post from '../components/Post.svelte';
-    import Filter from '../components/Filter.svelte';
-    import { currentView, currentPost } from '../store';
-    import { request } from '../io';
-    import Single from '../views/Single.svelte';
+    import env from "../environment";
+    import type { post } from "../types";
+    import Post from "../components/Post.svelte";
+    import Filter from "../components/Filter.svelte";
+    import { currentView, currentPost } from "../store";
+    import { request } from "../io";
+    import Single from "../views/Single.svelte";
     let categories: Array<string> = [];
     let posts: Array<post> = [];
-    let filterSummary = '';
-    let currentCategory = '';
-    let currentYear=''
-    let yearFrom=""
-    let yearUntil=""
-    let filterFulltext = '';
-    let role = '';
+    let years: Array<string> = [];
+    let filterSummary = "";
+    let currentCategory = "";
+    let currentYear = "";
+    let yearFrom = "";
+    let yearUntil = "";
+    let filterFulltext = "";
+    let role = "";
     doFilter();
     async function changeCat() {
         const result = await fetch(
-            env.url + 'summary?category=' + currentCategory
+            env.url + "summary?category=" + currentCategory
         );
         if (result.ok) {
             const retval = await result.json();
-            if (retval.status == 'ok') {
+            if (retval.status == "ok") {
                 posts = retval.result;
             }
         }
@@ -35,17 +36,27 @@
         if (filterSummary.length) {
             filters.push(`summary=${filterSummary}`);
         }
-        if (currentCategory != '') {
+        if (currentCategory != "") {
             filters.push(`category=${currentCategory}`);
         }
-
-        posts = await request('summary', filters);
+        if(yearFrom != ""){
+            if(yearUntil!=""){
+                filters.push(`between=${yearFrom},${yearUntil}`)
+            }else{
+                filters.push(`from=${yearFrom}`)
+            }
+        }else{
+            if(yearUntil!=""){
+                filters.push(`until=${yearUntil}`)
+            }
+        }
+        posts = await request("summary", filters);
 
         const cats = posts.map((post) => {
             // if(post.created.substring(0, 4)
-            return post.category
+            return post.category;
         });
-        categories = ['', ...new Set(cats)];
+        categories = ["", ...new Set(cats)];
     }
     function load(p: post) {
         $currentPost = p;
@@ -55,6 +66,17 @@
 
 <div
     class="flex flex-row flex-nowrap mx-5 m-2 p-1 text-sm border-blue-400 rounded-md border-2">
+    <Filter
+        caption="Jahr von"
+        choices={years}
+        bind:val={yearFrom}
+        on:changed={doFilter} />
+    <Filter
+        caption="Jahr bis"
+        choices={years}
+        bind:val={yearUntil}
+        on:changed={doFilter} />
+
     <Filter
         caption="Kategorie"
         choices={categories}
@@ -68,7 +90,7 @@
         caption="Volltext"
         bind:val={filterFulltext}
         on:changed={doFilter} />
-    <a href={env.url + 'login/admin/secret'}>{role}</a>
+    <a href={env.url + "login/admin/secret"}>{role}</a>
 </div>
 
 <div class="flex flex-row m-5 flex-wrap justify-center">

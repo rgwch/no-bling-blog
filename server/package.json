@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "dev": "runner=bun bun src/index.ts",
-    "node_dev": "tsc && node dest/index.js",
+    "bun_dev": "runner=bun bun src/index.ts", 
+    "dev": "tsc && node dest/index.js",
     "clean": "rimraf dest",
     "test": "jest"
   },
