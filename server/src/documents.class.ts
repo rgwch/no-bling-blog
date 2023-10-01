@@ -2,6 +2,8 @@ import fs from 'fs/promises'
 import { createReadStream, createWriteStream } from 'fs'
 import path from 'path'
 import { post } from './types'
+import {marked} from 'marked'
+
 export class Documents {
 
     constructor(private basedir: string, private indexdir: string) {
@@ -45,12 +47,13 @@ export class Documents {
      * @returns 
      */
     public async loadContents(entry: post): Promise<post> {
-        const filename = entry.fulltext
+        const filename = entry.filename
         if (!filename) {
             throw new Error("No filename supplied " + JSON.stringify(entry))
         }
         const contents = await fs.readFile(path.join(this.basedir, filename), "utf-8")
-        entry.fulltext = contents
+        entry.fulltext = marked.parse(contents)
+  
         return entry
     }
 

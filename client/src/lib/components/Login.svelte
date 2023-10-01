@@ -35,6 +35,6 @@
             class="text-sm px-3 hover:text-blue-500"
             on:click={() => login(username, password)}>Login</button>
     {:else}
-        <span on:click={doLogout}>{$currentRole}</span>
+        <button class="text-sm px-3 hover:text-blue-500" on:click={doLogout}>{$currentRole}</button>
     {/if}
 </div>

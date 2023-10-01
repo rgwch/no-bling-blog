@@ -1,11 +1,11 @@
 <script lang="ts">
-    import env from '../environment';
-    import { currentView, currentPost, currentRole } from '../store';
-    import type { post } from '../types';
-    import { request, write } from '../io';
-    import Summary from './Summary.svelte';
+    import env from "../environment";
+    import { currentView, currentPost, currentRole } from "../store";
+    import type { post } from "../types";
+    import { request, write } from "../io";
+    import Summary from "./Summary.svelte";
     let post: post;
-    request('read/' + $currentPost._id).then(async (result) => {
+    request("read/" + $currentPost._id).then(async (result) => {
         if (result) {
             post = result;
         }
@@ -16,7 +16,7 @@
     function doDelete() {}
     function doEdit() {}
     async function doSave() {
-        await write('updatemeta', post);
+        await write("updatemeta", post);
     }
 </script>
 
@@ -26,26 +26,27 @@
         <div class="text-blue-800 font-bold text-lg mb-4 text-center">
             {post.heading}
         </div>
-        <div>{post.fulltext}</div>
+        <div>{@html post.fulltext}</div>
     </div>
+    {#if $currentRole == "admin"}
+        <button
+            class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
+            on:click={doDelete}>Löschen</button>
+        <button
+            class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
+            on:click={doEdit}>Bearbeiten</button>
+        <span
+            class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md">
+            <span>Publiziert: </span>
+            <input
+                type="checkbox"
+                bind:checked={post.published}
+                on:click={doSave} />
+        </span>
+    {/if}
 {:else}
     <div>No Text</div>
 {/if}
 <button
     class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
     on:click={back}>Zurück</button>
-{#if $currentRole == 'admin'}
-    <button
-        class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
-        on:click={doDelete}>Löschen</button>
-    <button
-        class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
-        on:click={doEdit}>Bearbeiten</button>
-    <span class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md">
-        <span>Publiziert: </span>
-        <input
-            type="checkbox"
-            bind:checked={post.published}
-            on:click={doSave} />
-    </span>
-{/if}

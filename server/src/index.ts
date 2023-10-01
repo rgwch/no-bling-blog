@@ -21,6 +21,9 @@ const tokens: Array<string> = []
 
 // app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix + "*", cors())
+/**
+ * Find all posts matching given criteria 
+ */
 app.get(prefix + 'summary', async (c) => {
     const query: any = {}
     const jwt = c.req.query("jwt")
@@ -48,6 +51,9 @@ app.get(prefix + 'summary', async (c) => {
     return c.json({ status: "ok", role, result: posts })
 })
 
+/**
+ * Retrieve one post by its _id
+ */
 app.get(prefix + "read/:id", async (c) => {
     const params = c.req.param()
     if (params["id"]) {
@@ -58,13 +64,14 @@ app.get(prefix + "read/:id", async (c) => {
         throw new Error("no id supplied")
     }
 })
+/**
+ * log a user in
+ */
 app.get(prefix + "login/:user/:pwd", async (c) => {
     const cred: any = c.req.param()
     const hash = createHash('sha256')
     hash.update(cred.pwd)
     const hashed = hash.digest().toString("base64")
-    console.log(process.cwd)
-    // const users = require(process.env.users)
     const usersfile = await fs.readFile(process.env.users, "utf-8")
     const users = JSON.parse(usersfile)
     const user = users[cred.user]
@@ -77,14 +84,18 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
     }
     return c.json({ status: "fail", message: "bad credentials" })
 })
+/**
+ * Add a new Post
+ */
 app.post(prefix + "add", async c => {
     const contents: post = await c.req.json()
     const document = contents.fulltext
     if (!contents._id) {
         contents._id = uuid()
     }
+    delete contents.fulltext
     const stored = await docs.addToIndex(contents._id, document, contents.heading)
-    contents.fulltext = stored.filename
+    contents.filename = stored.filename
     await db.create(contents)
     c.status(201)
     return c.json({ status: "ok", result: stored })
@@ -93,6 +104,7 @@ app.post(prefix + "add", async c => {
 app.post(prefix + "updatemeta", async c => {
     const contents: post = await c.req.json()
     contents.modified = new Date()
+    delete contents.fulltext
     const result = await db.update(contents._id, contents)
     return c.json({ status: "ok", result })
 })

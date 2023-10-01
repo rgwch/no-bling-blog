@@ -28,7 +28,7 @@ export async function write(url: string, body: any): Promise<any> {
         headers,
         body: JSON.stringify(body)
     }
-    const answer = await fetch(url, options)
+    const answer = await fetch(env.url + url, options)
     if (answer.ok) {
         const result = await answer.json()
         return result

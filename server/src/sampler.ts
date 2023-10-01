@@ -16,6 +16,7 @@ docs.parseFile("../data/sample.html", "ein erster Test").then(async t => {
             heading: getWords(tokens, 5),
             teaser: getWords(tokens, 20),
             fulltext: getWords(tokens, 100),
+            filename: "",
             keywords: "",
             category: getWords(tokens.slice(800,810), 1),
             author: "gerry",
@@ -24,7 +25,8 @@ docs.parseFile("../data/sample.html", "ein erster Test").then(async t => {
             published: true
         }
         const tokenized = await docs.addToIndex(p._id, p.fulltext, p.heading)
-        p.fulltext = tokenized.filename
+        p.filename = tokenized.filename
+        delete p.fulltext
         const result = await (db.create(p))
     }
 })

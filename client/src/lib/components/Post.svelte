@@ -10,7 +10,7 @@
     <p class="mx-6">
         <span class="p-2">Kategorie:</span><span>{item.category}</span>
     </p>
-    <p class="mx-6 mb-2">{item.teaser}</p>
+    <p class="mx-6 mb-2" >{@html item.teaser}</p>
 </div>
 
 <style>

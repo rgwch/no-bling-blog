@@ -9,4 +9,5 @@ export type post = {
     created: Date
     modified: Date
     published: boolean
+    filename: string
 }
