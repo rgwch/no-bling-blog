@@ -40,7 +40,7 @@ function getWords(tokens: Array<string>, num: number): string {
     return ret
 }
 
-function getRandomDate(from: Date, to: Date) {
+function getRandomDate(from: Date, to: Date):Date {
     const fromTime = from.getTime();
     const toTime = to.getTime();
     return new Date(fromTime + Math.random() * (toTime - fromTime));

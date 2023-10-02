@@ -27,6 +27,12 @@ db.find({}).then((posts: Array<post>) => {
         }
     }
 })
+/*
+const cats = posts.map((post) => {
+    return post.category;
+});
+categories = ["", ...new Set(cats)];
+*/
 
 // console.log(process.env)
 let currentUser;
@@ -132,7 +138,7 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
     const user = users.find(u => u.name == cred.user)
     if (user?.pass === hashed) {
         // login ok
-        user.exp = Math.round(new Date().getTime() / 1000 + 120)
+        user.exp = Math.round(new Date().getTime() / 1000 + 3600)
         if (!process.env.jwt_secret) {
             console.log("No JWT Secret found. ")
         }
@@ -148,7 +154,7 @@ app.get(prefix + "stats", async (c) => {
         status: "ok",
         result: {
             startdate: dateFrom,
-            categories
+            categories:[...categories]
         }
     })
 })

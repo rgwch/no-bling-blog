@@ -27,19 +27,9 @@
         }
         years.push("")
         years=years
+        categories=result.categories
     })
     doFilter();
-    async function changeCat() {
-        const result = await fetch(
-            env.url + "summary?category=" + currentCategory
-        );
-        if (result.ok) {
-            const retval = await result.json();
-            if (retval.status == "ok") {
-                posts = retval.result;
-            }
-        }
-    }
     async function doFilter() {
         let filters = [];
         if (filterFulltext.length) {
@@ -64,10 +54,6 @@
         }
         posts = await request("summary", filters);
 
-        const cats = posts.map((post) => {
-            return post.category;
-        });
-        categories = ["", ...new Set(cats)];
     }
     function load(p: post) {
         $currentPost = p;
@@ -104,7 +90,7 @@
         caption="Kategorie"
         choices={categories}
         bind:val={currentCategory}
-        on:changed={changeCat} />
+        on:changed={doFilter} />
     <Filter
         caption="Zusammenfassung"
         bind:val={filterSummary}
