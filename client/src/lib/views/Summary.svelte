@@ -1,10 +1,9 @@
 <script lang="ts">
-    import env from "../environment";
     import type { post } from "../types";
     import Post from "../components/Post.svelte";
     import Filter from "../components/Filter.svelte";
     import Edit from "./Edit.svelte"
-    import { currentView, currentPost } from "../store";
+    import { currentView, currentPost, currentJWT } from "../store";
     import { request } from "../io";
     import Single from "../views/Single.svelte";
     let categories: Array<string> = [];
@@ -16,7 +15,6 @@
     let yearFrom = "";
     let yearUntil = "";
     let filterFulltext = "";
-    let role = "";
     request("stats").then(result=>{
         const dt=new Date(result.startdate)
         const now=new Date().getTime()
@@ -31,6 +29,7 @@
     })
     doFilter();
     async function doFilter() {
+        // console.log(new Date().toString()+":"+$currentJWT)
         let filters = [];
         if (filterFulltext.length) {
             filters.push(`fulltext=${filterFulltext}`);

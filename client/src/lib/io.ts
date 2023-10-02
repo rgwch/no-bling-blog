@@ -8,16 +8,26 @@ currentJWT.subscribe(n => {
 function setRole(role: string) {
     if (!role || role == "visitor") {
         currentRole.set("visitor")
-        currentJWT.set("")
+        console.log("no role")
+        // currentJWT.set("")
     } else {
         currentRole.set(role)
     }
 }
 export async function request(url: string, query: Array<string> = []): Promise<any> {
+    // console.log(jwt)
+    /*
     if (jwt?.length > 5) {
         query.push("jwt=" + jwt)
     }
-    const answer = await fetch(env.url + url + "?" + query.join("&"))
+    */
+    const headers = new Headers()
+    headers.append("accept", "application/json")
+    if (jwt?.length > 5) {
+        headers.append("Authorization", "Bearer " + jwt)
+    }
+
+    const answer = await fetch(env.url + url + "?" + query.join("&"), { headers })
     if (answer.ok) {
         if (answer.status == 401) {
             alert("unauthorized")
@@ -31,7 +41,7 @@ export async function request(url: string, query: Array<string> = []): Promise<a
         }
     }
     alert(answer.status + ", " + answer.statusText)
-    if(answer.status==401){
+    if (answer.status == 401) {
         setRole("visitor")
     }
     return undefined
@@ -57,9 +67,9 @@ export async function write(url: string, body: any): Promise<any> {
         return result
     } else {
         alert(answer.status + ", " + answer.statusText)
-        if(answer.status==401){
+        if (answer.status == 401) {
             setRole("visitor")
-        }    
+        }
         return undefined
     }
 

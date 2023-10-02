@@ -37,7 +37,7 @@ function getWords(tokens: Array<string>, num: number): string {
         const rnd = Math.round(tokens.length * Math.random())
         ret = ret + tokens[rnd] + " "
     }
-    return ret
+    return ret.trim()
 }
 
 function getRandomDate(from: Date, to: Date):Date {

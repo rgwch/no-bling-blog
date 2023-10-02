@@ -39,14 +39,13 @@ let currentUser;
 // app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix + "*", cors())
 app.use(prefix + "*", async (c, next) => {
-    let jwt = c.req.query("jwt")
     currentUser = { name: "visitor", role: "visitor" }
-    if (!jwt) {
-        const bearer = c.req.header("Authorization")
-        if (bearer?.startsWith("Bearer ")) {
-            jwt = bearer.substring(7)
-        }
+    let jwt
+    const bearer = c.req.header("Authorization")
+    if (bearer?.startsWith("Bearer ")) {
+        jwt = bearer.substring(7)
     }
+    console.log(jwt)
     if (jwt) {
         try {
             const user = await verify(jwt, process.env.jwt_secret)
@@ -154,7 +153,7 @@ app.get(prefix + "stats", async (c) => {
         status: "ok",
         result: {
             startdate: dateFrom,
-            categories:[...categories]
+            categories: [...categories]
         }
     })
 })
@@ -193,6 +192,7 @@ app.post(prefix + "update", async c => {
     if (hasAccess(contents)) {
         const document = contents.fulltext
         delete contents.fulltext
+        contents.created=new Date(contents.created)
         contents.modified = new Date()
         await db.update(contents._id, contents)
         const stored = await docs.replaceDocument(contents._id, document, contents.heading)
@@ -210,6 +210,7 @@ app.post(prefix + "update", async c => {
 app.post(prefix + "updatemeta", async c => {
     const contents: post = await c.req.json()
     if (hasAccess(contents)) {
+        contents.created=new Date(contents.created)
         contents.modified = new Date()
         delete contents.fulltext
         const result = await db.update(contents._id, contents)
