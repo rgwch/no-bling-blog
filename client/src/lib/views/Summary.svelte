@@ -27,7 +27,7 @@
         }
         years.push("")
         years=years
-        categories=result.categories
+        categories=["",...result.categories]
     })
     doFilter();
     async function doFilter() {

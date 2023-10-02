@@ -62,7 +62,7 @@ export class NeDB implements IDatabase {
     this.checkUsing()
     return new Promise((resolve, reject) => {
       delete params.database
-      this.dbs[this.using].find(params, (err: Error, result: any) => {
+      this.dbs[this.using].find(params).sort({ created: -1 }).exec((err: Error, result: any) => {
         if (err) {
           reject(err)
         }
