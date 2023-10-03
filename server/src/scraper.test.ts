@@ -6,7 +6,7 @@ const source = "https://www.tagesanzeiger.ch/julian-assange-darf-nicht-ausgelief
 test("fetch", async () => {
     const scraper = new Scraper();
     try {
-        const stat = fs.stat("test.html")
+        const stat = await fs.stat("test.html")
         expect(stat).toBeDefined()
     } catch (err) {
         const html = await scraper.fetch(source)
@@ -16,9 +16,9 @@ test("fetch", async () => {
     }
 })
 
-test("scrape",async ()=>{
-    const scraper=new Scraper()
-    const html=await fs.readFile("test.html","utf8")
-    const result=await scraper.scrape(html)
+test("scrape", async () => {
+    const scraper = new Scraper()
+    const html = await fs.readFile("test.html", "utf8")
+    const result = await scraper.scrape(html)
     expect(result).toBeDefined()
 })
