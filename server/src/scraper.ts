@@ -1,4 +1,6 @@
-import fs from 'fs/promises'
+import { DOMParser } from 'xmldom';
+const parser=new DOMParser()
+
 export class Scraper{
     async fetch(url:string):Promise<string>{
         const response=await fetch(url)
@@ -9,7 +11,10 @@ export class Scraper{
         return ""
     }
 
-    async scrape(url:string){
-        
+    async scrape(html:string){
+        const dom=parser.parseFromString(html)
+        const teaser=dom.getElementsByTagName("teaser")
+        console.log(teaser)
+        return teaser
     }
 }
