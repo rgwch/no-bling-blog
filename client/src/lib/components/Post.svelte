@@ -1,17 +1,22 @@
 <script lang="ts">
     import{createEventDispatcher} from 'svelte'
+    import {DateTime} from 'luxon'
     import type { post } from "../types";
     export let item: post;
     const dispatch=createEventDispatcher()
+    function formatTime(time?:string){
+        const dt=DateTime.fromISO(time ?? new Date().toISOString())
+        return dt.toFormat("yyyy-MM-dd - HH:mm")
+    }
 </script>
 
 <div class="data" on:click={()=>dispatch("load",item._id)}>
-    <h1 class="text-blue-300 font-semibold text-lg mx-5">{item.heading}</h1>
-    <p class="mx-6">
-        <span class="p-2">Kategorie:</span><span>{item.category}</span>
+    <h1 class="text-blue-300 font-semibold text-lg mx-5 capitalize w-full">{item.heading}</h1>
+    <p class="mx-6 text-xs font-bold text-blue-400 w-full" >
+        <span class="px-2">Kategorie:</span><span>{item.category}</span>
     </p>
-    <p class="mx-6 mb-2" >{@html item.teaser}</p>
-    <p class="text-sm">{item.created}</p>
+    <p class="mx-6 mb-2 w-full" >{@html item.teaser}</p>
+    <p class="text-xs mt-3 text-blue-400">{formatTime(item.created?.toString())}</p>
 </div>
 
 <style>
@@ -25,7 +30,7 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: space-around;
+        justify-content: stretch;
         align-items: center;
         text-align: center;
         width: 350px;

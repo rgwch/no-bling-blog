@@ -45,7 +45,6 @@ app.use(prefix + "*", async (c, next) => {
     if (bearer?.startsWith("Bearer ")) {
         jwt = bearer.substring(7)
     }
-    console.log(jwt)
     if (jwt) {
         try {
             const user = await verify(jwt, process.env.jwt_secret)

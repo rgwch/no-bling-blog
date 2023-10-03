@@ -32,10 +32,10 @@
         // console.log(new Date().toString()+":"+$currentJWT)
         let filters = [];
         if (filterFulltext.length) {
-            filters.push(`fulltext=${filterFulltext}`);
+            filters.push(`fulltext=${filterFulltext.toLocaleLowerCase()}`);
         }
         if (filterSummary.length) {
-            filters.push(`summary=${filterSummary}`);
+            filters.push(`summary=${filterSummary.toLocaleLowerCase()}`);
         }
         if (currentCategory != "") {
             filters.push(`category=${currentCategory}`);

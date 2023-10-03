@@ -4,12 +4,20 @@
 
 @layer base {
   h1 {
-    @apply text-2xl;
+    @apply text-2xl font-bold text-blue-700;
   }
   h2 {
-    @apply text-xl;
+    @apply text-xl font-semibold text-blue-600;
   }
-  /* ... */
+  ul{
+    @apply list-disc list-inside
+  }
+
+}
+
+.btn {
+  @apply mr-4 my-1 p-1 border-2 border-blue-800 bg-blue-200 rounded-md;
+
 }
 /*
 :root {

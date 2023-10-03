@@ -84,13 +84,13 @@
         </div>
         {#if $currentRole == 'admin'}
             <button
-                class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
+                class="btn"
                 on:click={doDelete}>Löschen</button>
             <button
-                class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
+                class="btn"
                 on:click={doEdit}>Editieren</button>
             <span
-                class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md">
+                class="btn">
                 <span>Publiziert: </span>
                 <input
                     type="checkbox"
@@ -103,5 +103,5 @@
     <div>No Text</div>
 {/if}
 <button
-    class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
+    class="btn"
     on:click={back}>Zurück</button>
