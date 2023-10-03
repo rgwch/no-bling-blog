@@ -75,7 +75,7 @@
         </span>
     {:else}
         <div
-            class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-5">
+            class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-5 prose">
             <div class="text-sm font-light italic">({post.category})</div>
             <div class="text-blue-800 font-bold text-lg mb-4 text-center">
                 {post.heading}
