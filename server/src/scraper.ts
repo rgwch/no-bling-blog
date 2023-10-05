@@ -14,11 +14,37 @@ export class Scraper {
     async scrape(html: string) {
         const dom = parser.parseFromString(html)
         const main = dom.getElementsByTagName("main")
+        let author = ""
+        let title = ""
+        let lead = ""
         if (main) {
             const first = main.item(0)
-            console.log(first)
+            if (first) {
+                const divs = first.getElementsByTagName("div")
+                const ar = Array.from(divs)
+                for (const div of ar) {
+                    const cl = div.getAttribute("class")
+                    if (cl?.includes("author")) {
+                        author = div.innerHTML
+                        console.log("author")
+                    }
+                    if (cl?.includes("title")) {
+                        title = div.innerHTML
+                        console.log("title")
+                    }
+                    if (cl?.includes("content")) {
+                        console.log("content")
+                    }
+                    if (cl.includes("lead")) {
+                        lead = div.innerHTML
+                        console.log("lead")
+                    }
+                };
+            }
         }
 
-        return ""
+        return {author,title,lead}
     }
+
+
 }
