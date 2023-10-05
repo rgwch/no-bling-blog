@@ -1,0 +1,7 @@
+import tagiScraper from "./tagiscraper";
+
+function fetchContent(url: string) {
+    if (url.toLocaleLowerCase().startsWith("https://www.tages-anzeiger.ch/")) {
+        return tagiScraper(url)
+    }
+}

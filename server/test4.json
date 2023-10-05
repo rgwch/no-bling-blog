@@ -1,0 +1,47 @@
+{
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.tagesanzeiger.ch/kampf-gegen-steuerflucht-woher-stammt-das-mitleid-mit-den-lottomillionaeren-974654472864"
+    },
+    "headline": "Kampf gegen Steuerflucht: Woher stammt das Mitleid mit den Lotto­millionären?",
+    "description": "Ein Solothurner gewinnt 68 Millionen, zügelt und spart so viel Geld. Künftig solle die Steuer am alten Wohnort anfallen, fordert ein Ständerat. Und zieht damit den Volkszorn auf sich.",
+    "datePublished": "2023-10-05T09:50:55+02:00",
+    "dateModified": "2023-10-05T07:50:55.000Z",
+    "genre": "news",
+    "inLanguage": "de",
+    "keywords": [],
+    "url": "https://www.tagesanzeiger.ch/kampf-gegen-steuerflucht-woher-stammt-das-mitleid-mit-den-lottomillionaeren-974654472864",
+    "thumbnailUrl": "https://cdn.unitycms.io/images/7Uyw0ExyK0l866T7auq8DV.jpg?op=ocroped&val=1200,1200,1000,1000,0,0&sum=P8dIHcABxNs",
+    "isAccessibleForFree": false,
+    "publisher": {
+        "@type": "Organization",
+        "name": "Tamedia AG",
+        "url": "https://www.tagesanzeiger.ch",
+        "sameAs": "https://www.facebook.com/Tagesanzeiger/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.tagesanzeiger.ch/_next/static/media/logo_tagesanzeiger.54c816aa.png"
+        }
+    },
+    "articleSection": "wirtschaft",
+    "author": [
+        {
+            "@type": "Person",
+            "name": "Konrad Staehelin",
+            "url": "https://www.tagesanzeiger.ch/author/52374240/konrad-staehelin"
+        }
+    ],
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://cdn.unitycms.io/images/7Uyw0ExyK0l866T7auq8DV.jpg?op=ocroped&val=1200,1200,1000,1000,0,0&sum=P8dIHcABxNs",
+        "width": 1200,
+        "height": 798
+    },
+    "hasPart": {
+        "@type": "WebPageElement",
+        "isAccessibleForFree": false,
+        "cssSelector": "._paywalled-content"
+    }
+}
