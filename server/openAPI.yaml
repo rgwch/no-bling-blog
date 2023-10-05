@@ -3,7 +3,7 @@ info:
   title: NoBlingBlog Server
   version: 1.0.0
 servers:
-  - url: https://api.server.test/api/1.0
+  - url: http://localhost:3000/api/1.0
 paths:
   /summary:
     get:
@@ -46,11 +46,11 @@ paths:
             type: string
           required: false
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
           description: Unauthorized
-  '/read/{id}':
+  "/read/{id}":
     get:
       description: "Get the full text of a post"
       parameters:
@@ -61,12 +61,12 @@ paths:
             type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
           description: Unauthorized
-      
-  '/login/{user}/{pwd}':
+
+  "/login/{user}/{pwd}":
     get:
       description: "Login with the given credentials"
       parameters:
@@ -76,24 +76,24 @@ paths:
           schema:
             type: string
           required: true
-        - name: pwd 
+        - name: pwd
           description: "Password"
           in: path
           schema:
             type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
-        '403':
+        "403":
           description: Bad credentials
-  /stats: 
+  /stats:
     get:
       description: "Get statistics about the blog"
       responses:
-        '200':
+        "200":
           description: OK
-        '401':
+        "401":
           description: Unauthorized
 
   /add:
@@ -104,9 +104,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: "#/components/schemas/Post"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
@@ -120,8 +120,8 @@ paths:
                     type: string
                     example: admin
                   result:
-                    $ref: '#/components/schemas/PostResult'
-        '401':
+                    $ref: "#/components/schemas/PostResult"
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -142,9 +142,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: "#/components/schemas/Post"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -158,8 +158,8 @@ paths:
                     type: string
                     example: admin
                   stored:
-                    $ref: '#/components/schemas/PostResult'
-        '401':
+                    $ref: "#/components/schemas/PostResult"
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -180,9 +180,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: "#/components/schemas/Post"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -196,8 +196,8 @@ paths:
                     type: string
                     example: admin
                   result:
-                    $ref: '#/components/schemas/PostResult'
-        '401':
+                    $ref: "#/components/schemas/PostResult"
+        "401":
           description: Unauthorized
           content:
             application/json:
