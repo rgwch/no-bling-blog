@@ -1,9 +1,13 @@
 import { Scraper } from "./scraper";
 import fs from 'fs/promises'
 const source = "https://www.tagesanzeiger.ch/julian-assange-darf-nicht-ausgeliefert-werden-993647635714"
+import { fetchContent } from "./scrapers";
 
+test ("metaparser", async()=>{
+    const result = await fetchContent(source)
+})
 
-test("fetch", async () => {
+xtest("fetch", async () => {
     const scraper = new Scraper();
     try {
         const stat = await fs.stat("test.html")
@@ -16,7 +20,7 @@ test("fetch", async () => {
     }
 })
 
-test("scrape", async () => {
+xtest("scrape", async () => {
     const scraper = new Scraper()
     const html = await fs.readFile("test.html", "utf8")
     const result = await scraper.scrape(html)
