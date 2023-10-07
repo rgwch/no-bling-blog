@@ -1,10 +1,12 @@
 import { Scraper } from "./scraper";
 import fs from 'fs/promises'
 const source = "https://www.tagesanzeiger.ch/julian-assange-darf-nicht-ausgeliefert-werden-993647635714"
+const blick="https://www.blick.ch/wirtschaft/muenze-aus-dem-wallis-kommt-unter-den-hammer-dieses-goldvreneli-ist-ein-vermoegen-wert-id19014385.html"
 import { fetchContent } from "./scrapers";
 
 test ("metaparser", async()=>{
-    const result = await fetchContent(source)
+    const result = await fetchContent(blick)
+    console.log(result)
 })
 
 xtest("fetch", async () => {
