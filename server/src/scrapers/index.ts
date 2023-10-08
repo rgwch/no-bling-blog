@@ -7,6 +7,7 @@ import metaScraper from 'metascraper'
 import htmlmeta from 'html-metadata'
 
 const metascraper = metaScraper([description(), title(), date(), author()])
+
 export type imageObject = {
     "@type": "ImageObject",
     url: string,
@@ -22,7 +23,7 @@ type metadata = {
         title: string,
         description: string,
         headline: string,
-        image: Array<imageObject>
+        image: Array<imageObject | string>
         dateModified: string,
         datePublished: string,
         isAccessibleForFree: boolean,
@@ -99,16 +100,43 @@ export class MetaScraper {
             this.author = el.author.name || "anonymous"
         }
         if (Array.isArray(el.image)) {
-            this.image = el.image[0]
+            this.image = this.loadImage(el.image[0])
         } else {
-            this.image = el.image
+            this.image = this.loadImage(el.image)
         }
         this.title = el.title || el.headline
         this.description = el.description || el.headline
+        if (this.title == this.description) {
+            this.description = ""
+        }
 
     }
-    public getAuthor() {
+
+    private loadImage(el: imageObject | string): imageObject {
+        if (typeof el == "string") {
+            return {
+                "@type": "ImageObject",
+                url: el,
+                height: 0,
+                width: 0
+            }
+        } else {
+            return el
+        }
+    }
+    public getAuthor(): string {
         return this.author
     }
+    public getImage(): imageObject {
+        return this.image
+    }
+    public getTitle(): string {
+        return this.title
+    }
+    public getText(): string {
+        return this.description
+    }
+    public getUrl = (): string => this.url
+
 }
 

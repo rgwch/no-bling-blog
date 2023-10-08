@@ -3,7 +3,7 @@ import { createReadStream, createWriteStream } from 'fs'
 import path from 'path'
 import { post } from './types'
 import { marked } from 'marked'
-import { fetchMetadata, type metadata } from './scrapers'
+import { MetaScraper, type imageObject } from './scrapers'
 
 export type analyzed = {
     filename: string
@@ -32,6 +32,28 @@ export class Documents {
      * @returns {filename, tokens:Array<string>}
      */
     public async addToIndex(id: string, contents: string, title: string): Promise<analyzed> {
+        // check for embedded links
+        const links = contents.match(/<[^>]+>/g)
+        if (links) {
+            for (const link of links) {
+                const scraper = new MetaScraper(link.substring(1, link.length - 1))
+                if (await scraper.load()) {
+                    /*
+                    const repl = {
+                        author: scraper.getAuthor(),
+                        title: scraper.getTitle(),
+                        Text: scraper.getText(),
+                    }
+                    */
+                    const repl = `<div style="border: 2px solid blue;background-color:light-gray;">
+                    <a href="${scraper.getUrl()}">${scraper.getTitle()}</a>
+                    <div>${scraper.getText()}</div>
+                    <img src="${scraper.getImage().url}" alt="${scraper.getTitle()}"></div>`
+                    contents = contents.replace(link, repl)
+                }
+            }
+        }
+
         const parsed = await this.parseString(contents, title)
         // add tokens to index
         for (const token of parsed.tokens) {
@@ -43,16 +65,6 @@ export class Documents {
             }
             cont += id + "\n"
             await fs.writeFile(path.join(this.indexdir, token), cont)
-        }
-        // check for embedded links
-        const links = contents.match(/<[^>]+>/g)
-        if (links) {
-            for (const link of links) {
-                const meta: metadata = await fetchMetadata(link)
-                if (meta) {
-                    link.replace(link, meta.title)
-                }
-            }
         }
         return parsed
     }
