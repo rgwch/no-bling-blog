@@ -3,6 +3,7 @@ import { createReadStream, createWriteStream } from 'fs'
 import path from 'path'
 import { post } from './types'
 import { marked } from 'marked'
+import { fetchMetadata, type metadata } from './scrapers'
 
 export type analyzed = {
     filename: string
@@ -32,6 +33,7 @@ export class Documents {
      */
     public async addToIndex(id: string, contents: string, title: string): Promise<analyzed> {
         const parsed = await this.parseString(contents, title)
+        // add tokens to index
         for (const token of parsed.tokens) {
             let cont = ""
             try {
@@ -42,10 +44,20 @@ export class Documents {
             cont += id + "\n"
             await fs.writeFile(path.join(this.indexdir, token), cont)
         }
+        // check for embedded links
+        const links = contents.match(/<[^>]+>/g)
+        if (links) {
+            for (const link of links) {
+                const meta: metadata = await fetchMetadata(link)
+                if (meta) {
+                    link.replace(link, meta.title)
+                }
+            }
+        }
         return parsed
     }
     /**
-     * Replace existing document: Remove all index entries an d the file and write it new
+     * Replace existing document: Remove all index entries and the file and write it new
      * @param id 
      * @param contents 
      * @param title 
@@ -102,7 +114,7 @@ export class Documents {
         let fullpath = path.join(this.basedir, fname)
         if (fullpath.endsWith("_")) {
             fullpath = fullpath.slice(0, -1)
-        } 
+        }
         if (!overwrite) {
             do {
                 try {
