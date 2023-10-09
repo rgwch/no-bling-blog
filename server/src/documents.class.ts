@@ -38,28 +38,14 @@ export class Documents {
             for (const link of links) {
                 const scraper = new MetaScraper(link.substring(2, link.length - 2))
                 if (await scraper.load()) {
-                    /*
                     const repl = {
-                        author: scraper.getAuthor(),
+                        template: "reference",
+                        url: scraper.getUrl(),
                         title: scraper.getTitle(),
-                        Text: scraper.getText(),
+                        text: scraper.getText(),
+                        imgurl: scraper.getImage().url
                     }
-                    */
-                    /*
-                     const repl = `<div style="border: 2px solid blue;background-color:light-gray;">
-                    </div>`
-                     */
-                    const repl = 
-                    `<div class="prose md:prose-xl" style="display:grid;grid-template-columns: repeat(2, 1fr);">
-                        <div w-max-{800px}> 
-                            <a href="${scraper.getUrl()}">${scraper.getTitle()}</a>
-                            <p>${scraper.getText()}</p>
-                        </div>
-                        <div> 
-                            <img src="${scraper.getImage().url}" alt="${scraper.getTitle()} width="200px">
-                        </div>
-                    </div>`
-                    contents = contents.replace(link, repl)
+                    contents = contents.replace(link, JSON.stringify(repl))
                 }
             }
         }
@@ -123,6 +109,23 @@ export class Documents {
         entry.fulltext = raw ? contents : marked.parse(contents)
 
         return entry
+    }
+
+    async process(text: string): Promise<string> {
+        const links = text.match(/\[\[[^\]]+\]\]/g)
+        for (const link of links) {
+            try {
+                const ref = JSON.parse(link.substring(2, link.length - 2))
+                const partial = await fs.readFile(path.join(__dirname, "../../data/parttials", ref + ".html"), "utf-8")
+                // todo
+                text.replace(link, partial)
+            } catch (err) {
+                text.replace(link, "error")
+            }
+
+        }
+
+        return text
     }
 
     /**
