@@ -33,10 +33,10 @@ export class Documents {
      */
     public async addToIndex(id: string, contents: string, title: string): Promise<analyzed> {
         // check for embedded links
-        const links = contents.match(/<[^>]+>/g)
+        const links = contents.match(/\[\[[^\]]+\]\]/g)
         if (links) {
             for (const link of links) {
-                const scraper = new MetaScraper(link.substring(1, link.length - 1))
+                const scraper = new MetaScraper(link.substring(2, link.length - 2))
                 if (await scraper.load()) {
                     /*
                     const repl = {
@@ -45,10 +45,17 @@ export class Documents {
                         Text: scraper.getText(),
                     }
                     */
-                    const repl = `<div style="border: 2px solid blue;background-color:light-gray;">
-                    <a href="${scraper.getUrl()}">${scraper.getTitle()}</a>
-                    <div>${scraper.getText()}</div>
-                    <img src="${scraper.getImage().url}" alt="${scraper.getTitle()}"></div>`
+                    /*
+                     const repl = `<div style="border: 2px solid blue;background-color:light-gray;">
+                    </div>`
+                     */
+                    const repl = `<div class="flex flex-row border border-blue-500 p-2">
+                        <div> <a href="${scraper.getUrl()}">${scraper.getTitle()}</a>
+                        <div>${scraper.getText()}</div>
+                    </div>
+                    <div> 
+                        <img src="${scraper.getImage().url}" alt="${scraper.getTitle()}">
+                    </div></div>`
                     contents = contents.replace(link, repl)
                 }
             }

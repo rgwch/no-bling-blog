@@ -1,15 +1,9 @@
 <script lang="ts">
-    import { currentJWT, currentRole } from '../store.ts';
-    import { login } from '../io.ts';
+    import { currentJWT, currentRole } from '../store';
+    import { login } from '../io';
     let username = '';
     let password = '';
     let errmsg = '';
-    async function doLogin() {
-        const ok = await login(username, password);
-        if (!ok) {
-            errmsg = 'fehler';
-        }
-    }
     async function doLogout() {
         $currentJWT = '';
         $currentRole = 'visitor';
