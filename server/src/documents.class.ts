@@ -49,13 +49,16 @@ export class Documents {
                      const repl = `<div style="border: 2px solid blue;background-color:light-gray;">
                     </div>`
                      */
-                    const repl = `<div class="flex flex-row border border-blue-500 p-2">
-                        <div> <a href="${scraper.getUrl()}">${scraper.getTitle()}</a>
-                        <div>${scraper.getText()}</div>
-                    </div>
-                    <div> 
-                        <img src="${scraper.getImage().url}" alt="${scraper.getTitle()}">
-                    </div></div>`
+                    const repl = 
+                    `<div class="prose md:prose-xl" style="display:grid;grid-template-columns: repeat(2, 1fr);">
+                        <div w-max-{800px}> 
+                            <a href="${scraper.getUrl()}">${scraper.getTitle()}</a>
+                            <p>${scraper.getText()}</p>
+                        </div>
+                        <div> 
+                            <img src="${scraper.getImage().url}" alt="${scraper.getTitle()} width="200px">
+                        </div>
+                    </div>`
                     contents = contents.replace(link, repl)
                 }
             }
