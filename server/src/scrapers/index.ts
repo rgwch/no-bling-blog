@@ -1,4 +1,3 @@
-import tagiScraper from "./tagiscraper";
 import author from 'metascraper-author'
 import description from 'metascraper-description'
 import title from 'metascraper-title'
@@ -6,7 +5,7 @@ import date from 'metascraper-date'
 import metaScraper from 'metascraper'
 import htmlmeta from 'html-metadata'
 
-const metascraper = metaScraper([description(), title(), date(), author()])
+// const metascraper = metaScraper([description(), title(), date(), author()])
 
 export type imageObject = {
     "@type": "ImageObject",
@@ -62,14 +61,6 @@ export class MetaScraper {
     }
     public async load(): Promise<boolean> {
         try {
-            /*
-            const response = await fetch(url)
-            if (response.ok) {
-                const html = await response.text()
-                const parsed = await metascraper({ url, html })
-                return parsed
-            }
-            */
             const meta = await htmlmeta(this.url)
             if (meta.jsonLd) {
                 if (Array.isArray(meta.jsonLd)) {

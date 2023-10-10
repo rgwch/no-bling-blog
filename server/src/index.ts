@@ -4,7 +4,7 @@ import { serve } from '@hono/node-server'
 import { decode, sign, verify } from 'hono/jwt'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { cors } from 'hono/cors'
-import { getDatabase } from './db'
+import { getDatabase } from './database/db'
 import { post } from './types'
 import { Documents } from "./documents.class"
 import { v4 as uuid } from 'uuid'

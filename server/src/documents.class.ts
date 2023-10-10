@@ -24,6 +24,9 @@ export class Documents {
         }
     }
 
+    public async add(document:Partial<post>){
+        return this.addToIndex(document._id,document.fulltext,document.heading)
+    }
     /**
      * Tokenize a document, store its contents as file in the basedir and add its contents to the index.
      * @param id id of the file (will be used as reference in the index entries)
@@ -106,7 +109,8 @@ export class Documents {
             throw new Error("No filename supplied " + JSON.stringify(entry))
         }
         const contents = await fs.readFile(path.join(this.basedir, filename), "utf-8")
-        entry.fulltext = raw ? contents : marked.parse(contents)
+        const processed=await this.process(contents)
+        entry.fulltext = raw ? contents : marked.parse(processed)
 
         return entry
     }
@@ -117,7 +121,13 @@ export class Documents {
             try {
                 const ref = JSON.parse(link.substring(2, link.length - 2))
                 const partial = await fs.readFile(path.join(__dirname, "../../data/parttials", ref + ".html"), "utf-8")
-                // todo
+                const tokens=partial.match(/\[\[[^\]]+\]\]/g)
+                for(const token of tokens){
+                    const repl=ref[token.substring(2,token.length-2)]
+                    if(repl){
+                        partial.replace(token,repl)
+                    }
+                }
                 text.replace(link, partial)
             } catch (err) {
                 text.replace(link, "error")

@@ -1,4 +1,4 @@
-import { logger } from './logger'
+import { logger } from '../logger'
 import { v4 as uuid } from 'uuid'
 import type { IDatabase } from './db.interface'
 import Datastore from 'nedb'

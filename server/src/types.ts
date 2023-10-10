@@ -10,5 +10,5 @@ export type post = {
     modified: Date
     published: boolean
     filename: string,
-    reference: any
+    reference?: any
 }
