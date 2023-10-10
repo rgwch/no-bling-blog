@@ -27,14 +27,7 @@ db.find({}).then((posts: Array<post>) => {
         }
     }
 })
-/*
-const cats = posts.map((post) => {
-    return post.category;
-});
-categories = ["", ...new Set(cats)];
-*/
 
-// console.log(process.env)
 let currentUser;
 // app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix + "*", cors())
@@ -107,7 +100,7 @@ app.get(prefix + 'summary', async (c) => {
         }
         return post.published;
     })
-    return c.json({ status: "ok", role: currentUser?.role, result: posts })
+    return c.json({ status: "ok", user: currentUser, result: posts })
 })
 
 /**
@@ -117,8 +110,11 @@ app.get(prefix + "read/:id", async (c) => {
     const params = c.req.param()
     if (params["id"]) {
         const entry = await db.get(params["id"])
-        const processed = await docs.loadContents(entry, c.req.query("raw") == "true")
-        return c.json({ status: "ok", role: currentUser?.role, result: processed })
+        let processed=await docs.loadContents(entry)
+        if(c.req.query("raw")=="true"){
+            processed=await docs.processContents(processed)
+        }
+        return c.json({ status: "ok", user: currentUser, result: processed })
     } else {
         throw new Error("no id supplied")
     }

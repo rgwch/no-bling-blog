@@ -24,8 +24,8 @@ export class Documents {
         }
     }
 
-    public async add(document:Partial<post>){
-        return this.addToIndex(document._id,document.fulltext,document.heading)
+    public async add(document: Partial<post>) {
+        return this.addToIndex(document._id, document.fulltext, document.heading)
     }
     /**
      * Tokenize a document, store its contents as file in the basedir and add its contents to the index.
@@ -100,32 +100,33 @@ export class Documents {
     /**
      * Lod the contents of a document in the post structure
      * @param entry 
-     * @param raw if true, return markdown text, if false, return html text
      * @returns 
      */
-    public async loadContents(entry: post, raw = false): Promise<post> {
+    public async loadContents(entry: post): Promise<post> {
         const filename = entry.filename
         if (!filename) {
             throw new Error("No filename supplied " + JSON.stringify(entry))
         }
-        const contents = await fs.readFile(path.join(this.basedir, filename), "utf-8")
-        const processed=await this.process(contents)
-        entry.fulltext = raw ? contents : marked.parse(processed)
-
+        entry.fulltext = await fs.readFile(path.join(this.basedir, filename), "utf-8")
         return entry
     }
 
+    public async processContents(entry: post): Promise<post> {
+        const processed = await this.process(entry.fulltext)
+        entry.fulltext = marked.parse(processed)
+        return entry
+    }
     async process(text: string): Promise<string> {
         const links = text.match(/\[\[[^\]]+\]\]/g)
         for (const link of links) {
             try {
                 const ref = JSON.parse(link.substring(2, link.length - 2))
                 const partial = await fs.readFile(path.join(__dirname, "../../data/parttials", ref + ".html"), "utf-8")
-                const tokens=partial.match(/\[\[[^\]]+\]\]/g)
-                for(const token of tokens){
-                    const repl=ref[token.substring(2,token.length-2)]
-                    if(repl){
-                        partial.replace(token,repl)
+                const tokens = partial.match(/\[\[[^\]]+\]\]/g)
+                for (const token of tokens) {
+                    const repl = ref[token.substring(2, token.length - 2)]
+                    if (repl) {
+                        partial.replace(token, repl)
                     }
                 }
                 text.replace(link, partial)
