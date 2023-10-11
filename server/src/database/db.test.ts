@@ -1,7 +1,8 @@
 import { getDatabase } from './db'
 
-xtest("construct database", async () => {
+test("construct database", async () => {
   process.env.storage = "filebased"
+  process.env.filebased_basedir = "../data/test/dbtest"
   let db = getDatabase()
   expect(db).toBeDefined()
 

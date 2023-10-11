@@ -1,17 +1,18 @@
-import { currentJWT, currentRole } from "./store";
+import { currentJWT, currentUser } from "./store";
+import type { user } from './types'
 import env from './environment'
 let jwt = ""
 currentJWT.subscribe(n => {
     jwt = n
 })
 
-function setRole(role: string) {
-    if (!role || role == "visitor") {
-        currentRole.set("visitor")
+function setUser(user: user) {
+    if (!user || user.name == "visitor") {
+        currentUser.set({ name: "visitor", role: "visitor" })
         console.log("no role")
         // currentJWT.set("")
     } else {
-        currentRole.set(role)
+        currentUser.set(user)
     }
 }
 export async function request(url: string, query: Array<string> = []): Promise<any> {
@@ -34,7 +35,7 @@ export async function request(url: string, query: Array<string> = []): Promise<a
         }
         const result = await answer.json()
         if (result.status == "ok") {
-            setRole(result.role)
+            setUser(result.user)
             return result.result
         } else {
             alert(result.status + ": " + result.message)
@@ -42,7 +43,7 @@ export async function request(url: string, query: Array<string> = []): Promise<a
     }
     alert(answer.status + ", " + answer.statusText)
     if (answer.status == 401) {
-        setRole("visitor")
+        setUser({ role: "visitor", name: "visitor" })
     }
     return undefined
 }
@@ -63,12 +64,12 @@ export async function write(url: string, body: any): Promise<any> {
     const answer = await fetch(env.url + url, options)
     if (answer.ok) {
         const result = await answer.json()
-        setRole(result.role)
+        setUser(result.user)
         return result
     } else {
         alert(answer.status + ", " + answer.statusText)
         if (answer.status == 401) {
-            setRole("visitor")
+            setUser({ role: "visitor", name: "visitor" })
         }
         return undefined
     }
@@ -79,7 +80,7 @@ export async function login(user: string, password: string): Promise<boolean> {
     const result = await request(`login/${user}/${password}`)
     if (result) {
         currentJWT.set(result.jwt)
-        currentRole.set(result.role)
+        currentUser.set(result.user)
         return true
     }
     return false

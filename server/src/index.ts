@@ -7,27 +7,12 @@ import { cors } from 'hono/cors'
 import { getDatabase } from './database/db'
 import { post } from './types'
 import { Documents } from "./documents.class"
-import { v4 as uuid } from 'uuid'
 import { createHash } from 'node:crypto'
 import fs from 'fs/promises'
 
 const prefix = "/api/1.0/"
-const categories = new Set<string>()
-let dateFrom = new Date()
-const db = getDatabase()
-db.use("nbb")
 const app = new Hono()
 const docs = new Documents(process.env.documents, process.env.index)
-db.find({}).then((posts: Array<post>) => {
-    for (const p of posts) {
-        categories.add(p.category)
-        const d: Date = new Date(p.created)
-        if (d.getTime() < dateFrom.getTime()) {
-            dateFrom = d
-        }
-    }
-})
-
 let currentUser;
 // app.use("/static/", serveStatic({ path: "./" }))
 app.use(prefix + "*", cors())
@@ -66,11 +51,7 @@ function hasAccess(post: post): boolean {
  * Find all posts matching given criteria 
  */
 app.get(prefix + 'summary', async (c) => {
-    let posts=await docs.find(c.req.query)
-    const matcher = c.req.query('fulltext')
-    if (matcher) {
-        posts = await docs.filter(posts, matcher)
-    }
+    let posts = await docs.find(c.req.param())
     posts = posts.filter(post => {
         if (hasAccess(post)) {
             return true
@@ -86,12 +67,8 @@ app.get(prefix + 'summary', async (c) => {
 app.get(prefix + "read/:id", async (c) => {
     const params = c.req.param()
     if (params["id"]) {
-        const entry = await db.get(params["id"])
-        let processed=await docs.loadContents(entry)
-        if(c.req.query("raw")=="true"){
-            processed=await docs.processContents(processed)
-        }
-        return c.json({ status: "ok", user: currentUser, result: processed })
+        const entry = await docs.get(params["id"], c.req.query("raw") == "true")
+        return c.json({ status: "ok", user: currentUser, result: entry })
     } else {
         throw new Error("no id supplied")
     }
@@ -113,8 +90,10 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
         if (!process.env.jwt_secret) {
             console.log("No JWT Secret found. ")
         }
+        delete user.pass
         const token = await sign(user, process.env.jwt_secret)
-        return c.json({ status: "ok", result: { jwt: token, role: user.role } })
+        delete user.pass
+        return c.json({ status: "ok", result: { jwt: token, user } })
     }
     c.status(401)
     return c.json({ status: "fail", message: "bad credentials" })
@@ -124,8 +103,8 @@ app.get(prefix + "stats", async (c) => {
     return c.json({
         status: "ok",
         result: {
-            startdate: dateFrom,
-            categories: [...categories]
+            startdate: docs.getFirstDate(),
+            categories: docs.getCategoryList()
         }
     })
 })
@@ -135,20 +114,12 @@ app.get(prefix + "stats", async (c) => {
 app.post(prefix + "add", async c => {
     if (currentUser.role == "admin" || currentUser.role == "editor") {
         const contents: post = await c.req.json()
-        const document = contents.fulltext
-        if (!contents._id) {
-            contents._id = uuid()
+        if (!contents.author) {
+            contents.author = currentUser.name
         }
-        delete contents.fulltext
-        const stored = await docs.addToIndex(contents._id, document, contents.heading)
-        contents.filename = stored.filename
-        contents.author = currentUser.name
-        contents.created = new Date()
-        contents.modified = new Date()
-        await db.create(contents)
-        categories.add(contents.category)
+        const stored = await docs.add(contents)
         c.status(201)
-        return c.json({ status: "ok", role: currentUser.role, result: stored })
+        return c.json({ status: "ok", user: currentUser, result: stored })
     } else {
         c.status(401)
         return c.json({ status: "fail", message: "not authorized" })
@@ -162,14 +133,8 @@ app.post(prefix + "update", async c => {
 
     const contents: post = await c.req.json()
     if (hasAccess(contents)) {
-        const document = contents.fulltext
-        delete contents.fulltext
-        contents.created=new Date(contents.created)
-        contents.modified = new Date()
-        await db.update(contents._id, contents)
-        const stored = await docs.replaceDocument(contents._id, document, contents.heading)
-        categories.add(contents.category)
-        return c.json({ status: "ok", role: currentUser.role, stored })
+        await docs.update(contents)
+        return c.json({ status: "ok", user: currentUser })
     } else {
         c.status(401)
         return c.json({ "status": "fail", message: " not authorized" })
@@ -182,11 +147,8 @@ app.post(prefix + "update", async c => {
 app.post(prefix + "updatemeta", async c => {
     const contents: post = await c.req.json()
     if (hasAccess(contents)) {
-        contents.created=new Date(contents.created)
-        contents.modified = new Date()
-        delete contents.fulltext
-        const result = await db.update(contents._id, contents)
-        return c.json({ status: "ok", role: currentUser.role, result })
+        await docs.updateMeta(contents)
+        return c.json({ status: "ok", user: currentUser })
     } else {
         c.status(401)
         return c.json({ "status": "fail", message: " not authorized" })

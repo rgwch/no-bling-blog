@@ -9,5 +9,11 @@ export type post = {
     created?: Date
     modified?: Date
     published: boolean
-    filename?:string
+    filename?: string
+}
+
+export type user = {
+    name: string
+    role: string
+    label?: string
 }

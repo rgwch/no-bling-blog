@@ -5,6 +5,7 @@ import { post } from './types'
 import { marked } from 'marked'
 import { MetaScraper, type imageObject } from './scrapers'
 import { getDatabase } from './database/db'
+import { v4 as uuid } from 'uuid'
 
 export type analyzed = {
     filename: string
@@ -12,6 +13,8 @@ export type analyzed = {
 }
 export class Documents {
     private db
+    private categories = new Set<string>()
+    private dateFrom = new Date()
 
     constructor(private basedir: string, private indexdir: string) {
         try {
@@ -26,40 +29,95 @@ export class Documents {
         }
         this.db = getDatabase()
         this.db.use("nbb")
-
+        this.db.find({}).then((posts: Array<post>) => {
+            for (const p of posts) {
+                this.categories.add(p.category)
+                const d: Date = new Date(p.created)
+                if (d.getTime() < this.dateFrom.getTime()) {
+                    this.dateFrom = d
+                }
+            }
+        })
     }
 
-    public async add(document: Partial<post>) {
-        return this.addToIndex(document._id, document.fulltext, document.heading)
+    public getCategoryList(): Array<string> {
+        return [...this.categories]
+    }
+    public getFirstDate(): Date {
+        return this.dateFrom
     }
 
-    public async find(q: any) : Promise<Array<post>>{
+    public async add(entry: post): Promise<post> {
+        const document = entry.fulltext
+        if (!entry._id) {
+            entry._id = uuid()
+        }
+        delete entry.fulltext
+        const stored = await this.addToIndex(entry._id, document, entry.heading)
+        entry.filename = stored.filename
+        entry.created = new Date()
+        entry.modified = new Date()
+        await this.db.create(entry)
+        this.categories.add(entry.category)
+        return entry
+    }
+
+    public async update(entry: post): Promise<post> {
+        const document = entry.fulltext
+        delete entry.fulltext
+        entry.modified = new Date()
+        await this.db.update(entry._id, entry)
+        const stored = await this.replaceDocument(entry._id, document, entry.heading)
+        this.categories.add(entry.category)
+        return entry
+    }
+
+    public async updateMeta(entry: post): Promise<post> {
+        entry.created = new Date(entry.created)
+        delete entry.fulltext
+        entry.modified = new Date()
+        await this.db.update(entry._id, entry)
+        return entry
+    }
+    public async find(q: any): Promise<Array<post>> {
         const query: any = {}
 
-        const cat = q('category')
+        const cat = q['category']
         if (cat) {
             query.category = cat
         }
-        const sum = q('summary')
+        const sum = q['summary']
         if (sum) {
             query.teaser = new RegExp(sum)
         }
-        const from = q("from")
+        const from = q["from"]
         if (from) {
             query.created = { $gte: new Date(from + "-01-01") }
         }
-        const until = q("until")
+        const until = q["until"]
         if (until) {
             query.created = { $lte: new Date(until + "-12-31") }
         }
-        const between = q("between")
+        const between = q["between"]
         if (between) {
             const cr = between.split(/[,\-]/)
             query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
         }
         let posts: Array<post> = await this.db.find(query)
+        const matcher = q['fulltext']
+        if (matcher) {
+            posts = await this.filter(posts, matcher)
+        }
         return posts
+    }
 
+    public async get(id: string, raw: boolean): Promise<post> {
+        const entry = await this.db.get(id)
+        let processed = await this.loadContents(entry)
+        if (!raw) {
+            processed = (await this.processContents(processed)) as post
+        }
+        return processed
     }
     /**
      * Tokenize a document, store its contents as file in the basedir and add its contents to the index.
@@ -70,6 +128,9 @@ export class Documents {
      */
     public async addToIndex(id: string, contents: string, title: string): Promise<analyzed> {
         // check for embedded links
+        if (!id || !contents || !title) {
+            throw new Error("Missing parameter")
+        }
         const links = contents.match(/\[\[[^\]]+\]\]/g)
         if (links) {
             for (const link of links) {
@@ -109,6 +170,9 @@ export class Documents {
      * @returns 
      */
     public async replaceDocument(id: string, contents: string, title: string): Promise<analyzed> {
+        if (!id || !contents || !title) {
+            throw new Error("Missing parameter")
+        }
         await this.removeFromIndex(id)
         const filename = await this.makeFilename(title, true)
         await fs.rm(filename)
@@ -120,6 +184,9 @@ export class Documents {
      * @param id id of the removed post
      */
     public async removeFromIndex(id: string) {
+        if (!id) {
+            throw new Error("Missing parameter")
+        }
         const kws = await fs.readdir(this.indexdir)
         for (const file of kws) {
             try {
@@ -146,6 +213,9 @@ export class Documents {
     }
 
     public async processContents(entry: Partial<post>): Promise<Partial<post>> {
+        if (!entry?.fulltext) {
+            throw new Error("No fulltext supplied " + JSON.stringify(entry))
+        }
         const processed = await this.process(entry.fulltext)
         entry.fulltext = marked.parse(processed)
         return entry

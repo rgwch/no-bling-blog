@@ -1,6 +1,6 @@
 <script lang="ts">
     import env from '../environment';
-    import { currentView, currentPost, currentRole } from '../store';
+    import { currentView, currentPost, currentUser } from '../store';
     import type { post } from '../types';
     import { request, write } from '../io';
     import Summary from './Summary.svelte';
@@ -82,15 +82,10 @@
             </div>
             <div>{@html post.fulltext}</div>
         </div>
-        {#if $currentRole == 'admin'}
-            <button
-                class="btn"
-                on:click={doDelete}>Löschen</button>
-            <button
-                class="btn"
-                on:click={doEdit}>Editieren</button>
-            <span
-                class="btn">
+        {#if $currentUser.role == 'admin'}
+            <button class="btn" on:click={doDelete}>Löschen</button>
+            <button class="btn" on:click={doEdit}>Editieren</button>
+            <span class="btn">
                 <span>Publiziert: </span>
                 <input
                     type="checkbox"
@@ -102,6 +97,4 @@
 {:else}
     <div>No Text</div>
 {/if}
-<button
-    class="btn"
-    on:click={back}>Zurück</button>
+<button class="btn" on:click={back}>Zurück</button>

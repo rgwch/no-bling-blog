@@ -2,10 +2,10 @@ import { FileDB } from "./filedb.class";
 import fs from 'fs'
 
 beforeAll(() => {
-    fs.rmSync("../data/testdir", { recursive: true, force: true })
+    fs.rmSync("../data/test/filedbtest", { recursive: true, force: true })
 })
 test("create and use database", async () => {
-    const db = new FileDB("../data");
+    const db = new FileDB("../data/test/filedbtest");
     expect(await db.createDatabase("testdir")).toBeTruthy()
     const test = {
         a: "barbarossa hic est",

@@ -1,11 +1,11 @@
 import { NeDB } from "./nedb.class";
 import fs from 'fs'
 
-beforeAll(()=>{
-  fs.rmSync("../data/test_nedb",{force:true})
+beforeAll(() => {
+  fs.rmSync("../data/test/test_nedb", { force: true })
 })
 test("create and use database", async () => {
-  const db = new NeDB("../data");
+  const db = new NeDB("../data/test");
   // expect(await db.createDatabase("test_nedb")).toBeTruthy()
   const test = {
     a: "b",
