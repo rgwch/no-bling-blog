@@ -111,7 +111,7 @@ export class Documents {
         return entry
     }
 
-    public async processContents(entry: post): Promise<post> {
+    public async processContents(entry: Partial<post>): Promise<Partial<post>> {
         const processed = await this.process(entry.fulltext)
         entry.fulltext = marked.parse(processed)
         return entry
@@ -121,7 +121,7 @@ export class Documents {
         for (const link of links) {
             try {
                 const ref = JSON.parse(link.substring(2, link.length - 2))
-                const partial = await fs.readFile(path.join(__dirname, "../../data/parttials", ref + ".html"), "utf-8")
+                const partial = await fs.readFile(path.join(process.env.partials, ref.template + ".html"), "utf-8")
                 const tokens = partial.match(/\[\[[^\]]+\]\]/g)
                 for (const token of tokens) {
                     const repl = ref[token.substring(2, token.length - 2)]
