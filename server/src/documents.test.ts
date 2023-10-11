@@ -33,9 +33,9 @@ describe('Documents', () => {
   it("should process a partial", async ()=>{
     const partial="<div>This is a [[title]]</div>"
     await fs.writeFile(path.join(partialsBase,"test.html"), partial)
-    const post = {_id: "__test__", fulltext: `This is a [[{"template":"test","title":"partial"}]]`}
+    const post = {_id: "__test__", fulltext: `Replace the following: [[{"template":"test","title":"partial"}]] with the template`}
     const processed = await documents.processContents(post)
-    expect(processed.fulltext).toEqual("<div>This is a partial</div>")
+    expect(processed.fulltext.trim()).toEqual("<p>Replace the following: <div>This is a partial</div> with the template</p>")
   })
   xit('should add a document to the list', () => {
     const document = { _id: "__test__", heading: 'Test Document', content: 'This is a test document.'};
