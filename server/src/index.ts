@@ -66,30 +66,7 @@ function hasAccess(post: post): boolean {
  * Find all posts matching given criteria 
  */
 app.get(prefix + 'summary', async (c) => {
-    const query: any = {}
-
-    const cat = c.req.query('category')
-    if (cat) {
-        query.category = cat
-    }
-    const sum = c.req.query('summary')
-    if (sum) {
-        query.teaser = new RegExp(sum)
-    }
-    const from = c.req.query("from")
-    if (from) {
-        query.created = { $gte: new Date(from + "-01-01") }
-    }
-    const until = c.req.query("until")
-    if (until) {
-        query.created = { $lte: new Date(until + "-12-31") }
-    }
-    const between = c.req.query("between")
-    if (between) {
-        const cr = between.split(/[,\-]/)
-        query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
-    }
-    let posts: Array<post> = await db.find(query)
+    let posts=await docs.find(c.req.query)
     const matcher = c.req.query('fulltext')
     if (matcher) {
         posts = await docs.filter(posts, matcher)

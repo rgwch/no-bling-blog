@@ -4,12 +4,14 @@ import path from 'path'
 import { post } from './types'
 import { marked } from 'marked'
 import { MetaScraper, type imageObject } from './scrapers'
+import { getDatabase } from './database/db'
 
 export type analyzed = {
     filename: string
     tokens: Array<string>
 }
 export class Documents {
+    private db
 
     constructor(private basedir: string, private indexdir: string) {
         try {
@@ -22,10 +24,42 @@ export class Documents {
         } catch (err) {
 
         }
+        this.db = getDatabase()
+        this.db.use("nbb")
+
     }
 
     public async add(document: Partial<post>) {
         return this.addToIndex(document._id, document.fulltext, document.heading)
+    }
+
+    public async find(q: any) : Promise<Array<post>>{
+        const query: any = {}
+
+        const cat = q('category')
+        if (cat) {
+            query.category = cat
+        }
+        const sum = q('summary')
+        if (sum) {
+            query.teaser = new RegExp(sum)
+        }
+        const from = q("from")
+        if (from) {
+            query.created = { $gte: new Date(from + "-01-01") }
+        }
+        const until = q("until")
+        if (until) {
+            query.created = { $lte: new Date(until + "-12-31") }
+        }
+        const between = q("between")
+        if (between) {
+            const cr = between.split(/[,\-]/)
+            query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
+        }
+        let posts: Array<post> = await this.db.find(query)
+        return posts
+
     }
     /**
      * Tokenize a document, store its contents as file in the basedir and add its contents to the index.
@@ -126,12 +160,12 @@ export class Documents {
                 for (const token of tokens) {
                     const repl = ref[token.substring(2, token.length - 2)]
                     if (repl) {
-                        partial=partial.replace(token, repl)
+                        partial = partial.replace(token, repl)
                     }
                 }
-                text=text.replace(link, partial)
+                text = text.replace(link, partial)
             } catch (err) {
-                text=text.replace(link, "error")
+                text = text.replace(link, "error")
             }
 
         }

@@ -37,10 +37,10 @@ describe('Documents', () => {
     const processed = await documents.processContents(post)
     expect(processed.fulltext.trim()).toEqual("<p>Replace the following: <div>This is a partial</div> with the template</p>")
   })
-  xit('should add a document to the list', () => {
+  it('should add a document', () => {
     const document = { _id: "__test__", heading: 'Test Document', content: 'This is a test document.'};
     documents.add(document);
-    // expect(documents.list).toContain(document);
+    // expect(documents).toContain(document);
   });
 
   xit('should remove a document from the list', () => {
