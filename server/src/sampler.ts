@@ -4,9 +4,6 @@ import { post } from './types'
 import { v4 as uuid } from 'uuid'
 import { Documents } from './documents.class'
 
-const db = getDatabase()
-db.use("nbb")
-console.log(process.cwd())
 
 const docs = new Documents(process.env.documents, process.env.index)
 docs.parseFile("../data/sample.html", "ein erster Test").then(async t => {
@@ -25,10 +22,7 @@ docs.parseFile("../data/sample.html", "ein erster Test").then(async t => {
             modified: new Date(),
             published: true
         }
-        const tokenized = await docs.addToIndex(p._id, p.fulltext, p.heading)
-        p.filename = tokenized.filename
-        delete p.fulltext
-        const result = await (db.create(p))
+        await docs.add(p)
     }
 })
 

@@ -3,7 +3,8 @@
     "bun_dev": "runner=bun bun src/index.ts",
     "dev": "tsc && node dest/index.js",
     "clean": "rimraf dest",
-    "test": "jest"
+    "test": "jest",
+    "dummies": "tsc && node dest/sampler.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.2.0",

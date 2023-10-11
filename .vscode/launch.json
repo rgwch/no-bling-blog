@@ -6,6 +6,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Dummy database",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "dummies"
+            ],
+            "cwd":"${workspaceFolder}/server",
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+       
+        {
             "type": "bun",
             "request": "launch",
             "name": "Debug Bun",

@@ -11,7 +11,7 @@
 </script>
 
 <div class="flex flex-row">
-    {#if $currentUser.role == 'visitor' || $currentUser.role == undefined}
+    {#if $currentUser?.role == 'visitor' || $currentUser?.role == undefined}
         {#if errmsg}
             <span class="text-red-600">{errmsg}</span>
         {/if}

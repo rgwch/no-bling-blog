@@ -222,6 +222,9 @@ export class Documents {
     }
     async process(text: string): Promise<string> {
         const links = text.match(/\[\[[^\]]+\]\]/g)
+        if (!links) {
+            return text
+        }
         for (const link of links) {
             try {
                 const ref = JSON.parse(link.substring(2, link.length - 2))
