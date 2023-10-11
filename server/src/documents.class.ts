@@ -121,17 +121,17 @@ export class Documents {
         for (const link of links) {
             try {
                 const ref = JSON.parse(link.substring(2, link.length - 2))
-                const partial = await fs.readFile(path.join(process.env.partials, ref.template + ".html"), "utf-8")
+                let partial = await fs.readFile(path.join(process.env.partials, ref.template + ".html"), "utf-8")
                 const tokens = partial.match(/\[\[[^\]]+\]\]/g)
                 for (const token of tokens) {
                     const repl = ref[token.substring(2, token.length - 2)]
                     if (repl) {
-                        partial.replace(token, repl)
+                        partial=partial.replace(token, repl)
                     }
                 }
-                text.replace(link, partial)
+                text=text.replace(link, partial)
             } catch (err) {
-                text.replace(link, "error")
+                text=text.replace(link, "error")
             }
 
         }
