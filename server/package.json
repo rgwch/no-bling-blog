@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "tsc && node dest/manage.js",
-    "bun_dev": "runner=bun bun src/index.ts",
-    "dev": "tsc && node dest/index.js",
+    "dev": "tsc && NODE_ENV=debug node dest/index.js",
     "clean": "rimraf dest && rimraf ../client/dist",
     "test": "jest"
   },
