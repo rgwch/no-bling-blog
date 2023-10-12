@@ -163,10 +163,11 @@ export class Server {
             }
         })
         this.hono.use("/*", async (c, next) => {
-            console.log(process.cwd())
-            console.log(c.req.url)
             const base = "../client/dist/"
-            const filename = c.req.path
+            let filename = c.req.path
+            if (filename == "/") {
+                filename = "index.html"
+            }
             console.log(filename)
             let mime = 'text/html; charset="utf-8"'
             if (filename.endsWith('js')) {
@@ -181,10 +182,16 @@ export class Server {
                 mime = 'text/plain'
             }
             c.header("Content-Type", mime)
-            const cont = await fs.readFile(path.join(base, filename))
-            return c.stream(async stream => {
-                await stream.write(cont)
-            })
+            try {
+                const cont = await fs.readFile(path.join(base, filename))
+                return c.stream(async stream => {
+                    await stream.write(cont)
+                })
+            } catch (err) {
+                c.status(404)
+                return c.json({ status: "fail", message: "not found" })
+            }
+
         })
 
 

@@ -23,7 +23,7 @@ This is a very simple Blog app with no bling-bling (hence the name).
    
    ```
    (Stay with these defaults for you first tests.)
-1.  `npm run manage` will bring up the management interface:
+1.  `npm start` will bring up the management interface:
     ```
          ---------------------------------------------.
       | No-Bling-Blog Management                    |
@@ -40,6 +40,9 @@ This is a very simple Blog app with no bling-bling (hence the name).
       '---------------------------------------------'
 
     ```
-    For your first experiments, hit 3 for "create dummy posts" and then "2 for create new user". Enter any username you like and "admin" when asked for the role. Then, launch the blog with 1 and navigate to `http://localhost:3000`. You'll have 100 fake posts to experiment.
+    For your first experiments, hit 3 for "create dummy posts" and then "2 for create new user". Enter any username you like and "admin" when asked for the role. Then, launch the blog with 1 and navigate your favourite browser to `http://localhost:3000`. You'll have 100 fake posts to experiment.
 
-    
+## Development mode
+
+Launch `npm run dev` in the server directory and `npm run dev` in the client directory and navigate to `http://localhost:5173`
+

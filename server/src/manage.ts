@@ -6,6 +6,8 @@ import prompt from 'prompt-sync'
 import { createDummyPosts } from './sampler'
 import { Documents } from './documents.class'
 import { Server } from './server'
+const { exec } = require('child_process');
+
 
 const ask = prompt({ sigint: true })
 const docs = new Documents(process.env.documents, process.env.index)
@@ -21,6 +23,7 @@ const optionDefinitions = {
 showMenu()
 
 function showMenu() {
+  
   menu([
     { hotkey: "1", title: "Launch NoBlingBlog" },
     { hotkey: "2", title: "Create new user" },
@@ -36,9 +39,10 @@ function showMenu() {
     border: true
   }).then(async item => {
     console.clear()
+  
     switch (item.hotkey) {
       case "1":
-        launch()
+        await launch()
         break
       case "2":
         console.log("Create new user")
@@ -46,7 +50,7 @@ function showMenu() {
         break
       case "3":
         console.log("Create dummy posts")
-        dummies()
+        await dummies()
         break
       case "4":
         console.log("Show stats")
@@ -68,6 +72,7 @@ function showMenu() {
         process.exit(0)
     }
     showMenu()
+   
   })
 }
 
@@ -113,9 +118,23 @@ function stats() {
   console.log("Number of posts: " + docs.getNumEntries())
   console.log("Number of categories: " + docs.getCategoryList().length)
   console.log("First post: " + docs.getFirstDate())
+
 }
 
-function launch() {
-  const server=new Server( docs)
-  server.start()
+async function launch() {
+  console.log("Building client...")
+  return new Promise((resolve, reject) => {
+    exec("cd ../client && npm run build", (error: any, stdout: any, stderr: any) => {
+      if (error) {
+        console.log(error)
+        reject(error)
+      } else {
+        const server = new Server(docs)
+        server.start()
+        showMenu()
+        resolve(true)
+      }
+    })
+  })
+ 
 }

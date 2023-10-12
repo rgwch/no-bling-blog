@@ -1,14 +1,14 @@
 {
   "name": "no-bling-blog-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "rgwch",
   "license": "MIT",
   "scripts": {
+    "start": "tsc && node dest/manage.js",
     "bun_dev": "runner=bun bun src/index.ts",
     "dev": "tsc && node dest/index.js",
-    "clean": "rimraf dest",
-    "test": "jest",
-    "manage": "tsc && node dest/manage.js"
+    "clean": "rimraf dest && rimraf ../client/dist",
+    "test": "jest"
   },
   "dependencies": {
     "@hono/node-server": "^1.2.0",
