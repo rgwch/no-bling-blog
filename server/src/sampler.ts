@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import { getDatabase } from "./database/db";
 import { post } from './types'
 import { v4 as uuid } from 'uuid'
 import { Documents } from './documents.class'

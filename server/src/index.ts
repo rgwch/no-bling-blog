@@ -84,6 +84,12 @@ app.get(prefix + "login/:user/:pwd", async (c) => {
     const usersfile = await fs.readFile(process.env.users, "utf-8")
     const users = JSON.parse(usersfile)
     const user = users.find(u => u.name == cred.user)
+    if(user){
+        if(!user.pass){     // fist time login of a new user
+            user.pass=hashed
+            await fs.writeFile(process.env.users, JSON.stringify(users))
+        }
+    }
     if (user?.pass === hashed) {
         // login ok
         user.exp = Math.round(new Date().getTime() / 1000 + 3600)
