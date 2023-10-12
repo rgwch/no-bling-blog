@@ -17,7 +17,7 @@ function showMenu() {
     { hotkey: "b", title: "Backup data" },
     { hotkey: "v", title: "Show version" },
     { separator: true },
-    { hotkey: "c", title: "Cleanup, delete all data (destructive!" },
+    { hotkey: "c", title: "Cleanup, delete all data (destructive!)" },
     { hotkey: "x", title: "Exit" }
   ], {
     header: "No-Bling-Blog Management",
