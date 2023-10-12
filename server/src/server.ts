@@ -4,6 +4,7 @@ import { cors } from 'hono/cors'
 import { Documents } from './documents.class'
 import { decode, sign, verify } from 'hono/jwt'
 import fs from 'fs/promises'
+import path from 'path'
 import { createHash } from 'node:crypto'
 import { serve } from '@hono/node-server'
 
@@ -13,10 +14,9 @@ const prefix = "/api/1.0/"
 
 export class Server {
     private hono: Hono
-    constructor(private docs:Documents) {
+    constructor(private docs: Documents) {
         this.hono = new Hono()
         let currentUser;
-        // this.hono.use("/static/", serveStatic({ path: "./" }))
         this.hono.use(prefix + "*", cors())
         this.hono.use(prefix + "*", async (c, next) => {
             currentUser = { name: "visitor", role: "visitor" }
@@ -162,12 +162,37 @@ export class Server {
                 return c.json({ "status": "fail", message: " not authorized" })
             }
         })
+        this.hono.use("/*", async (c, next) => {
+            console.log(process.cwd())
+            console.log(c.req.url)
+            const base = "../client/dist/"
+            const filename = c.req.path
+            console.log(filename)
+            let mime = 'text/html; charset="utf-8"'
+            if (filename.endsWith('js')) {
+                mime = 'text/javascript'
+            } else if (filename.endsWith('css')) {
+                mime = 'text/css'
+            } else if (filename.endsWith('svg')) {
+                mime = 'text/svg+xml'
+            } else if (filename.endsWith('jpg')) {
+                mime = 'image/jpeg'
+            } else if (filename.endsWith('txt')) {
+                mime = 'text/plain'
+            }
+            c.header("Content-Type", mime)
+            const cont = await fs.readFile(path.join(base, filename))
+            return c.stream(async stream => {
+                await stream.write(cont)
+            })
+        })
+
 
         console.log("Hono serving at port 3000")
 
     }
     public start() {
-        const result=serve(this.hono)
+        const result = serve(this.hono)
         // console.log(JSON.stringify(result))
     }
 }
