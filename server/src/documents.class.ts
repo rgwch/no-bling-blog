@@ -15,6 +15,7 @@ export class Documents {
     private db
     private categories = new Set<string>()
     private dateFrom = new Date()
+    private numEntries = 0
 
     constructor(private basedir: string, private indexdir: string) {
         try {
@@ -30,6 +31,7 @@ export class Documents {
         this.db = getDatabase()
         this.db.use("nbb")
         this.db.find({}).then((posts: Array<post>) => {
+            this.numEntries = posts.length
             for (const p of posts) {
                 this.categories.add(p.category)
                 const d: Date = new Date(p.created)
@@ -46,7 +48,9 @@ export class Documents {
     public getFirstDate(): Date {
         return this.dateFrom
     }
-
+    public getNumEntries(): number {
+        return this.numEntries
+    }
     public async add(entry: post): Promise<post> {
         const document = entry.fulltext
         if (!entry._id) {
@@ -55,7 +59,9 @@ export class Documents {
         delete entry.fulltext
         const stored = await this.addToIndex(entry._id, document, entry.heading)
         entry.filename = stored.filename
-        entry.created = new Date()
+        if (!entry.created) {
+            entry.created = new Date()
+        }
         entry.modified = new Date()
         await this.db.create(entry)
         this.categories.add(entry.category)

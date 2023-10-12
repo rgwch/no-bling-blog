@@ -1,8 +1,15 @@
+import 'dotenv/config'
 import fs from 'fs'
 import path from 'path'
 import menu from 'console-menu'
 import prompt from 'prompt-sync'
+import { createDummyPosts } from './sampler'
+import { Documents } from './documents.class'
+import { Server } from './server'
+
 const ask = prompt({ sigint: true })
+const docs = new Documents(process.env.documents, process.env.index)
+
 
 const optionDefinitions = {
   alias: {
@@ -15,13 +22,14 @@ showMenu()
 
 function showMenu() {
   menu([
-    { hotkey: "n", title: "Create new user" },
-    { hotkey: "d", title: "Create dummy posts" },
-    { hotkey: "s", title: "Show stats" },
-    { hotkey: "b", title: "Backup data" },
-    { hotkey: "v", title: "Show version" },
+    { hotkey: "1", title: "Launch NoBlingBlog" },
+    { hotkey: "2", title: "Create new user" },
+    { hotkey: "3", title: "Create dummy posts" },
+    { hotkey: "4", title: "Show stats" },
+    { hotkey: "5", title: "Backup data" },
+    { hotkey: "6", title: "Show version" },
     { separator: true },
-    { hotkey: "c", title: "Cleanup, delete all data (destructive!)" },
+    { hotkey: "0", title: "Cleanup, delete all data (destructive!)" },
     { hotkey: "q", title: "Quit" }
   ], {
     header: "No-Bling-Blog Management",
@@ -29,23 +37,30 @@ function showMenu() {
   }).then(async item => {
     console.clear()
     switch (item.hotkey) {
-      case "n":
+      case "1":
+        launch()
+        break
+      case "2":
         console.log("Create new user")
         createUser()
         break
-      case "d":
+      case "3":
         console.log("Create dummy posts")
+        dummies()
         break
-      case "s":
+      case "4":
         console.log("Show stats")
+        stats()
         break
-      case "b":
+      case "5":
         console.log("Backup data")
+
         break
-      case "c":
+      case "0":
         console.log("Cleanup, delete all data (destructive!)")
+        cleanup()
         break
-      case "v":
+      case "6":
         showVersion();
         break
       case "x":
@@ -72,4 +87,35 @@ function createUser() {
   users.push({ name: user, role: role })
   fs.writeFileSync(usersfile, JSON.stringify(users))
   console.log("User created.")
+}
+
+function cleanup() {
+  for (let dir of [process.env.documents, process.env.nedb_datadir, process.env.index]) {
+    remove(dir)
+  }
+  console.log("All data deleted.")
+}
+
+function remove(dir: string) {
+  if (fs.existsSync(dir)) {
+    console.log("Removing " + dir)
+    fs.rmSync(dir, { recursive: true })
+  } else {
+    console.log("Directory " + dir + " does not exist.")
+  }
+}
+
+function dummies() {
+  createDummyPosts()
+}
+
+function stats() {
+  console.log("Number of posts: " + docs.getNumEntries())
+  console.log("Number of categories: " + docs.getCategoryList().length)
+  console.log("First post: " + docs.getFirstDate())
+}
+
+function launch() {
+  const server=new Server( docs)
+  server.start()
 }
