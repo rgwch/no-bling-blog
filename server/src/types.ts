@@ -12,3 +12,9 @@ export type post = {
     filename?: string,
     reference?: any
 }
+export type user = {
+    name: string
+    role: string
+    label?: string
+    pass?: string
+}

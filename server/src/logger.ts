@@ -6,7 +6,7 @@ import winston from 'winston'
 */
 
 export const logger = winston.createLogger({
-  level: (process.env.NODE_ENV==="debug") ? 'debug' : 'info',
+  level: (process.env.NODE_ENV==="debug") ? 'debug' : 'warn',
   silent: false,
   format: winston.format.combine(
     winston.format.colorize(),

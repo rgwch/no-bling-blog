@@ -14,8 +14,8 @@ This is a very simple Blog app with no bling-bling (hence the name).
 1. create a file server/.env with the following properties:
    ```
    storage=nedb
-   nedb_datadir=../data/nedb
    documents=../data/documents
+   nedb_datadir=../data/documents/nedb
    partials=../data/partials
    index=../data/documents/index
    users=../data/users.json
@@ -23,9 +23,9 @@ This is a very simple Blog app with no bling-bling (hence the name).
    
    ```
    (Stay with these defaults for you first tests.)
-1.  `npm start` will bring up the management interface:
+1.  `npm start` in the server directory will bring up the management interface:
     ```
-         ---------------------------------------------.
+      ---------------------------------------------.
       | No-Bling-Blog Management                    |
       +---------------------------------------------+
       | [1] Launch NoBlingBlog                      |

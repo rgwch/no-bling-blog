@@ -6,7 +6,9 @@ import prompt from 'prompt-sync'
 import { createDummyPosts } from './sampler'
 import { Documents } from './documents.class'
 import { Server } from './server'
+import { user } from './types'
 const { exec } = require('child_process');
+
 
 
 const ask = prompt({ sigint: true })
@@ -23,48 +25,48 @@ const optionDefinitions = {
 showMenu()
 
 function showMenu() {
-  
+
   menu([
-    { hotkey: "1", title: "Launch NoBlingBlog" },
-    { hotkey: "2", title: "Create new user" },
-    { hotkey: "3", title: "Create dummy posts" },
-    { hotkey: "4", title: "Show stats" },
-    { hotkey: "5", title: "Backup data" },
-    { hotkey: "6", title: "Show version" },
+    { hotkey: "r", title: "Build and run NoBlingBlog" },
+    { hotkey: "u", title: "Create new user" },
+    { hotkey: "s", title: "Show stats" },
+    { hotkey: "b", title: "Backup data" },
+    { hotkey: "v", title: "Show version" },
     { separator: true },
-    { hotkey: "0", title: "Cleanup, delete all data (destructive!)" },
+    { hotkey: "d", title: "Create dummy posts" },
+    { hotkey: "c", title: "Cleanup, delete all data (destructive!)" },
     { hotkey: "q", title: "Quit" }
   ], {
     header: "No-Bling-Blog Management",
     border: true
   }).then(async item => {
     console.clear()
-  
+
     switch (item.hotkey) {
-      case "1":
+      case "r":
         await launch()
         break
-      case "2":
+      case "u":
         console.log("Create new user")
         createUser()
         break
-      case "3":
+      case "d":
         console.log("Create dummy posts")
         await dummies()
         break
-      case "4":
+      case "s":
         console.log("Show stats")
         stats()
         break
-      case "5":
+      case "b":
         console.log("Backup data")
 
         break
-      case "0":
+      case "c":
         console.log("Cleanup, delete all data (destructive!)")
         cleanup()
         break
-      case "6":
+      case "v":
         showVersion();
         break
       case "x":
@@ -72,7 +74,7 @@ function showMenu() {
         process.exit(0)
     }
     showMenu()
-   
+
   })
 }
 
@@ -82,16 +84,24 @@ function showVersion() {
 }
 
 function createUser() {
+  const users = loadUsers()
   const user = ask("username? ->")
-  const role = ask("role (admin,editor)? ->")
-  const usersfile = path.join(__dirname, '../../data/users.json')
-  let users = []
-  if (fs.existsSync(usersfile)) {
-    users = JSON.parse(fs.readFileSync(usersfile, 'utf8'))
+  if (users.find(u => u.name == user)) {
+    console.log("User already exists.")
+  } else {
+    const role = ask("role (admin,editor)? ->")
+    users.push({ name: user, role: role })
+    fs.writeFileSync(process.env.users, JSON.stringify(users))
+    console.log("User created.")
   }
-  users.push({ name: user, role: role })
-  fs.writeFileSync(usersfile, JSON.stringify(users))
-  console.log("User created.")
+}
+
+function loadUsers(): Array<user> {
+  let users = []
+  if (fs.existsSync(process.env.users)) {
+    users = JSON.parse(fs.readFileSync(process.env.users, 'utf8'))
+  }
+  return users
 }
 
 function cleanup() {
@@ -110,18 +120,20 @@ function remove(dir: string) {
   }
 }
 
-function dummies() {
-  createDummyPosts()
+async function dummies() {
+  await createDummyPosts(docs)
+  await docs.rescan()
 }
 
 function stats() {
   console.log("Number of posts: " + docs.getNumEntries())
   console.log("Number of categories: " + docs.getCategoryList().length)
   console.log("First post: " + docs.getFirstDate())
-
+  const users=loadUsers()
+  console.log("Number of users: " + users.length)
 }
 
-async function launch() {
+function launch() {
   console.log("Building client...")
   return new Promise((resolve, reject) => {
     exec("cd ../client && npm run build", (error: any, stdout: any, stderr: any) => {
@@ -130,11 +142,12 @@ async function launch() {
         reject(error)
       } else {
         const server = new Server(docs)
-        server.start()
-        showMenu()
-        resolve(true)
+        server.start().then(() => {
+          console.log("NoBlingBlog started. Select 'quit' to stop.")
+          resolve(true)
+        })
       }
     })
   })
- 
+
 }

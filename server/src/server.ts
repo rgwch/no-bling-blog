@@ -5,6 +5,7 @@ import { Documents } from './documents.class'
 import { decode, sign, verify } from 'hono/jwt'
 import fs from 'fs/promises'
 import path from 'path'
+import { logger } from './logger'
 import { createHash } from 'node:crypto'
 import { serve } from '@hono/node-server'
 
@@ -33,7 +34,7 @@ export class Server {
                     }
                 }
                 catch (err) {
-                    console.log(err)
+                    logger.error(err)
                 }
             }
             await next()
@@ -96,7 +97,7 @@ export class Server {
                 // login ok
                 user.exp = Math.round(new Date().getTime() / 1000 + 3600)
                 if (!process.env.jwt_secret) {
-                    console.log("No JWT Secret found. ")
+                    logger.error("No JWT Secret found. ")
                 }
                 delete user.pass
                 const token = await sign(user, process.env.jwt_secret)
@@ -168,7 +169,7 @@ export class Server {
             if (filename == "/") {
                 filename = "index.html"
             }
-            console.log(filename)
+            logger.debug("serving " + filename)
             let mime = 'text/html; charset="utf-8"'
             if (filename.endsWith('js')) {
                 mime = 'text/javascript'
@@ -195,11 +196,11 @@ export class Server {
         })
 
 
-        console.log("Hono serving at port 3000")
+        logger.info("Hono serving at port 3000")
 
     }
-    public start() {
-        const result = serve(this.hono)
-        // console.log(JSON.stringify(result))
+    public async start() {
+        const result = await serve({ fetch: this.hono.fetch, port: 3000 })
+        // console.log(result.port))
     }
 }

@@ -30,6 +30,10 @@ export class Documents {
         }
         this.db = getDatabase()
         this.db.use("nbb")
+        this.rescan()
+    }
+
+    public async rescan() {
         this.db.find({}).then((posts: Array<post>) => {
             this.numEntries = posts.length
             for (const p of posts) {
