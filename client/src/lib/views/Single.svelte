@@ -75,12 +75,12 @@
         </span>
     {:else}
         <div
-            class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-5">
+            class="prose md:prose-lg max-w-none border-blue-600  rounded-md my-3 mx-5 p-5">
             <div class="text-sm font-light italic">({post.category})</div>
             <div class="text-blue-800 font-bold text-lg mb-4 text-center">
                 {post.heading}
             </div>
-            <div>{@html post.fulltext}</div>
+            <div>{@html post.fulltext}</div> 
         </div>
         {#if $currentUser.role == 'admin'}
             <button class="btn" on:click={doDelete}>Löschen</button>

@@ -19,6 +19,14 @@
   @apply mr-4 my-1 p-1 border-2 border-blue-800 bg-blue-200 rounded-md;
 
 }
+
+.btn:hover {
+  @apply bg-blue-300;
+}
+.two-col {
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+}
 /*
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

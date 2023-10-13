@@ -159,7 +159,7 @@ export class Documents {
                         text: scraper.getText(),
                         imgurl: scraper.getImage().url
                     }
-                    contents = contents.replace(link, JSON.stringify(repl))
+                    contents = contents.replace(link, "[["+JSON.stringify(repl)+"]]")
                 }
             }
         }

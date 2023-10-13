@@ -2,7 +2,7 @@
     import type { post } from "../types";
     import Post from "../components/Post.svelte";
     import Filter from "../components/Filter.svelte";
-    import Edit from "./Edit.svelte"
+    import Edit from "./Edit.svelte";
     import { currentView, currentPost, currentJWT } from "../store";
     import { request } from "../io";
     import Single from "../views/Single.svelte";
@@ -15,18 +15,18 @@
     let yearFrom = "";
     let yearUntil = "";
     let filterFulltext = "";
-    request("stats").then(result=>{
-        const dt=new Date(result.startdate)
-        const now=new Date().getTime()
-        while(dt.getTime() <= now){
-            const year=dt.getFullYear()
-            years.push(year.toString())        
-            dt.setFullYear(year+1)
+    request("stats").then((result) => {
+        const dt = new Date(result.startdate);
+        const now = new Date().getTime();
+        while (dt.getTime() <= now) {
+            const year = dt.getFullYear();
+            years.push(year.toString());
+            dt.setFullYear(year + 1);
         }
-        years.push("")
-        years=years
-        categories=["",...result.categories]
-    })
+        years.push("");
+        years = years;
+        categories = ["", ...result.categories];
+    });
     doFilter();
     async function doFilter() {
         // console.log(new Date().toString()+":"+$currentJWT)
@@ -40,51 +40,51 @@
         if (currentCategory != "") {
             filters.push(`category=${currentCategory}`);
         }
-        if(yearFrom != ""){
-            if(yearUntil!=""){
-                filters.push(`between=${yearFrom},${yearUntil}`)
-            }else{
-                filters.push(`from=${yearFrom}`)
+        if (yearFrom != "") {
+            if (yearUntil != "") {
+                filters.push(`between=${yearFrom},${yearUntil}`);
+            } else {
+                filters.push(`from=${yearFrom}`);
             }
-        }else{
-            if(yearUntil!=""){
-                filters.push(`until=${yearUntil}`)
+        } else {
+            if (yearUntil != "") {
+                filters.push(`until=${yearUntil}`);
             }
         }
         posts = await request("summary", filters);
-
     }
     function load(p: post) {
         $currentPost = p;
         $currentView = Single;
     }
-    function createNew(){
-        const np:post={
+    function createNew() {
+        const np: post = {
             heading: "",
             teaser: "",
             fulltext: "",
             category: "",
             author: "",
-            published: false
-        }
-        $currentPost=np
-        $currentView=Edit
+            published: false,
+        };
+        $currentPost = np;
+        $currentView = Edit;
     }
 </script>
 
 <div
-    class="flex flex-row flex-nowrap mx-5 m-2 p-1 text-sm border-blue-400 rounded-md border-2">
-    <Filter
-        caption="Jahr von"
-        choices={years}
-        bind:val={yearFrom}
-        on:changed={doFilter} />
-    <Filter
-        caption="Jahr bis"
-        choices={years}
-        bind:val={yearUntil}
-        on:changed={doFilter} />
-
+    class="flex flex-col justify-center content-stretch md:flex-row mx-5 m-2 p-1 text-sm">
+    <div class="flex flex-row">
+        <Filter
+            caption="Jahr von"
+            choices={years}
+            bind:val={yearFrom}
+            on:changed={doFilter} />
+        <Filter
+            caption="Jahr bis"
+            choices={years}
+            bind:val={yearUntil}
+            on:changed={doFilter} />
+    </div>
     <Filter
         caption="Kategorie"
         choices={categories}
@@ -98,7 +98,7 @@
         caption="Volltext"
         bind:val={filterFulltext}
         on:changed={doFilter} />
-    <button on:click={createNew}>Neu...</button>
+    <button class="btn" on:click={createNew}>Neu...</button>
 </div>
 
 <div class="flex flex-row m-5 flex-wrap justify-center">

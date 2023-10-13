@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex flex-col p-2">
-    <div>
+    <div class="whitespace-nowrap">
         {caption}
     </div>
     <div>
