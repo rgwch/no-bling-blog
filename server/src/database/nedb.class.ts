@@ -20,10 +20,12 @@ export class NeDB implements IDatabase {
     const ret = path.join((this.datadir || "../../data"), fn)
     return ret
   }
-  use(name: string, options?: any): boolean {
+  use(name: string, options?: any): Datastore {
     this.using = name
-    this.dbs[this.using] = new Datastore({ filename: this.makefile(this.using), autoload: true })
-    return true;
+    if (!this.dbs[this.using]) {
+      this.dbs[this.using] = new Datastore({ filename: this.makefile(this.using), autoload: true })
+    }
+    return this.dbs[this.using];
   }
 
   async checkInstance(): Promise<boolean> {
