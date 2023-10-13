@@ -1,6 +1,16 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
+
+
 import { post } from './types'
 import { Documents } from './documents.class'
 
+/** 
+ * Create 100 sanple posts for NoBlingBlog from random extracts of a html file
+ */
 
 export async function createDummyPosts(docs: Documents) {
     const t = await docs.parseFile("../data/sample.html", "ein erster Test")

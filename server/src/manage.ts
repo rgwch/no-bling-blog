@@ -1,3 +1,10 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
+
+// Management tool for NoBlingBlog
 import 'dotenv/config'
 import fs from 'fs'
 import path from 'path'
@@ -9,6 +16,47 @@ import { Server } from './server'
 import { user } from './types'
 const { exec } = require('child_process');
 
+// Check mandatory environment variables
+let env_ok = true;
+if (!process.env.documents) {
+  console.log("Environment variable 'documents' not set.")
+  env_ok = false
+}
+if (!process.env.index) {
+  console.log("Environment variable 'index' not set.")
+  env_ok = false
+}
+if (!process.env.users) {
+  console.log("Environment variable 'users' not set.")
+  env_ok = false
+}
+if (!process.env.storage) {
+  console.log("Environment variable 'storage' not set.")
+  env_ok = false
+} else {
+  if (process.env.storage == "nedb") {
+    if (!process.env.nedb_datadir) {
+      console.log("Environment variable 'nedb_datadir' not set.")
+      env_ok = false
+    }
+  } else if (process.env.storage == "filebased") {
+    if (!process.env.filebased_basedir) {
+      console.log("Environment variable 'filebased_basedir' not set.")
+      env_ok = false
+    }
+  } else {
+    console.log("Storage method " + process.env.storage + " not supported.")
+    env_ok = false
+  }
+}
+if (!process.env.jwt_secret) {
+  console.log("Environment variable 'jwt_secret' not set.")
+  env_ok = false
+}
+if (!env_ok) {
+  console.log("Please set environment variables and try again.")
+  process.exit(1)
+}
 
 
 const ask = prompt({ sigint: true })
@@ -129,7 +177,7 @@ function stats() {
   console.log("Number of posts: " + docs.getNumEntries())
   console.log("Number of categories: " + docs.getCategoryList().length)
   console.log("First post: " + docs.getFirstDate())
-  const users=loadUsers()
+  const users = loadUsers()
   console.log("Number of users: " + users.length)
 }
 

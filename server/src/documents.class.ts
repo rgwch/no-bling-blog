@@ -1,3 +1,9 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
+
 import fs from 'fs/promises'
 import { createReadStream, createWriteStream } from 'fs'
 import path from 'path'

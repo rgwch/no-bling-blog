@@ -1,3 +1,9 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
+
 import { Hono } from 'hono'
 import { post } from './types'
 import { cors } from 'hono/cors'
