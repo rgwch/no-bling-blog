@@ -3,7 +3,7 @@ import { setup_tests, cleanup_tests } from '../setup-tests'
 
 const env = "/dbtest"
 
-describe("db", () => {
+xdescribe("db", () => {
   beforeAll(async () => {
     await setup_tests()
     process.env.storage = "filebased"

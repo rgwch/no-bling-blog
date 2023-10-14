@@ -26,12 +26,16 @@ export class NeDB implements IDatabase {
     return ret
   }
   createDatabase(name: string, options?: any): Promise<boolean> {
-    if (!options?.inMemory) {
-      this.dbs[name] = new Datastore({ filename: this.makefile(name), autoload: true })
-    } else {
-      this.dbs[name] = new Datastore();
-    }
-    return Promise.resolve(true)
+    return new Promise((resolve, reject) => {
+      this.dbs[name] = new Datastore({ filename: this.makefile(name) })
+      this.dbs[name].loadDatabase(err => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(true)
+        }
+      })
+    })
   }
   async get(db: string, _id: string, options?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {

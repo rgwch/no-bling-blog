@@ -14,6 +14,8 @@ import { getDatabase } from './database/db'
 import { IDatabase } from './database/db.interface'
 import { tokenizer } from './tokenizer'
 import { v4 as uuid } from 'uuid'
+import { NeDB } from './database/nedb.class'
+import { logger } from './logger'
 const docdb = "nbbdocs"
 const indexdb = "nbbindex"
 
@@ -33,12 +35,15 @@ export class Documents {
         } catch (err) {
 
         }
-        this.db = getDatabase()
-        this.db.createDatabase(docdb)
-        this.db.createDatabase(indexdb)
-        this.rescan().then(() => {
-            console.log("Database initialized. " + this.numEntries + " posts in " + this.categories.size + " categories")
-        })
+        // this.db = getDatabase({ basedir })
+        this.db = new NeDB(basedir)
+
+    }
+    public async initialize() {
+        await this.db.createDatabase(docdb)
+        await this.db.createDatabase(indexdb)
+        await this.rescan()
+        logger.info("Database initialized. " + this.numEntries + " posts in " + this.categories.size + " categories")
     }
 
     public async rescan() {

@@ -34,7 +34,7 @@
             "type": "node",
             "outputCapture": "std",
         },       {
-            "name": "Debug single tests",
+            "name": "Debug single test",
             "request": "launch",
             "cwd":"${workspaceFolder}/server",
             "runtimeArgs": [

@@ -25,5 +25,5 @@ export async function setup_tests() {
 }
 
 export async function cleanup_tests() {
-    await fs.rm(base, { recursive: true })
+    await fs.rm(base, { recursive: true, force: true })
 }

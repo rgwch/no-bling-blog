@@ -8,18 +8,12 @@ describe('Documents', () => {
 
   beforeAll(async () => {
     await setup_tests()
+    documents = new Documents(process.env.documents);
+    await documents.initialize()
   })
   afterAll(async () => {
     await cleanup_tests()
   })
-
-  beforeEach(async () => {
-    return new Promise((resolve, reject) => {
-      documents = new Documents(process.env.documents);
-      setTimeout(resolve, 100)
-    })
-
-  });
 
   it("should process a partial", async () => {
     const partial = "<div>This is a [[title]]</div>"
