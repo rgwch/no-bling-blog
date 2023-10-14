@@ -16,8 +16,9 @@ export interface IDatabase {
   /**
    * fetch an element from the database
    * @param _id unique identifier for the element
-   * @returns The Element with the given _id
-   * @throws NotFoundException if the element doesnt exist
+   * @param options {nullIfMissing: boolean}
+   * @returns The Element with the given _id, or null if it does not exist and nullIfMissing is true
+   * @throws NotFoundException if the element doesnt exist and nullIfMissing is false
    */
   get(db:string,_id: string, options?: any): Promise<any>
   /**

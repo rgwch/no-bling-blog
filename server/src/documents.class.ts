@@ -12,6 +12,7 @@ import { marked } from 'marked'
 import { MetaScraper, type imageObject } from './scrapers'
 import { getDatabase } from './database/db'
 import { IDatabase } from './database/db.interface'
+import {tokenizer} from './tokenizer'
 import { v4 as uuid } from 'uuid'
 const docdb = "nbbdocs"
 const indexdb = "nbbindex"
@@ -84,6 +85,9 @@ export class Documents {
         return entry
     }
 
+    async tokenizeAndSave(contents:string,title:string, id:string){
+        const tokens=tokenizer.process(contents)
+    }
     public async update(entry: post): Promise<post> {
         const document = entry.fulltext
         delete entry.fulltext

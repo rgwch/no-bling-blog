@@ -4,11 +4,12 @@ import path from 'path'
 
 describe('Documents', () => {
   let documents: Documents;
+  const base="../data/test"
   const usersFile = '../data/test/users.json';
   const documentsBase = '../data/test/documents';
   const partialsBase = '../data/test/partials';
   const indexBase = '../data/test/index';
-
+ 
   beforeAll(async () => {
     await fs.mkdir(documentsBase, { recursive: true })
     await fs.mkdir(partialsBase, { recursive: true })
@@ -19,6 +20,7 @@ describe('Documents', () => {
     process.env.partials = partialsBase;
     process.env.index = indexBase;
     process.env.jwt_secret = 'secret';
+    process.env.nedb_datadir=base
 
   })
   afterAll(async () => {

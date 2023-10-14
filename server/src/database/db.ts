@@ -21,7 +21,7 @@ export const getDatabase = (): IDatabase => {
         db = new FileDB(process.env.filebased_basedir || "../data")
         break;
       default:
-        throw new Error("No Datastore defined in .env")
+        throw new Error("No valid datastore defined in .env")
     }
   }
   return db

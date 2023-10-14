@@ -1,13 +1,13 @@
 import { NeDB } from "./nedb.class";
 import fs from 'fs'
-const use="test_nedb"
+const use = "test_nedb"
 
 beforeAll(() => {
   fs.rmSync("../data/test/test_nedb", { force: true })
 })
 test("create and use database", async () => {
   const db = new NeDB("../data/test");
-  // expect(await db.createDatabase("test_nedb")).toBeTruthy()
+  expect(await db.createDatabase(use)).toBeTruthy()
   const test = {
     a: "b",
     b: "c",
@@ -15,12 +15,12 @@ test("create and use database", async () => {
       e: "f"
     }
   }
-  // expect(() => db.create(test)).toThrow("no database selected")
-  const id = (await db.create(use,test))._id
+  const id = (await db.create(use, test))._id
   expect(id).toBeDefined()
-  // expect(() => db.get(_id)).not.toThrow();
-  // expect(() => db.get("xyz")).toThrow()
-  const retr = await db.find(use,{})
+  await expect(db.get(use, "a")).rejects.toMatch("NotFound")
+  await expect(db.get(use, "a", { nullIfMissing: true })).resolves.toBeNull()
+  await expect(db.get(use, id)).resolves.toBeDefined()
+  const retr = await db.find(use, {})
   expect(Array.isArray(retr)).toBeTruthy()
   expect(retr).toHaveLength(1)
 

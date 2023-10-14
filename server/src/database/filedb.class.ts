@@ -6,7 +6,6 @@ import { v4 as uuid } from 'uuid'
 
 export class FileDB implements IDatabase {
     private basedir: string;
-    private using = "";
 
     constructor(basedir?: string) {
         this.basedir = basedir || "data"
@@ -15,22 +14,10 @@ export class FileDB implements IDatabase {
         }
     }
 
-    private checkUsing() {
-        if (!this.using) {
-            throw new Error("no database selected")
-        }
+    private makepath(db: string, name: string): string {
+        return path.join(this.basedir, db, name)
     }
-    private makepath(name: string): string {
-        this.checkUsing()
-        return path.join(this.using!, name)
-    }
-    use(database: string, options?: any): void {
-        const fullpath = path.join(this.basedir, database)
-        this.using = fullpath
-        if (!fs.existsSync(fullpath)) {
-            fs.mkdirSync(fullpath, { recursive: true })
-        }
-    }
+
     async checkInstance(): Promise<boolean> {
         return true
     }
@@ -44,33 +31,38 @@ export class FileDB implements IDatabase {
         }
         return true;
     }
-    get(id: string, options?: any): Promise<any> {
+    get(db: string, id: string, options?: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            fs.readFile(this.makepath(id), "utf-8", (err, cnt) => {
+            fs.readFile(this.makepath(db, id), "utf-8", (err, cnt) => {
                 if (err) {
-                    reject(err)
+                    if (options?.nullIfMissing) {
+                        resolve(null)
+                    } else {
+                        console.log(err)
+                        reject("NotFound")
+                    }
                 } else {
                     resolve(JSON.parse(cnt))
                 }
             })
         })
     }
-    find(params: any): Promise<any[]> {
+    find(db: string, params: any): Promise<any[]> {
         return new Promise((resolve, reject) => {
-            fs.readdir(this.using, (err, files) => {
+            fs.readdir(path.join(this.basedir, db), (err, files) => {
                 if (err) {
                     reject(err)
                 } else {
                     if (Object.keys(params).length == 0) {
                         resolve(files.map(fn => {
-                            const cont = fs.readFileSync(this.makepath(fn))
+                            const cont = fs.readFileSync(this.makepath(db, fn))
                             return JSON.parse(cont.toString())
                         }))
                     } else {
                         const ret = []
                         for (const file of files) {
                             try {
-                                const cont = fs.readFileSync(this.makepath(file))
+                                const cont = fs.readFileSync(this.makepath(db, file))
                                 const js = JSON.parse(cont.toString())
 
                                 for (const attr in params) {
@@ -92,12 +84,12 @@ export class FileDB implements IDatabase {
     }
 
 
-    create(element: any, params?: any): Promise<any> {
+    create(db: string, element: any, params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!element._id) {
                 element._id = uuid();
             }
-            fs.writeFile(this.makepath(element._id), JSON.stringify(element), (err) => {
+            fs.writeFile(this.makepath(db, element._id), JSON.stringify(element), (err) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -106,13 +98,13 @@ export class FileDB implements IDatabase {
             })
         })
     }
-    update(id: string, element: any): Promise<any> {
+    update(db: string, id: string, element: any): Promise<any> {
         element._id = id
-        return this.create(element)
+        return this.create(db, element)
     }
-    remove(id: string, params?: any): Promise<any> {
+    remove(db: string, id: string, params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            fs.rm(this.makepath(id), (err) => {
+            fs.rm(this.makepath(db, id), (err) => {
                 if (err) {
                     reject(err)
                 } else {

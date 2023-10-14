@@ -2,7 +2,7 @@ import fs from "fs"
 import path from 'path'
 export class Tokenizer {
     private stopWords: string[] = []
-    process(text: string): string[] {
+    public process(text: string): string[] {
         if (this.stopWords.length == 0) {
             this.stopWords = fs.readFileSync(path.join(process.env.basedir, "stopwords.txt"), "utf8").split("\n")
         }

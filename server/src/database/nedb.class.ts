@@ -7,14 +7,14 @@ import path from 'path'
 
 export class NeDB implements IDatabase {
   private dbs: { [name: string]: Datastore } = {}
-  
+
   constructor(private datadir: string) { }
 
   private makefile(fn: string): string {
     const ret = path.join((this.datadir || "../../data"), fn)
     return ret
   }
-  
+
   async checkInstance(): Promise<boolean> {
     return true;
   }
@@ -33,20 +33,23 @@ export class NeDB implements IDatabase {
     }
     return Promise.resolve(true)
   }
-  async get(db:string, _id: string, options?: any): Promise<any> {
+  async get(db: string, _id: string, options?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this.dbs[db].findOne({ '_id': _id }, (err: Error | null, result) => {
         if (err) {
           reject(err)
         }
         if (result == null) {
-          reject("NotFound")
+          if (options?.nullIfMissing) {
+            resolve(null)
+          } else
+            reject("NotFound")
         }
         resolve(result)
       })
     })
   }
-  find(db:string, params: any): Promise<any[]> {
+  find(db: string, params: any): Promise<any[]> {
     return new Promise((resolve, reject) => {
       delete params.database
       this.dbs[db].find(params).sort({ created: -1 }).exec((err: Error, result: any) => {
@@ -57,7 +60,7 @@ export class NeDB implements IDatabase {
       })
     })
   }
-  create(db:string,element: any, params?: any): Promise<any> {
+  create(db: string, element: any, params?: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.dbs[db].insert(element, (err, result) => {
         if (err) {
@@ -68,7 +71,7 @@ export class NeDB implements IDatabase {
     });
   }
 
-  update(db:string,_id: string, element: any, options?: any): Promise<any> {
+  update(db: string, _id: string, element: any, options?: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.dbs[db].update({ _id: _id }, element, {}, (err, result) => {
         if (err) {
@@ -79,7 +82,7 @@ export class NeDB implements IDatabase {
     });
   }
 
-  remove(db:string,_id: string, params?: any): Promise<any> {
+  remove(db: string, _id: string, params?: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.dbs[db].remove({ _id: _id }, {}, (err, result) => {
         if (err) {
