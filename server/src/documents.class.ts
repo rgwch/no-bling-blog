@@ -109,16 +109,18 @@ export class Documents {
             const links = document.match(/\[\[[^\]]+\]\]/g)
             if (links) {
                 for (const link of links) {
-                    const scraper = new MetaScraper(link.substring(2, link.length - 2))
-                    if (await scraper.load()) {
-                        const repl = {
-                            template: "reference",
-                            url: scraper.getUrl(),
-                            title: scraper.getTitle(),
-                            text: scraper.getText(),
-                            imgurl: scraper.getImage().url
+                    if (link.startsWith("[[http")) {
+                        const scraper = new MetaScraper(link.substring(2, link.length - 2))
+                        if (await scraper.load()) {
+                            const repl = {
+                                template: "reference",
+                                url: scraper.getUrl(),
+                                title: scraper.getTitle(),
+                                text: scraper.getText(),
+                                imgurl: scraper.getImage().url
+                            }
+                            document = document.replace(link, "[[" + JSON.stringify(repl) + "]]")
                         }
-                        document = document.replace(link, "[[" + JSON.stringify(repl) + "]]")
                     }
                 }
             }
