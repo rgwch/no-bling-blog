@@ -190,12 +190,16 @@ export class Documents {
     }
 
     public async get(id: string, raw: boolean): Promise<post> {
-        const entry = await this.db.get(docdb, id)
-        let processed = await this.loadContents(entry)
-        if (!raw) {
-            processed = (await this.processContents(processed)) as post
+        const entry = await this.db.get(docdb, id, { nullIfMissing: true })
+        if (entry) {
+            let processed = await this.loadContents(entry)
+            if (!raw) {
+                processed = (await this.processContents(processed)) as post
+            }
+            return processed
+        } else {
+            return null
         }
-        return processed
     }
 
     /**

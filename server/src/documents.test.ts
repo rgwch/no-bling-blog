@@ -37,27 +37,31 @@ describe('Documents', () => {
     const document = { _id: "deleteme", heading: 'Test Document do remove', fulltext: 'This is a test document.' };
     await documents.add(document);
     await documents.remove(document._id);
-    expect(documents.find({})).not.toContainEqual(document);
+    const found = await documents.find({})
+    expect(found).not.toContainEqual(document);
   });
 
-  xit('should update a document in the list', async () => {
+  it('should update a document in the list', async () => {
     const document = { _id: "1", heading: 'Test Document', fulltext: 'This is a test document.' };
     const updatedDocument = { _id: "1", heading: 'Updated Test Document', fulltext: 'This is an updated test document.' };
-    await documents.add(document);
-    await documents.update(updatedDocument);
-    //expect(documents.list).toContain(updatedDocument);
+    await documents.add(Object.assign({}, document));
+    await documents.update(Object.assign({}, updatedDocument));
+    const found = await documents.get("1", true)
+    expect(found.heading).toEqual(updatedDocument.heading);
+    expect(found.fulltext).toEqual(updatedDocument.fulltext);
     //expect(documents.list).not.toContain(document);
   });
 
   it('should get a document by id', async () => {
     const document = { _id: "1", heading: 'Test Document', fulltext: 'This is a test document.' };
-    await documents.add(document);
+    await documents.add(Object.assign({}, document));
     const retrievedDocument = await documents.get("1", true);
-    expect(retrievedDocument).toEqual(document);
+    expect(retrievedDocument.heading).toEqual(document.heading);
+    expect(retrievedDocument.fulltext).toEqual(document.fulltext);
   });
 
-  xit('should return null when getting a non-existent document by id', () => {
-    // const retrievedDocument = documents.getById(1);
-    // expect(retrievedDocument).toBeNull();
+  it('should return null when getting a non-existent document by id', async () => {
+    const retrievedDocument = await documents.get("222", true);
+    expect(retrievedDocument).toBeNull();
   });
 });
