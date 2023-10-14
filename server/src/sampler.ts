@@ -7,15 +7,17 @@
 
 import { post } from './types'
 import { Documents } from './documents.class'
+import { tokenizer } from './tokenizer'
+import fs from 'fs/promises'
 
 /** 
- * Create 100 sanple posts for NoBlingBlog from random extracts of a html file
+ * Create sample posts for NoBlingBlog from random extracts of a text file with at least 1000 words.
  */
+export async function createDummyPosts(docs: Documents, file: string, num: number) {
 
-export async function createDummyPosts(docs: Documents) {
-    const t = await docs.parseFile("../data/sample.html", "ein erster Test")
-    const tokens: Array<string> = t.tokens
-    for (let i = 0; i < 100; i++) {
+    const dummy = await fs.readFile(file, "utf-8")
+    const tokens = tokenizer.process(dummy)
+    for (let i = 0; i < num; i++) {
         const p = {
             heading: getWords(tokens, 5),
             teaser: getWords(tokens, 20),

@@ -169,7 +169,7 @@ function remove(dir: string) {
 }
 
 async function dummies() {
-  await createDummyPosts(docs)
+  await createDummyPosts(docs, "../data/sample.html")
   await docs.rescan()
 }
 

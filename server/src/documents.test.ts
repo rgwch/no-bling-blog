@@ -1,32 +1,16 @@
 import { Documents } from './documents.class';
 import fs from 'fs/promises'
+import { setup_tests, cleanup_tests } from './setup-tests'
 import path from 'path'
 
 describe('Documents', () => {
   let documents: Documents;
-  const base="../data/test"
-  const usersFile = '../data/test/users.json';
-  const documentsBase = '../data/test/documents';
-  const partialsBase = '../data/test/partials';
-  const indexBase = '../data/test/index';
- 
-  beforeAll(async () => {
-    await fs.mkdir(documentsBase, { recursive: true })
-    await fs.mkdir(partialsBase, { recursive: true })
-    await fs.mkdir(indexBase, { recursive: true })
-    process.env.storage = "nedb";
-    process.env.users = usersFile;
-    process.env.documents = documentsBase;
-    process.env.partials = partialsBase;
-    process.env.index = indexBase;
-    process.env.jwt_secret = 'secret';
-    process.env.nedb_datadir=base
 
+  beforeAll(async () => {
+    await setup_tests()
   })
   afterAll(async () => {
-    await fs.rm(documentsBase, { recursive: true })
-    await fs.rm(partialsBase, { recursive: true })
-    await fs.rm(indexBase, { recursive: true })
+    await cleanup_tests()
   })
 
   beforeEach(() => {
@@ -35,7 +19,7 @@ describe('Documents', () => {
 
   it("should process a partial", async () => {
     const partial = "<div>This is a [[title]]</div>"
-    await fs.writeFile(path.join(partialsBase, "test.html"), partial)
+    await fs.writeFile(path.join(process.env.partials, "test.html"), partial)
     const post = { _id: "__test__", fulltext: `Replace the following: [[{"template":"test","title":"partial"}]] with the template` }
     const processed = await documents.processContents(post)
     expect(processed.fulltext.trim()).toEqual("<p>Replace the following: <div>This is a partial</div> with the template</p>")

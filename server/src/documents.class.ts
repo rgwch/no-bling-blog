@@ -12,7 +12,7 @@ import { marked } from 'marked'
 import { MetaScraper, type imageObject } from './scrapers'
 import { getDatabase } from './database/db'
 import { IDatabase } from './database/db.interface'
-import {tokenizer} from './tokenizer'
+import { tokenizer } from './tokenizer'
 import { v4 as uuid } from 'uuid'
 const docdb = "nbbdocs"
 const indexdb = "nbbindex"
@@ -27,14 +27,9 @@ export class Documents {
     private dateFrom = new Date()
     private numEntries = 0
 
-    constructor(private basedir: string, private indexdir: string) {
+    constructor(private basedir: string) {
         try {
             fs.mkdir(basedir, { recursive: true })
-        } catch (err) {
-
-        }
-        try {
-            fs.mkdir(indexdir, { recursive: true })
         } catch (err) {
 
         }
@@ -69,33 +64,68 @@ export class Documents {
         return this.numEntries
     }
     public async add(entry: post): Promise<post> {
-        const document = entry.fulltext
+        let document = entry.fulltext
         if (!entry._id) {
             entry._id = uuid()
         }
         delete entry.fulltext
-        const stored = await this.addToIndex(entry._id, document, entry.heading)
-        entry.filename = stored.filename
+        const links = document.match(/\[\[[^\]]+\]\]/g)
+        if (links) {
+            for (const link of links) {
+                const scraper = new MetaScraper(link.substring(2, link.length - 2))
+                if (await scraper.load()) {
+                    const repl = {
+                        template: "reference",
+                        url: scraper.getUrl(),
+                        title: scraper.getTitle(),
+                        text: scraper.getText(),
+                        imgurl: scraper.getImage().url
+                    }
+                    document = document.replace(link, "[[" + JSON.stringify(repl) + "]]")
+                }
+            }
+        }
         if (!entry.created) {
             entry.created = new Date()
         }
         entry.modified = new Date()
         await this.db.create(docdb, entry)
         this.categories.add(entry.category)
+        await this.tokenizeAndSave(document, entry.heading, entry._id)
         return entry
     }
 
-    async tokenizeAndSave(contents:string,title:string, id:string){
-        const tokens=tokenizer.process(contents)
+    async tokenizeAndSave(contents: string, title: string, id: string, overwrite = false) {
+        const tokens = tokenizer.process(contents)
+        for (const token of tokens) {
+            let index = await this.db.get(indexdb, token)
+            if (!index) {
+                index = { _id: token, posts: [] }
+            }
+            if (!index.posts.includes(id)) {
+                index.posts.push(id)
+                await this.db.update(indexdb, token, index)
+            }
+        }
+        const outfile = await this.makeFilename(title, overwrite)
+        await fs.writeFile(outfile, contents)
     }
+
+    public async remove(id: string): Promise<void> {
+        const entry = await this.db.get(docdb, id)
+        await this.db.remove(docdb, id)
+        const existing = await this.db.find(indexdb, { posts: { $elemMatch: id } })
+        for (const e of existing) {
+            e.posts = e.posts.filter(p => p !== id)
+            await this.db.update(indexdb, e._id, e)
+        }
+        await fs.rm(path.join(this.basedir, entry.filename))
+        await this.rescan()
+    }
+
     public async update(entry: post): Promise<post> {
-        const document = entry.fulltext
-        delete entry.fulltext
-        entry.modified = new Date()
-        await this.db.update(docdb, entry._id, entry)
-        const stored = await this.replaceDocument(entry._id, document, entry.heading)
-        this.categories.add(entry.category)
-        return entry
+        await this.remove(entry._id)
+        return this.add(entry)
     }
 
     public async updateMeta(entry: post): Promise<post> {
@@ -145,87 +175,9 @@ export class Documents {
         }
         return processed
     }
-    /**
-     * Tokenize a document, store its contents as file in the basedir and add its contents to the index.
-     * @param id id of the file (will be used as reference in the index entries)
-     * @param contents contents of the file in  recognized format
-     * @param title title (to be used as filename)
-     * @returns {filename, tokens:Array<string>}
-     */
-    public async addToIndex(id: string, contents: string, title: string): Promise<analyzed> {
-        // check for embedded links
-        if (!id || !contents || !title) {
-            throw new Error("Missing parameter")
-        }
-        const links = contents.match(/\[\[[^\]]+\]\]/g)
-        if (links) {
-            for (const link of links) {
-                const scraper = new MetaScraper(link.substring(2, link.length - 2))
-                if (await scraper.load()) {
-                    const repl = {
-                        template: "reference",
-                        url: scraper.getUrl(),
-                        title: scraper.getTitle(),
-                        text: scraper.getText(),
-                        imgurl: scraper.getImage().url
-                    }
-                    contents = contents.replace(link, "[[" + JSON.stringify(repl) + "]]")
-                }
-            }
-        }
-
-        const parsed = await this.parseString(contents, title)
-        // add tokens to index
-        for (const token of parsed.tokens) {
-            let cont = ""
-            try {
-                cont = await fs.readFile(path.join(this.indexdir, token), "utf-8")
-            } catch (err) {
-                // not found
-            }
-            cont += id + "\n"
-            await fs.writeFile(path.join(this.indexdir, token), cont)
-        }
-        return parsed
-    }
-    /**
-     * Replace existing document: Remove all index entries and the file and write it new
-     * @param id 
-     * @param contents 
-     * @param title 
-     * @returns 
-     */
-    public async replaceDocument(id: string, contents: string, title: string): Promise<analyzed> {
-        if (!id || !contents || !title) {
-            throw new Error("Missing parameter")
-        }
-        await this.removeFromIndex(id)
-        const filename = await this.makeFilename(title, true)
-        await fs.rm(filename)
-        return await this.addToIndex(id, contents, title)
-    }
 
     /**
-     * Remove a post rference from the index
-     * @param id id of the removed post
-     */
-    public async removeFromIndex(id: string) {
-        if (!id) {
-            throw new Error("Missing parameter")
-        }
-        const kws = await fs.readdir(this.indexdir)
-        for (const file of kws) {
-            try {
-                const cont = await fs.readFile(path.join(this.indexdir, file), "utf-8")
-                const modified = cont.replaceAll(id + "\n", "")
-                await fs.writeFile(path.join(this.indexdir, file), modified)
-            } catch (err) {
-                // not found
-            }
-        }
-    }
-    /**
-     * Lod the contents of a document in the post structure
+     * Load the contents of a document in the post structure
      * @param entry 
      * @returns 
      */
@@ -304,7 +256,7 @@ export class Documents {
      * @param overwrite if true, overwrites existing file. If false, modifies title
      * @returns 
      */
-    public parseFile(filename: string, title = path.basename(filename), overwrite = false): Promise<analyzed> {
+    public xparseFile(filename: string, title = path.basename(filename), overwrite = false): Promise<analyzed> {
         return new Promise(async (resolve, reject) => {
             const words = []
             const instr = createReadStream(filename)
@@ -327,48 +279,18 @@ export class Documents {
         })
     }
 
-    /**
-     * tokenize a string, write it as a file to the docbase and return the tokens and the filename
-     * @param input contents of the file
-     * @param title filename to use. Will be modified if file with the same bname already exists
-     * @param overwrite if true, overwrites existing file. If false, modifies title
-     * @returns {filename,tokens:Array<String>}
-     */
-    public async parseString(input: string, title: string, overwrite = false): Promise<analyzed> {
-        const outfile = await this.makeFilename(title, overwrite)
-        await fs.writeFile(outfile, input)
-        const words = input.split(/[^\w]+/)
-        const uniq = [...new Set(words.map(w => w.toLowerCase()))]
-        return ({ tokens: uniq.filter(n => n.length > 3), filename: path.basename(outfile) });
-    }
 
 
 
     /**
      * Filter an array of post to files containing a keyword in the fulltext
      * @param posts list to consider
-     * @param criteria keyword to match
+     * @param keyword keyword to match
      * @returns reduced list, kan be empty
      */
-    public async filter(posts: Array<post>, criteria: string): Promise<Array<post>> {
-        const ret: Array<post> = []
-        const ids: Array<string> = []
-        const files = await fs.readdir(this.indexdir)
-        for (const file of files) {
-            if (file.match(criteria)) {
-                const kw = await fs.readFile(path.join(this.indexdir, file), "utf-8")
-                const id = kw.split(/\n/)
-                ids.push(...id)
-            }
-        }
-        for (const post of posts) {
-            for (const id of ids.filter(i => i.length > 0)) {
-                if (id === post._id) {
-                    ret.push(post)
-                    break;
-                }
-            }
-        }
+    public async filter(posts: Array<post>, keyword: string): Promise<Array<post>> {
+        const found = await this.db.get(indexdb, keyword)
+        const ret = posts.filter(p => found.posts.includes(p._id))
         return ret
     }
 }
