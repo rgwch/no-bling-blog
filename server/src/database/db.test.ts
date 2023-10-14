@@ -1,15 +1,18 @@
 import { getDatabase } from './db'
-import fs from "fs"
+import { setup_tests, cleanup_tests } from '../setup-tests'
+
+const env = "/dbtest"
 
 describe("db", () => {
-  beforeAll(() => {
+  beforeAll(async () => {
+    await setup_tests()
     process.env.storage = "filebased"
-    process.env.filebased_basedir = "../data/test/dbtest"
+    process.env.filebased_basedir = process.env.base + env
 
   })
 
-  afterAll(() => {
-    fs.rmdirSync("../data/test/dbtest", { recursive: true })
+  afterAll(async () => {
+    cleanup_tests()
   })
   test("construct database", async () => {
     let db = getDatabase()

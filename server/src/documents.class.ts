@@ -69,19 +69,21 @@ export class Documents {
             entry._id = uuid()
         }
         delete entry.fulltext
-        const links = document.match(/\[\[[^\]]+\]\]/g)
-        if (links) {
-            for (const link of links) {
-                const scraper = new MetaScraper(link.substring(2, link.length - 2))
-                if (await scraper.load()) {
-                    const repl = {
-                        template: "reference",
-                        url: scraper.getUrl(),
-                        title: scraper.getTitle(),
-                        text: scraper.getText(),
-                        imgurl: scraper.getImage().url
+        if (document?.length > 5) {
+            const links = document.match(/\[\[[^\]]+\]\]/g)
+            if (links) {
+                for (const link of links) {
+                    const scraper = new MetaScraper(link.substring(2, link.length - 2))
+                    if (await scraper.load()) {
+                        const repl = {
+                            template: "reference",
+                            url: scraper.getUrl(),
+                            title: scraper.getTitle(),
+                            text: scraper.getText(),
+                            imgurl: scraper.getImage().url
+                        }
+                        document = document.replace(link, "[[" + JSON.stringify(repl) + "]]")
                     }
-                    document = document.replace(link, "[[" + JSON.stringify(repl) + "]]")
                 }
             }
         }
@@ -89,13 +91,13 @@ export class Documents {
             entry.created = new Date()
         }
         entry.modified = new Date()
+        entry.filename = await this.tokenizeAndSave(document, entry.heading, entry._id)
         await this.db.create(docdb, entry)
         this.categories.add(entry.category)
-        await this.tokenizeAndSave(document, entry.heading, entry._id)
         return entry
     }
 
-    async tokenizeAndSave(contents: string, title: string, id: string, overwrite = false) {
+    async tokenizeAndSave(contents: string, title: string, id: string, overwrite = false): Promise<string> {
         const tokens = tokenizer.process(contents)
         for (const token of tokens) {
             let index = await this.db.get(indexdb, token)
@@ -109,6 +111,7 @@ export class Documents {
         }
         const outfile = await this.makeFilename(title, overwrite)
         await fs.writeFile(outfile, contents)
+        return outfile
     }
 
     public async remove(id: string): Promise<void> {

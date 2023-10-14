@@ -2,6 +2,7 @@ import { NeDB } from "./nedb.class";
 import type { IDatabase } from "./db.interface";
 import { CouchDB } from "./couchdb.class";
 import { FileDB } from "./filedb.class";
+import {logger} from "../logger"
 
 let db: IDatabase
 export const getDatabase = (): IDatabase => {
@@ -9,15 +10,15 @@ export const getDatabase = (): IDatabase => {
   if (!db) {
     switch (storage) {
       case "nedb":
-        console.log("NeDB")
+        logger.debug("NeDB")
         db = new NeDB(process.env.nedb_datadir || "../data")
         break;
       case "couchdb":
-        console.log("CouchDB")
+        logger.debug("CouchDB")
         db = new CouchDB({ host: process.env.couch_host, port: process.env.couch_port, username: process.env.couch_user, password: process.env.couch_password })
         break;
       case "filebased":
-        console.log("fileDB")
+        logger.debug("fileDB")
         db = new FileDB(process.env.filebased_basedir || "../data")
         break;
       default:

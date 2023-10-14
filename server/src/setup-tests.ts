@@ -1,3 +1,4 @@
+import "dotenv/config"
 const base = "../data/test"
 const usersFile = '../data/test/users.json';
 const documentsBase = '../data/test/documents';
@@ -12,6 +13,7 @@ export async function setup_tests() {
     await fs.mkdir(documentsBase, { recursive: true })
     await fs.mkdir(partialsBase, { recursive: true })
     await fs.mkdir(indexBase, { recursive: true })
+    process.env.base=base
     process.env.storage = "nedb";
     process.env.users = usersFile;
     process.env.documents = documentsBase;
@@ -23,7 +25,5 @@ export async function setup_tests() {
 }
 
 export async function cleanup_tests() {
-    await fs.rm(documentsBase, { recursive: true })
-    await fs.rm(partialsBase, { recursive: true })
-    await fs.rm(indexBase, { recursive: true })
+    // await fs.rm(base, { recursive: true })
 }

@@ -26,7 +26,7 @@ export class NeDB implements IDatabase {
     return ret
   }
   createDatabase(name: string, options?: any): Promise<boolean> {
-    if (!options?.imMemory) {
+    if (!options?.inMemory) {
       this.dbs[name] = new Datastore({ filename: this.makefile(name), autoload: true })
     } else {
       this.dbs[name] = new Datastore();
@@ -51,7 +51,6 @@ export class NeDB implements IDatabase {
   }
   find(db: string, params: any): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      delete params.database
       this.dbs[db].find(params).sort({ created: -1 }).exec((err: Error, result: any) => {
         if (err) {
           reject(err)

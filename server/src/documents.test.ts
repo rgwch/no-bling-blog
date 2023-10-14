@@ -14,7 +14,7 @@ describe('Documents', () => {
   })
 
   beforeEach(() => {
-    documents = new Documents("../data/test/documents", "../data/test/index");
+    documents = new Documents(process.env.documents);
   });
 
   it("should process a partial", async () => {
@@ -24,10 +24,11 @@ describe('Documents', () => {
     const processed = await documents.processContents(post)
     expect(processed.fulltext.trim()).toEqual("<p>Replace the following: <div>This is a partial</div> with the template</p>")
   })
-  it('should add a document', () => {
-    const document = { _id: "__test__", heading: 'Test Document', content: 'This is a test document.' };
-    documents.add(document);
-    // expect(documents).toContain(document);
+  it('should add a document', async () => {
+    const document = { _id: "__test__", heading: 'Test Document', fulltext: 'This is a test document.' };
+    await documents.add(document);
+    const found=await documents.find({})
+    expect(found).toContain(document);
   });
 
   xit('should remove a document from the list', () => {

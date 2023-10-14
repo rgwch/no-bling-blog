@@ -3,6 +3,7 @@ import { IDatabase } from "./db.interface";
 import fs from 'fs'
 import path from 'path'
 import { v4 as uuid } from 'uuid'
+import { logger } from '../logger'
 
 export class FileDB implements IDatabase {
     private basedir: string;
@@ -38,7 +39,7 @@ export class FileDB implements IDatabase {
                     if (options?.nullIfMissing) {
                         resolve(null)
                     } else {
-                        console.log(err)
+                        logger.debug(err)
                         reject("NotFound")
                     }
                 } else {
@@ -73,7 +74,7 @@ export class FileDB implements IDatabase {
                                     }
                                 }
                             } catch (err) {
-                                console.log(err)
+                                logger.debug(err)
                             }
                         }
                         resolve(ret)
