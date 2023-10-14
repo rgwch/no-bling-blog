@@ -60,3 +60,7 @@ Admins need an account with the role set to 'admin'. They can read, edit, publis
 A post is initially unpublished when created. Its editor or the admin can edit, publish and unpublish it. If published, it's visible to all visitor. If unpublished, it's only visible to its editor and to admin(s).
 
 Posts can be written in the Markdown language. All standard markups are supported. Additionally, Metadata of news sites can be embedded with: [[https://some.news.site.somewhere/hot/article.html]]. No-Bling-Blog will read json-ld metadata such as title, author, image, teaser fom such a page and provide these information as link to the original article in the post. 
+
+## Design
+
+You can, of course, customize the design of NoBlingBlog. But you must do so in the source files. 
