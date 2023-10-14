@@ -11,14 +11,17 @@ import { post } from './types'
 import { marked } from 'marked'
 import { MetaScraper, type imageObject } from './scrapers'
 import { getDatabase } from './database/db'
+import { IDatabase } from './database/db.interface'
 import { v4 as uuid } from 'uuid'
+const docdb = "nbbdocs"
+const indexdb = "nbbindex"
 
 export type analyzed = {
     filename: string
     tokens: Array<string>
 }
 export class Documents {
-    private db
+    private db: IDatabase
     private categories = new Set<string>()
     private dateFrom = new Date()
     private numEntries = 0
@@ -35,12 +38,15 @@ export class Documents {
 
         }
         this.db = getDatabase()
-        this.db.use("nbb")
-        this.rescan()
+        this.db.createDatabase(docdb)
+        this.db.createDatabase(indexdb)
+        this.rescan().then(() => {
+            console.log("Database initialized. " + this.numEntries + " posts in " + this.categories.size + " categories")
+        })
     }
 
     public async rescan() {
-        this.db.find({}).then((posts: Array<post>) => {
+        return this.db.find(docdb, {}).then((posts: Array<post>) => {
             this.numEntries = posts.length
             for (const p of posts) {
                 this.categories.add(p.category)
@@ -73,7 +79,7 @@ export class Documents {
             entry.created = new Date()
         }
         entry.modified = new Date()
-        await this.db.create(entry)
+        await this.db.create(docdb, entry)
         this.categories.add(entry.category)
         return entry
     }
@@ -82,7 +88,7 @@ export class Documents {
         const document = entry.fulltext
         delete entry.fulltext
         entry.modified = new Date()
-        await this.db.update(entry._id, entry)
+        await this.db.update(docdb, entry._id, entry)
         const stored = await this.replaceDocument(entry._id, document, entry.heading)
         this.categories.add(entry.category)
         return entry
@@ -92,7 +98,7 @@ export class Documents {
         entry.created = new Date(entry.created)
         delete entry.fulltext
         entry.modified = new Date()
-        await this.db.update(entry._id, entry)
+        await this.db.update(docdb, entry._id, entry)
         return entry
     }
     public async find(q: any): Promise<Array<post>> {
@@ -119,7 +125,7 @@ export class Documents {
             const cr = between.split(/[,\-]/)
             query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
         }
-        let posts: Array<post> = await this.db.find(query)
+        let posts: Array<post> = await this.db.find(docdb, query)
         const matcher = q['fulltext']
         if (matcher) {
             posts = await this.filter(posts, matcher)
@@ -128,7 +134,7 @@ export class Documents {
     }
 
     public async get(id: string, raw: boolean): Promise<post> {
-        const entry = await this.db.get(id)
+        const entry = await this.db.get(docdb, id)
         let processed = await this.loadContents(entry)
         if (!raw) {
             processed = (await this.processContents(processed)) as post
@@ -159,7 +165,7 @@ export class Documents {
                         text: scraper.getText(),
                         imgurl: scraper.getImage().url
                     }
-                    contents = contents.replace(link, "[["+JSON.stringify(repl)+"]]")
+                    contents = contents.replace(link, "[[" + JSON.stringify(repl) + "]]")
                 }
             }
         }
