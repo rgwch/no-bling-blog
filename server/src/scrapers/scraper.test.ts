@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 const source = "https://www.tagesanzeiger.ch/julian-assange-darf-nicht-ausgeliefert-werden-993647635714"
-import { MetaScraper } from "./scrapers";
+import { MetaScraper } from ".";
 
 xtest("metaparser", async () => {
     const scraper = new MetaScraper(source)

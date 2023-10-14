@@ -1,12 +1,3 @@
 data/solr
-data/raw
-data/nbb
-data/testdb
-data/test_nedb
-data/testdir
-data/documents
-data/fnbb
-data/users.json
-data/nedb
 data/test
-
+data/users.json

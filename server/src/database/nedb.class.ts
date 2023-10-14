@@ -11,7 +11,7 @@ export class NeDB implements IDatabase {
   constructor(private datadir: string) { }
 
   private makefile(fn: string): string {
-    const ret = path.join((this.datadir || "../../data"), fn)
+    const ret = path.join((this.datadir ?? "../../data"), fn)
     return ret
   }
 

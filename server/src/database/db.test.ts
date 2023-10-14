@@ -1,18 +1,18 @@
+import { TestEnvironment } from './../test_environment';
 import { getDatabase } from './db'
-import { setup_tests, cleanup_tests } from '../setup-tests'
 
 const env = "/dbtest"
 
 xdescribe("db", () => {
+  let te: TestEnvironment = new TestEnvironment()
   beforeAll(async () => {
-    await setup_tests()
+    await te.setup()
     process.env.storage = "filebased"
-    process.env.filebased_basedir = process.env.base + env
-
+    process.env.filebased_basedir = process.env.documents + env
   })
 
   afterAll(async () => {
-    cleanup_tests()
+    // cleanup_tests()
   })
   test("construct database", async () => {
     let db = getDatabase()

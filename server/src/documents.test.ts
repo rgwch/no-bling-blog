@@ -1,18 +1,20 @@
 import { Documents } from './documents.class';
 import fs from 'fs/promises'
-import { setup_tests, cleanup_tests } from './setup-tests'
+import { TestEnvironment } from './test_environment'
 import path from 'path'
 
 describe('Documents', () => {
+
   let documents: Documents;
+  let te: TestEnvironment = new TestEnvironment()
 
   beforeAll(async () => {
-    await setup_tests()
-    documents = new Documents(process.env.documents);
+    await te.setup()
+    documents = new Documents(process.env.documents + "/doctest");
     await documents.initialize()
   })
   afterAll(async () => {
-    await cleanup_tests()
+    await te.teardown()
   })
 
   it("should process a partial", async () => {

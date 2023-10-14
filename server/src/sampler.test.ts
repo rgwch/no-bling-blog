@@ -1,19 +1,18 @@
-import { setup_tests, cleanup_tests } from "./setup-tests"
+import { TestEnvironment } from './test_environment';
 import { createDummyPosts } from "./sampler"
 import { Documents } from "./documents.class"
 
 describe('sampler', () => {
+    let te: TestEnvironment = new TestEnvironment()
     beforeAll(async () => {
-        await setup_tests()
+        await te.setup()
     })
     afterAll(async () => {
-        await cleanup_tests()
+        await te.teardown()
     })
-    function sleep(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+
     it('should create dummy posts', async () => {
-        const docs = new Documents(process.env.base + "/sampler")
+        const docs = new Documents(process.env.documents + "/sampler")
         await docs.initialize()
         await createDummyPosts(docs, process.env.basedir + "/sample.html", 100)
         const found = await docs.find({})
