@@ -13,17 +13,17 @@ export async function setup_tests() {
     await fs.mkdir(documentsBase, { recursive: true })
     await fs.mkdir(partialsBase, { recursive: true })
     await fs.mkdir(indexBase, { recursive: true })
-    process.env.base=base
+    process.env.base = base
     process.env.storage = "nedb";
     process.env.users = usersFile;
     process.env.documents = documentsBase;
     process.env.partials = partialsBase;
     process.env.index = indexBase;
     process.env.jwt_secret = 'secret';
-    process.env.nedb_datadir = base
+    process.env.nedb_datadir = documentsBase
 
 }
 
 export async function cleanup_tests() {
-    // await fs.rm(base, { recursive: true })
+    await fs.rm(base, { recursive: true })
 }

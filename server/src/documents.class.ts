@@ -100,7 +100,7 @@ export class Documents {
     async tokenizeAndSave(contents: string, title: string, id: string, overwrite = false): Promise<string> {
         const tokens = tokenizer.process(contents)
         for (const token of tokens) {
-            let index = await this.db.get(indexdb, token)
+            let index = await this.db.get(indexdb, token, { nullIfMissing: true })
             if (!index) {
                 index = { _id: token, posts: [] }
             }

@@ -72,7 +72,7 @@ export class NeDB implements IDatabase {
 
   update(db: string, _id: string, element: any, options?: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.dbs[db].update({ _id: _id }, element, {}, (err, result) => {
+      this.dbs[db].update({ _id: _id }, element, { upsert: true }, (err, result) => {
         if (err) {
           reject(err)
         }

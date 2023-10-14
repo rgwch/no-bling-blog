@@ -13,8 +13,12 @@ describe('Documents', () => {
     await cleanup_tests()
   })
 
-  beforeEach(() => {
-    documents = new Documents(process.env.documents);
+  beforeEach(async () => {
+    return new Promise((resolve, reject) => {
+      documents = new Documents(process.env.documents);
+      setTimeout(resolve, 100)
+    })
+
   });
 
   it("should process a partial", async () => {
@@ -27,8 +31,9 @@ describe('Documents', () => {
   it('should add a document', async () => {
     const document = { _id: "__test__", heading: 'Test Document', fulltext: 'This is a test document.' };
     await documents.add(document);
-    const found=await documents.find({})
-    expect(found).toContain(document);
+    const found = await documents.find({})
+    expect(Array.isArray(found)).toBeTruthy()
+    expect(found).toContainEqual(document);
   });
 
   xit('should remove a document from the list', () => {
