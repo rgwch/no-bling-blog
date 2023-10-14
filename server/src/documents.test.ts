@@ -6,14 +6,15 @@ import path from 'path'
 describe('Documents', () => {
 
   let documents: Documents;
-  let te: TestEnvironment = new TestEnvironment()
+  let te: TestEnvironment;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    te = new TestEnvironment()
     await te.setup()
     documents = new Documents(process.env.documents + "/doctest");
     await documents.initialize()
   })
-  afterAll(async () => {
+  afterEach(async () => {
     await te.teardown()
   })
 
@@ -32,27 +33,27 @@ describe('Documents', () => {
     expect(found).toContainEqual(document);
   });
 
-  xit('should remove a document from the list', () => {
-    const document = { _id: "1", heading: 'Test Document', content: 'This is a test document.' };
-    documents.add(document);
-    // documents.remove(document);
-    // expect(documents.list).not.toContain(document);
+  it('should remove a document', async () => {
+    const document = { _id: "deleteme", heading: 'Test Document do remove', fulltext: 'This is a test document.' };
+    await documents.add(document);
+    await documents.remove(document._id);
+    expect(documents.find({})).not.toContainEqual(document);
   });
 
-  xit('should update a document in the list', () => {
-    const document = { _id: "1", heading: 'Test Document', content: 'This is a test document.' };
-    const updatedDocument = { _id: "1", heading: 'Updated Test Document', content: 'This is an updated test document.' };
-    documents.add(document);
-    //documents.update(updatedDocument);
+  xit('should update a document in the list', async () => {
+    const document = { _id: "1", heading: 'Test Document', fulltext: 'This is a test document.' };
+    const updatedDocument = { _id: "1", heading: 'Updated Test Document', fulltext: 'This is an updated test document.' };
+    await documents.add(document);
+    await documents.update(updatedDocument);
     //expect(documents.list).toContain(updatedDocument);
     //expect(documents.list).not.toContain(document);
   });
 
-  xit('should get a document by id', () => {
-    const document = { _id: "1", heading: 'Test Document', content: 'This is a test document.' };
-    documents.add(document);
-    // const retrievedDocument = documents.getById(1);
-    // expect(retrievedDocument).toEqual(document);
+  it('should get a document by id', async () => {
+    const document = { _id: "1", heading: 'Test Document', fulltext: 'This is a test document.' };
+    await documents.add(document);
+    const retrievedDocument = await documents.get("1", true);
+    expect(retrievedDocument).toEqual(document);
   });
 
   xit('should return null when getting a non-existent document by id', () => {

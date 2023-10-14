@@ -28,10 +28,12 @@ export class Documents {
     private categories = new Set<string>()
     private dateFrom = new Date()
     private numEntries = 0
+    private fulltextDir;
 
     constructor(private basedir: string) {
         try {
-            fs.mkdir(basedir, { recursive: true })
+            this.fulltextDir = path.join(basedir, "fulltext")
+            fs.mkdir(this.fulltextDir, { recursive: true })
         } catch (err) {
 
         }
@@ -116,18 +118,30 @@ export class Documents {
         }
         const outfile = await this.makeFilename(title, overwrite)
         await fs.writeFile(outfile, contents)
-        return outfile
+        return path.basename(outfile)
     }
 
+    /**
+     * remove a database entry and the corresponding fulltext file, and the corresponding index entries
+     * @param id id of the post to remove
+     */
     public async remove(id: string): Promise<void> {
         const entry = await this.db.get(docdb, id)
         await this.db.remove(docdb, id)
         const existing = await this.db.find(indexdb, { posts: { $elemMatch: id } })
         for (const e of existing) {
             e.posts = e.posts.filter(p => p !== id)
-            await this.db.update(indexdb, e._id, e)
+            if (e.posts.length == 0) {
+                await this.db.remove(indexdb, e._id)
+            } else {
+                await this.db.update(indexdb, e._id, e)
+            }
         }
-        await fs.rm(path.join(this.basedir, entry.filename))
+        try {
+            await fs.rm(path.join(this.fulltextDir, entry.filename))
+        } catch (err: any) {
+            logger.error("Error removing file " + entry.filename + " " + err.message)
+        }
         await this.rescan()
     }
 
@@ -194,7 +208,7 @@ export class Documents {
         if (!filename) {
             throw new Error("No filename supplied " + JSON.stringify(entry))
         }
-        entry.fulltext = await fs.readFile(path.join(this.basedir, filename), "utf-8")
+        entry.fulltext = await fs.readFile(path.join(this.fulltextDir, filename), "utf-8")
         return entry
     }
 
@@ -240,7 +254,7 @@ export class Documents {
      */
     private async makeFilename(title: string, overwrite = false): Promise<string> {
         const fname = title.toLocaleLowerCase().replace(/[^\w]+/g, "_")
-        let fullpath = path.join(this.basedir, fname)
+        let fullpath = path.join(this.fulltextDir, fname)
         if (fullpath.endsWith("_")) {
             fullpath = fullpath.slice(0, -1)
         }
@@ -256,38 +270,6 @@ export class Documents {
         }
         return fullpath
     }
-
-    /**
-     * tokenize a file, copy it to the document basedir and return the tokens and the generated filename
-     * @param filename full path name of the file to parse
-     * @param title title for the created file in docbase
-     * @param overwrite if true, overwrites existing file. If false, modifies title
-     * @returns 
-     */
-    public xparseFile(filename: string, title = path.basename(filename), overwrite = false): Promise<analyzed> {
-        return new Promise(async (resolve, reject) => {
-            const words = []
-            const instr = createReadStream(filename)
-            const outfile = await this.makeFilename(title, overwrite)
-            const outstr = createWriteStream(outfile)
-            instr.on('data', chunk => {
-                outstr.write(chunk)
-                const tokens = chunk.toString().split(/[^\w]+/)
-                words.push(...tokens)
-            })
-            instr.on('end', () => {
-                outstr.close()
-                const uniq = [...new Set(words.map(w => w.toLowerCase()))]
-                resolve({ tokens: uniq.filter(n => n.length > 3), filename: path.basename(outfile) })
-            })
-            instr.on('error', err => {
-                reject(err)
-            })
-
-        })
-    }
-
-
 
 
     /**

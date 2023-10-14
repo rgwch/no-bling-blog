@@ -8,7 +8,7 @@
     "dev": "tsc && NODE_ENV=debug node dest/index.js",
     "clean": "rimraf dest && rimraf ../client/dist",
     "test": "jest",
-    "testdoc": "jest src/sampler.test.ts"
+    "testdoc": "jest src/documents.test.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.2.0",
