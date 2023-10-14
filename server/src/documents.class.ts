@@ -30,7 +30,12 @@ export class Documents {
     private numEntries = 0
     private fulltextDir;
 
-    constructor(private basedir: string) {
+    /**
+     * Will create a new database in the basedir, if it does not exist
+     * Will create a "fulltext" subdirectory in the basedir, if it does not exist
+     * @param basedir 
+     */
+    constructor(basedir: string) {
         try {
             this.fulltextDir = path.join(basedir, "fulltext")
             fs.mkdir(this.fulltextDir, { recursive: true })
@@ -41,6 +46,9 @@ export class Documents {
         this.db = new NeDB(basedir)
 
     }
+    /**
+     * Always call this method before using the database
+     */
     public async initialize() {
         await this.db.createDatabase(docdb)
         await this.db.createDatabase(indexdb)
@@ -48,6 +56,10 @@ export class Documents {
         logger.info("Database initialized. " + this.numEntries + " posts in " + this.categories.size + " categories")
     }
 
+    /**
+     * Read some statistics from the database
+     * @returns 
+     */
     public async rescan() {
         return this.db.find(docdb, {}).then((posts: Array<post>) => {
             this.numEntries = posts.length
@@ -61,15 +73,32 @@ export class Documents {
         })
     }
 
+    /**
+     * Get List of categories
+     * @returns 
+     */
     public getCategoryList(): Array<string> {
         return [...this.categories]
     }
+    /**
+     * get the date of the first entry
+     * @returns 
+     */
     public getFirstDate(): Date {
         return this.dateFrom
     }
+    /**
+     * get the number of entries
+     * @returns 
+     */
     public getNumEntries(): number {
         return this.numEntries
     }
+    /**
+     * add a new entry to the database. Fulltext will be tokenized and saved in a file in the fulltext directory. Tokens will be added to the index database
+     * @param entry 
+     * @returns 
+     */
     public async add(entry: post): Promise<post> {
         let document = entry.fulltext
         if (!entry._id) {
@@ -145,11 +174,22 @@ export class Documents {
         await this.rescan()
     }
 
+    /**
+     * Update a post. The fulltext will be new tokenized and saved in a file in the fulltext directory. 
+     * Existing tokens will be removed and new tokens will be added to the index database
+     * @param entry 
+     * @returns 
+     */
     public async update(entry: post): Promise<post> {
         await this.remove(entry._id)
         return this.add(entry)
     }
 
+    /**
+     * Update the metadata of a post. The fulltext will not be changed
+     * @param entry 
+     * @returns 
+     */
     public async updateMeta(entry: post): Promise<post> {
         entry.created = new Date(entry.created)
         delete entry.fulltext
@@ -157,6 +197,12 @@ export class Documents {
         await this.db.update(docdb, entry._id, entry)
         return entry
     }
+
+    /**
+     * Find posts matching given criteria
+     * @param q [Category, summary, from, until, between, fulltext]
+     * @returns a (possibly empty) list of posts
+     */
     public async find(q: any): Promise<Array<post>> {
         const query: any = {}
 
@@ -189,6 +235,12 @@ export class Documents {
         return posts
     }
 
+    /**
+     * Get a post by id. Fulltext will be loaded and processed, and attached to the fulltext property of the post
+     * @param id 
+     * @param raw True: return fulltext as is, false: Link metadata will be processed and markdown will be compiled.
+     * @returns 
+     */
     public async get(id: string, raw: boolean): Promise<post> {
         const entry = await this.db.get(docdb, id, { nullIfMissing: true })
         if (entry) {
@@ -280,7 +332,7 @@ export class Documents {
      * Filter an array of post to files containing a keyword in the fulltext
      * @param posts list to consider
      * @param keyword keyword to match
-     * @returns reduced list, kan be empty
+     * @returns reduced list, can be empty
      */
     public async filter(posts: Array<post>, keyword: string): Promise<Array<post>> {
         const found = await this.db.get(indexdb, keyword)

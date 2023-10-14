@@ -60,7 +60,7 @@ if (!env_ok) {
 
 
 const ask = prompt({ sigint: true })
-const docs = new Documents(process.env.documents, process.env.index)
+const docs = new Documents(process.env.documents)
 
 
 const optionDefinitions = {
@@ -69,8 +69,9 @@ const optionDefinitions = {
   }
 
 }
-
-showMenu()
+docs.initialize().then(() => {
+  showMenu()
+})
 
 function showMenu() {
 
@@ -169,7 +170,7 @@ function remove(dir: string) {
 }
 
 async function dummies() {
-  await createDummyPosts(docs, "../data/sample.html")
+  await createDummyPosts(docs, "../data/sample.html", 100)
   await docs.rescan()
 }
 
