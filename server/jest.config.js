@@ -2,6 +2,6 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  modulePathIgnorePatterns: ["<rootDir>/dest/"]
-
+  modulePathIgnorePatterns: ["<rootDir>/dest/"],
+  globalTeardown: './cleanup_tests.js',
 };
