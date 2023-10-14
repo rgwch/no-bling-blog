@@ -292,6 +292,8 @@ export class Documents {
                     const repl = ref[token.substring(2, token.length - 2)]
                     if (repl) {
                         partial = partial.replace(token, repl)
+                    } else {
+                        partial = partial.replace(token, "")
                     }
                 }
                 text = text.replace(link, partial)
