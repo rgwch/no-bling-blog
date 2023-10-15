@@ -5,6 +5,10 @@ let jwt = ""
 currentJWT.subscribe(n => {
     jwt = n
 })
+let api: string = env.prefix
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    api = `http://localhost:${env.port}${env.prefix}`
+}
 
 function setUser(user: user) {
     if (!user || user.name == "visitor") {
@@ -15,6 +19,13 @@ function setUser(user: user) {
         currentUser.set(user)
     }
 }
+
+/**
+ * Send a GET request to the server. Will enclose the user's JWT if available.
+ * @param url url within the api (after the prefix)
+ * @param query any parameters to be sent
+ * @returns 
+ */
 export async function request(url: string, query: Array<string> = []): Promise<any> {
     const headers = new Headers()
     headers.append("accept", "application/json")
@@ -22,7 +33,7 @@ export async function request(url: string, query: Array<string> = []): Promise<a
         headers.append("Authorization", "Bearer " + jwt)
     }
 
-    const answer = await fetch(env.url + url + "?" + query.join("&"), { headers })
+    const answer = await fetch(api + url + "?" + query.join("&"), { headers })
     if (answer.ok) {
         const result = await answer.json()
         if (result.status == "ok") {
@@ -41,6 +52,12 @@ export async function request(url: string, query: Array<string> = []): Promise<a
     return undefined
 }
 
+/**
+ * Send a POST request to the server. Will enclose the user's JWT if available.
+ * @param url url within the api (after the prefix)
+ * @param body post body
+ * @returns 
+ */
 export async function write(url: string, body: any): Promise<any> {
     const headers: any = {
         "content-type": "application/json",
@@ -54,7 +71,7 @@ export async function write(url: string, body: any): Promise<any> {
         headers,
         body: JSON.stringify(body)
     }
-    const answer = await fetch(env.url + url, options)
+    const answer = await fetch(api + url, options)
     if (answer.ok) {
         const result = await answer.json()
         setUser(result.user)
@@ -69,6 +86,12 @@ export async function write(url: string, body: any): Promise<any> {
 
 }
 
+/**
+ * Send a Login request to the server. Will set the user and JWT if successful.
+ * @param user 
+ * @param password 
+ * @returns 
+ */
 export async function login(user: string, password: string): Promise<boolean> {
     const result = await request(`login/${user}/${password}`)
     if (result) {

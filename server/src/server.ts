@@ -25,7 +25,9 @@ export class Server {
     constructor(private docs: Documents) {
         this.hono = new Hono()
         let currentUser;
-        this.hono.use(prefix + "*", cors())
+        if (process.env.NODE_ENV == "development") {
+            this.hono.use(prefix + "*", cors())
+        }
         this.hono.use(prefix + "*", async (c, next) => {
             currentUser = { name: "visitor", role: "visitor" }
             let jwt

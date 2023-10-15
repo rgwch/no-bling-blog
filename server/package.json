@@ -6,6 +6,7 @@
   "scripts": {
     "start": "tsc && node dest/manage.js",
     "dev": "tsc && NODE_ENV=debug node dest/index.js",
+    "prod": "tsc && NODE_ENV=production node dest/index.js",
     "clean": "rimraf dest && rimraf ../client/dist",
     "test": "jest",
     "testdoc": "jest src/documents.test.ts"
