@@ -42,7 +42,7 @@ export async function request(url: string, query: Array<string> = []): Promise<a
         } else {
             alert(result.status + ": " + result.message)
             setUser({ role: "visitor", name: "visitor" })
-            return result.result
+            return result.message
         }
     }
     alert(answer.status + ", " + answer.statusText)

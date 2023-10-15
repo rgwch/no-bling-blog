@@ -87,6 +87,28 @@ export class Server {
                 throw new Error("no id supplied")
             }
         })
+
+        this.hono.get(prefix + "delete/:id", async (c) => {
+            const params = c.req.param()
+            if (params["id"]) {
+                const entries = await docs.find({ id: params["id"] })
+                if (entries.length == 0) {
+                    throw new Error("no such entry")
+                }
+                const entry = entries[0]
+                if (hasAccess(entry)) {
+
+                    const deleted = await docs.remove(params["id"])
+                    return c.json({ status: "ok", user: currentUser, result: entry })
+                }
+                else {
+                    c.status(401)
+                    return c.json({ status: "fail", message: "not authorized" })
+                }
+            } else {
+                throw new Error("no id supplied")
+            }
+        })
         /**
          * log a user in
          */

@@ -1,20 +1,20 @@
 <script lang="ts">
-    import env from '../environment';
-    import { currentView, currentPost, currentUser } from '../store';
-    import type { post } from '../types';
-    import { request, write } from '../io';
-    import Summary from './Summary.svelte';
-    import { _ } from 'svelte-i18n';
+    import env from "../environment";
+    import { currentView, currentPost, currentUser } from "../store";
+    import type { post } from "../types";
+    import { request, write } from "../io";
+    import Summary from "./Summary.svelte";
+    import { _ } from "svelte-i18n";
     let post: post;
     let editmode = false;
-    let title = '';
-    let teaser = '';
-    let fulltext = '';
+    let title = "";
+    let teaser = "";
+    let fulltext = "";
 
     reload();
 
-    async function reload() {
-        request('read/' + $currentPost._id, [`raw=${editmode}`]).then(
+    function reload() {
+        request("read/" + $currentPost._id, [`raw=${editmode}`]).then(
             async (result) => {
                 if (result) {
                     post = result;
@@ -25,24 +25,31 @@
     function back() {
         $currentView = Summary;
     }
-    function doDelete() {}
+    async function doDelete() {
+        const result = await request("delete/" + $currentPost._id);
+        if (result) {
+            $currentView = Summary;
+        } else {
+            alert(result.message);
+        }
+    }
     async function doEdit() {
         editmode = !editmode;
         await reload();
     }
     async function doSaveAll() {
-        await write('update', post);
+        await write("update", post);
         editmode = false;
         await reload();
     }
     async function doSaveMeta() {
-        await write('updatemeta', post);
+        await write("updatemeta", post);
     }
     let canEdit = () => {
-        if ($currentUser.role == 'admin') {
+        if ($currentUser.role == "admin") {
             return true;
         }
-        if ($currentUser.role == 'editor') {
+        if ($currentUser.role == "editor") {
             return $currentUser.name == post.author;
         }
         return false;
@@ -57,38 +64,38 @@
                 contenteditable="true"
                 class="text-blue-800 font-bold text-lg mb-4 text-center"
                 bind:innerText={post.heading} />
-            <p class="text-sm">{$_('summary')}:</p>
+            <p class="text-sm">{$_("summary")}:</p>
             <div
                 class="border border-sm border-blue-600 mb-2 p-1"
                 contenteditable="true"
                 bind:innerText={post.teaser} />
-            <p class="text-sm">{$_('fulltext')}:</p>
+            <p class="text-sm">{$_("fulltext")}:</p>
             <div
                 class="border border-sm border-blue-600 mb-2 p-1"
                 contenteditable="true"
                 bind:innerText={post.fulltext} />
             <div class="text-sm font-light italic">
-                {$_('category')}:
+                {$_("category")}:
                 <span contenteditable="true" bind:textContent={post.category}
                     >{post.category}</span>
                 <span
                     class="ml-5"
                     contenteditable="true"
                     bind:textContent={post.author}
-                    >{$_('author')}: {post.author}</span>
-                <span class="ml-5">{$_('created')}: {post.created}</span>
-                <span class="ml-5">{$_('modified')}: {post.modified}</span>
+                    >{$_("author")}: {post.author}</span>
+                <span class="ml-5">{$_("created")}: {post.created}</span>
+                <span class="ml-5">{$_("modified")}: {post.modified}</span>
             </div>
         </div>
         <button
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
-            on:click={doSaveAll}>{$_('save')}</button>
+            on:click={doSaveAll}>{$_("save")}</button>
         <button
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
-            on:click={doEdit}>{$_('cancel')}</button>
+            on:click={doEdit}>{$_("cancel")}</button>
         <span
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md">
-            <span>{$_('published')}: </span>
+            <span>{$_("published")}: </span>
             <input
                 type="checkbox"
                 bind:checked={post.published}
@@ -102,18 +109,18 @@
             </div>
             <div>{@html post.fulltext}</div>
             <div class="text-sm font-light italic border border-t-blue-700">
-                {$_('category')}:
+                {$_("category")}:
                 <span>{post.category}</span>
-                <span class="ml-5">{$_('author')}: {post.author}</span>
-                <span class="ml-5">{$_('created')}: {post.created}</span>
-                <span class="ml-5">{$_('modified')}: {post.modified}</span>
+                <span class="ml-5">{$_("author")}: {post.author}</span>
+                <span class="ml-5">{$_("created")}: {post.created}</span>
+                <span class="ml-5">{$_("modified")}: {post.modified}</span>
             </div>
         </div>
         {#if canEdit()}
-            <button class="btn" on:click={doDelete}>{$_('delete')}</button>
-            <button class="btn" on:click={doEdit}>{$_('edit')}</button>
+            <button class="btn" on:click={doDelete}>{$_("delete")}</button>
+            <button class="btn" on:click={doEdit}>{$_("edit")}</button>
             <span class="btn">
-                <span>{$_('published')}: </span>
+                <span>{$_("published")}: </span>
                 <input
                     type="checkbox"
                     bind:checked={post.published}
@@ -124,4 +131,4 @@
 {:else}
     <div>No Text</div>
 {/if}
-<button class="btn" on:click={back}>{$_('back')}</button>
+<button class="btn" on:click={back}>{$_("back")}</button>

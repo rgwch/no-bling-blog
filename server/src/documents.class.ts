@@ -208,17 +208,19 @@ export class Documents {
      */
     public async find(q: any): Promise<Array<post>> {
         const query: any = {}
-
+        const id = q['id']
+        if (id) {
+            const entry = await this.db.get(docdb, id, { nullIfMissing: true })
+            if (entry) {
+                return [entry]
+            } else {
+                return []
+            }
+        }
         const cat = q['category']
         if (cat) {
             query.category = cat
         }
-        /*
-        const sum = q['text']
-        if (sum) {
-            query.teaser = new RegExp(sum)
-        }
-        */
         const from = q["from"]
         if (from) {
             query.created = { $gte: new Date(from + "-01-01") }
