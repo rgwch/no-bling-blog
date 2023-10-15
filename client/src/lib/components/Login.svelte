@@ -9,10 +9,11 @@
     async function doLogout() {
         $currentJWT = '';
         $currentUser = { name: 'visitor', role: 'visitor' };
+        open = false;
     }
 </script>
 
-<div class="flex flex-row">
+<div class="flex flex-col md:flex-row">
     {#if $currentUser?.role == 'visitor' || $currentUser?.role == undefined}
         {#if open}
             {#if errmsg}

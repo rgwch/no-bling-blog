@@ -13,5 +13,7 @@
     "back": "Retour",
     "username": "Nom d'utilisateur",
     "password": "Mot de passe",
-    "login": "Connexion"
+    "login": "Connexion",
+    "created": "Créé",
+    "modified": "Modifié"
 }

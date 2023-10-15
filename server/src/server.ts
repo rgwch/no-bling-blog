@@ -21,6 +21,7 @@ const prefix = "/api/1.0/"
 
 export class Server {
     private hono: Hono
+    private bans: any = {}
     constructor(private docs: Documents) {
         this.hono = new Hono()
         let currentUser;
@@ -56,6 +57,7 @@ export class Server {
             }
             return false;
         }
+
         /**
          * Find all posts matching given criteria 
          */
@@ -87,6 +89,9 @@ export class Server {
          */
         this.hono.get(prefix + "login/:user/:pwd", async (c) => {
             const cred: any = c.req.param()
+            if (this.isBanned(cred.user)) {
+                return c.json({ status: "fail", message: "banned" })
+            }
             const hash = createHash('sha256')
             hash.update(cred.pwd)
             const hashed = hash.digest().toString("base64")
@@ -107,8 +112,10 @@ export class Server {
                 }
                 delete user.pass
                 const token = await sign(user, process.env.jwt_secret)
-                delete user.pass
                 return c.json({ status: "ok", result: { jwt: token, user } })
+            } else {
+                logger.warn("Bad login attempt for user " + cred.user)
+                this.ban(cred.user)
             }
             c.status(401)
             return c.json({ status: "fail", message: "bad credentials" })
@@ -187,6 +194,8 @@ export class Server {
                 mime = 'image/jpeg'
             } else if (filename.endsWith('txt')) {
                 mime = 'text/plain'
+            } else if (filename.endsWith('png')) {
+                mime = 'image/png'
             }
             c.header("Content-Type", mime)
             try {
@@ -204,6 +213,37 @@ export class Server {
 
         logger.info("Hono serving at port 3000")
 
+    }
+    /**
+     * check if a user is banned. If ban is expired, remove them from ban list
+     * @param user username
+     * @returns true if the user is banned
+     */
+    isBanned(user) {
+        const banned = this.bans[user]
+        if (banned?.exp) {
+            if (banned.exp > Math.round(new Date().getTime() / 1000)) {
+                return true
+            } else {
+                delete this.bans[user]
+            }
+        }
+        return false
+    }
+    /**
+     * Ban a user (after three bad login attempts, ban for 5 minutes)
+     */
+    ban(user) {
+        const banned = this.bans[user]
+        if (banned?.warned) {
+            if (banned.warned > 1) {
+                banned.exp = Math.round(new Date().getTime() / 1000 + 300)
+            } else {
+                banned.warned++
+            }
+        } else {
+            this.bans[user] = { warned: 1 }
+        }
     }
     public async start() {
         const result = await serve({ fetch: this.hono.fetch, port: 3000 })

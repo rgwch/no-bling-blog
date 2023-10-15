@@ -38,13 +38,21 @@
     async function doSaveMeta() {
         await write('updatemeta', post);
     }
+    let canEdit = () => {
+        if ($currentUser.role == 'admin') {
+            return true;
+        }
+        if ($currentUser.role == 'editor') {
+            return $currentUser.name == post.author;
+        }
+        return false;
+    };
 </script>
 
 {#if post}
     {#if editmode}
         <div
             class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-5">
-            <div class="text-sm font-light italic">({post.category})</div>
             <div
                 contenteditable="true"
                 class="text-blue-800 font-bold text-lg mb-4 text-center"
@@ -59,6 +67,18 @@
                 class="border border-sm border-blue-600 mb-2"
                 contenteditable="true"
                 bind:textContent={post.fulltext} />
+            <div class="text-sm font-light italic">
+                {$_('category')}:
+                <span contenteditable="true" bind:textContent={post.category}
+                    >{post.category}</span>
+                <span
+                    class="ml-5"
+                    contenteditable="true"
+                    bind:textContent={post.author}
+                    >{$_('author')}: {post.author}</span>
+                <span class="ml-5">{$_('created')}: {post.created}</span>
+                <span class="ml-5">{$_('modified')}: {post.modified}</span>
+            </div>
         </div>
         <button
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
@@ -77,13 +97,19 @@
     {:else}
         <div
             class="prose md:prose-lg max-w-none border-blue-600 rounded-md my-3 mx-5 p-5">
-            <div class="text-sm font-light italic">({post.category})</div>
             <div class="text-blue-800 font-bold text-lg mb-4 text-center">
                 {post.heading}
             </div>
             <div>{@html post.fulltext}</div>
+            <div class="text-sm font-light italic border border-t-blue-700">
+                {$_('category')}:
+                <span>{post.category}</span>
+                <span class="ml-5">{$_('author')}: {post.author}</span>
+                <span class="ml-5">{$_('created')}: {post.created}</span>
+                <span class="ml-5">{$_('modified')}: {post.modified}</span>
+            </div>
         </div>
-        {#if $currentUser.role == 'admin'}
+        {#if canEdit()}
             <button class="btn" on:click={doDelete}>{$_('delete')}</button>
             <button class="btn" on:click={doEdit}>{$_('edit')}</button>
             <span class="btn">

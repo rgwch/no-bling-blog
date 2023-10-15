@@ -13,7 +13,8 @@
 
 <main>
   <div class="container mx-auto">
-    <div class="bg-blue-200 flex flex-row flex-nowrap items-center mx-5 px-5">
+    <div
+      class="bg-blue-200 flex flex-col md:flex-row flex-nowrap items-center mx-5 px-5">
       <div
         class="py-1 mr-2"
         on:click={home}

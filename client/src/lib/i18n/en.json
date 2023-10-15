@@ -13,5 +13,7 @@
     "back": "Back",
     "username": "Username",
     "password": "Password",
-    "login": "Login"
+    "login": "Login",
+    "created": "Created",
+    "modified": "Modified"
 }

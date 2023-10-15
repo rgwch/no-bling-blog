@@ -184,6 +184,7 @@ export class Documents {
      */
     public async update(entry: post): Promise<post> {
         await this.remove(entry._id)
+        entry.created = new Date(entry.created)
         return this.add(entry)
     }
 

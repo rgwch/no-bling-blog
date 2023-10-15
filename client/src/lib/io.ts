@@ -16,12 +16,6 @@ function setUser(user: user) {
     }
 }
 export async function request(url: string, query: Array<string> = []): Promise<any> {
-    // console.log(jwt)
-    /*
-    if (jwt?.length > 5) {
-        query.push("jwt=" + jwt)
-    }
-    */
     const headers = new Headers()
     headers.append("accept", "application/json")
     if (jwt?.length > 5) {
@@ -30,15 +24,14 @@ export async function request(url: string, query: Array<string> = []): Promise<a
 
     const answer = await fetch(env.url + url + "?" + query.join("&"), { headers })
     if (answer.ok) {
-        if (answer.status == 401) {
-            alert("unauthorized")
-        }
         const result = await answer.json()
         if (result.status == "ok") {
             setUser(result.user)
             return result.result
         } else {
             alert(result.status + ": " + result.message)
+            setUser({ role: "visitor", name: "visitor" })
+            return result.result
         }
     }
     alert(answer.status + ", " + answer.statusText)
