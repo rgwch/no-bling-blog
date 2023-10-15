@@ -52,19 +52,19 @@
 {#if post}
     {#if editmode}
         <div
-            class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-5">
+            class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-2">
             <div
                 contenteditable="true"
                 class="text-blue-800 font-bold text-lg mb-4 text-center"
                 bind:textContent={post.heading} />
             <p class="text-sm">{$_('summary')}:</p>
             <div
-                class="border border-sm border-blue-600 mb-2"
+                class="border border-sm border-blue-600 mb-2 p-1"
                 contenteditable="true"
                 bind:textContent={post.teaser} />
             <p class="text-sm">{$_('fulltext')}:</p>
             <div
-                class="border border-sm border-blue-600 mb-2"
+                class="border border-sm border-blue-600 mb-2 p-1"
                 contenteditable="true"
                 bind:textContent={post.fulltext} />
             <div class="text-sm font-light italic">

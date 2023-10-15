@@ -203,7 +203,7 @@ export class Documents {
 
     /**
      * Find posts matching given criteria
-     * @param q [Category, summary, from, until, between, fulltext]
+     * @param q [Category, from, until, between, text]
      * @returns a (possibly empty) list of posts
      */
     public async find(q: any): Promise<Array<post>> {
@@ -213,10 +213,12 @@ export class Documents {
         if (cat) {
             query.category = cat
         }
-        const sum = q['summary']
+        /*
+        const sum = q['text']
         if (sum) {
             query.teaser = new RegExp(sum)
         }
+        */
         const from = q["from"]
         if (from) {
             query.created = { $gte: new Date(from + "-01-01") }
@@ -231,9 +233,10 @@ export class Documents {
             query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
         }
         let posts: Array<post> = await this.db.find(docdb, query)
-        const matcher = q['fulltext']
-        if (matcher) {
-            posts = await this.filter(posts, matcher)
+        const keyword = q['text']
+        if (keyword) {
+            const found = await this.db.get(indexdb, keyword)
+            posts = posts.filter(p => found.posts.includes(p._id))
         }
         return posts
     }

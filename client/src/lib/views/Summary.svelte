@@ -15,12 +15,12 @@
     let categories: Array<string> = [];
     let posts: Array<post> = [];
     let years: Array<string> = [];
-    let filterSummary = '';
+    let filterText = '';
     let currentCategory = '';
     let currentYear = '';
     let yearFrom = '';
     let yearUntil = '';
-    let filterFulltext = '';
+
     request('stats').then((result) => {
         const dt = new Date(result.startdate);
         const now = new Date().getTime();
@@ -37,11 +37,8 @@
     async function doFilter() {
         // console.log(new Date().toString()+":"+$currentJWT)
         let filters = [];
-        if (filterFulltext.length) {
-            filters.push(`fulltext=${filterFulltext.toLocaleLowerCase()}`);
-        }
-        if (filterSummary.length) {
-            filters.push(`summary=${filterSummary.toLocaleLowerCase()}`);
+        if (filterText.length) {
+            filters.push(`text=${filterText.toLocaleLowerCase()}`);
         }
         if (currentCategory != '') {
             filters.push(`category=${currentCategory}`);
@@ -69,7 +66,7 @@
             teaser: '',
             fulltext: '',
             category: '',
-            author: '',
+            author: $currentUser.name,
             published: false,
         };
         $currentPost = np;
@@ -98,15 +95,12 @@
     </div>
     <div class="flex flex-row">
         <Filter
-            caption={$_('summary')}
-            bind:val={filterSummary}
+            caption={$_('text')}
+            bind:val={filterText}
             on:changed={doFilter} />
-        <Filter
-            caption={$_('fulltext')}
-            bind:val={filterFulltext}
-            on:changed={doFilter} />
+
         {#if $currentUser?.role == 'admin' || $currentUser?.role == 'editor'}
-            <button on:click={createNew}
+            <button class="pt-3 mt-2" on:click={createNew}
                 ><img src="/page_add.png" alt="add post" /></button>
         {/if}
     </div>
@@ -117,4 +111,3 @@
         <Post item={post} on:load={() => load(post)} />
     {/each}
 </div>
-<!-- button on:click={()=>create(null)}>Send</button -->

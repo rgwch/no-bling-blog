@@ -25,7 +25,8 @@ export class Server {
     constructor(private docs: Documents) {
         this.hono = new Hono()
         let currentUser;
-        if (process.env.NODE_ENV == "development") {
+        if (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "debug") {
+            console.log("Running in development mode")
             this.hono.use(prefix + "*", cors())
         }
         this.hono.use(prefix + "*", async (c, next) => {
@@ -212,9 +213,6 @@ export class Server {
 
         })
 
-
-        logger.info("Hono serving at port 3000")
-
     }
     /**
      * check if a user is banned. If ban is expired, remove them from ban list
@@ -248,7 +246,9 @@ export class Server {
         }
     }
     public async start() {
-        const result = await serve({ fetch: this.hono.fetch, port: 3000 })
-        // console.log(result.port))
+        const port = parseInt(process.env.nbb_port || "3000")
+        const result = await serve({ fetch: this.hono.fetch, port })
+        logger.info("Hono serving at port " + port)
+
     }
 }
