@@ -76,11 +76,11 @@ docs.initialize().then(() => {
 function showMenu() {
 
   menu([
-    { hotkey: "r", title: "Build and run NoBlingBlog" },
-    { hotkey: "u", title: "Create new user" },
-    { hotkey: "s", title: "Show stats" },
-    { hotkey: "b", title: "Backup data" },
-    { hotkey: "v", title: "Show version" },
+    { hotkey: "1", title: "Build and run NoBlingBlog" },
+    { hotkey: "2", title: "Create new user" },
+    { hotkey: "3", title: "Show stats" },
+    { hotkey: "4", title: "Backup data" },
+    { hotkey: "5", title: "Show version" },
     { separator: true },
     { hotkey: "d", title: "Create dummy posts" },
     { hotkey: "c", title: "Cleanup, delete all data (destructive!)" },
@@ -92,10 +92,10 @@ function showMenu() {
     console.clear()
 
     switch (item.hotkey) {
-      case "r":
+      case "1":
         await launch()
         break
-      case "u":
+      case "2":
         console.log("Create new user")
         createUser()
         break
@@ -103,19 +103,19 @@ function showMenu() {
         console.log("Create dummy posts")
         await dummies()
         break
-      case "s":
+      case "3":
         console.log("Show stats")
         stats()
         break
-      case "b":
+      case "4":
         console.log("Backup data")
-
+        backup()
         break
       case "c":
         console.log("Cleanup, delete all data (destructive!)")
         cleanup()
         break
-      case "v":
+      case "5":
         showVersion();
         break
       case "x":
@@ -182,6 +182,21 @@ function stats() {
   console.log("Number of users: " + users.length)
 }
 
+function backup() {
+  const backupdir = process.env.backupdir || path.join(__dirname, "../backup")
+  if (!fs.existsSync(backupdir)) {
+    fs.mkdirSync(backupdir)
+  }
+  const backupfile = path.join(backupdir, "backup_" + new Date().toISOString() + ".zip")
+  console.log("Creating backup " + backupfile)
+  exec("zip -r " + backupfile + " " + process.env.documents + " " + process.env.index + " " + process.env.users, (error: any, stdout: any, stderr: any) => {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log("Backup created.")
+    }
+  })
+}
 function launch() {
   console.log("Building client...")
   return new Promise((resolve, reject) => {

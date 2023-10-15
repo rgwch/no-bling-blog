@@ -129,14 +129,14 @@ export class Documents {
             entry.created = new Date()
         }
         entry.modified = new Date()
-        entry.filename = await this.tokenizeAndSave(document, entry.heading, entry._id)
+        entry.filename = await this.tokenizeAndSave(document, entry.teaser, entry.heading, entry._id)
         await this.db.create(docdb, entry)
         this.categories.add(entry.category)
         return entry
     }
 
-    async tokenizeAndSave(contents: string, title: string, id: string, overwrite = false): Promise<string> {
-        const tokens = tokenizer.process(contents)
+    async tokenizeAndSave(contents: string, summary: string, title: string, id: string, overwrite = false): Promise<string> {
+        const tokens = tokenizer.process(contents + " " + summary + " " + title)
         for (const token of tokens) {
             let index = await this.db.get(indexdb, token, { nullIfMissing: true })
             if (!index) {

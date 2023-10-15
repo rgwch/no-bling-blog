@@ -56,17 +56,17 @@
             <div
                 contenteditable="true"
                 class="text-blue-800 font-bold text-lg mb-4 text-center"
-                bind:textContent={post.heading} />
+                bind:innerText={post.heading} />
             <p class="text-sm">{$_('summary')}:</p>
             <div
                 class="border border-sm border-blue-600 mb-2 p-1"
                 contenteditable="true"
-                bind:textContent={post.teaser} />
+                bind:innerText={post.teaser} />
             <p class="text-sm">{$_('fulltext')}:</p>
             <div
                 class="border border-sm border-blue-600 mb-2 p-1"
                 contenteditable="true"
-                bind:textContent={post.fulltext} />
+                bind:innerText={post.fulltext} />
             <div class="text-sm font-light italic">
                 {$_('category')}:
                 <span contenteditable="true" bind:textContent={post.category}

@@ -14,5 +14,5 @@ init({
 })
 
 // To change the locale for testing:
-// locale.set('fr') 
+locale.set('en')
 
