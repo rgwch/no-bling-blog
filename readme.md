@@ -63,4 +63,10 @@ Posts can be written in the Markdown language. All standard markups are supporte
 
 ## Design
 
-You can, of course, customize the design of NoBlingBlog. But you must do so in the source files. 
+You can, of course, customize the design of NoBlingBlog. But you must do so in the source files. There's no bling-bling method...
+So:
+
+* Make a fork of this repository
+* Modify the relevant files in the client directory. Images are in /public, the top page layout is in src/App.svelte. Other files of interest for design are in src/lib/views.
+
+

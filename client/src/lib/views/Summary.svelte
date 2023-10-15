@@ -3,7 +3,12 @@
     import Post from "../components/Post.svelte";
     import Filter from "../components/Filter.svelte";
     import Edit from "./Edit.svelte";
-    import { currentView, currentPost, currentJWT } from "../store";
+    import {
+        currentView,
+        currentPost,
+        currentJWT,
+        currentUser,
+    } from "../store";
     import { request } from "../io";
     import Single from "../views/Single.svelte";
     let categories: Array<string> = [];
@@ -98,7 +103,9 @@
         caption="Volltext"
         bind:val={filterFulltext}
         on:changed={doFilter} />
-    <button class="btn" on:click={createNew}>Neu...</button>
+    {#if $currentUser?.role == "admin" || $currentUser?.role == "editor"}
+        <button class="btn" on:click={createNew}>Neu...</button>
+    {/if}
 </div>
 
 <div class="flex flex-row m-5 flex-wrap justify-center">

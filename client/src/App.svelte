@@ -3,13 +3,26 @@
   import Summary from "./lib/views/Summary.svelte";
   import Login from "./lib/components/Login.svelte";
   $currentView = Summary;
-
+  function home() {
+    $currentView = Summary;
+  }
+  function key(event: any) {
+    if (event.key === "Enter") $currentView = Summary;
+  }
 </script>
 
 <main>
   <div class="container mx-auto">
-    <div class="bg-blue-200 flex flex-row flex-nowrap mx-5 px-5">
-      <h1 class="text-lg cursor-pointer" on:click={()=>{$currentView=Summary}}>The No Bling Blog</h1>
+    <div class="bg-blue-200 flex flex-row flex-nowrap items-center mx-5 px-5">
+      <div
+        class="p-2"
+        on:click={home}
+        on:keypress={key}
+        tabindex="0"
+        role="button">
+        <img src="/nbb_logo.png" alt="NBB Logo" width="64" />
+      </div>
+      <div class="text-2xl justify-center">The No Bling Blog</div>
       <div class="flex-1" />
       <Login />
     </div>
@@ -17,4 +30,3 @@
     <svelte:component this={$currentView} />
   </div>
 </main>
-
