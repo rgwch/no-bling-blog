@@ -4,6 +4,7 @@
     import type { post } from '../types';
     import { request, write } from '../io';
     import Summary from './Summary.svelte';
+    import { _ } from 'svelte-i18n';
     let post: post;
     let editmode = false;
     let title = '';
@@ -48,12 +49,12 @@
                 contenteditable="true"
                 class="text-blue-800 font-bold text-lg mb-4 text-center"
                 bind:textContent={post.heading} />
-            <p class="text-sm">Zusammenfassung:</p>
+            <p class="text-sm">{$_('summary')}:</p>
             <div
                 class="border border-sm border-blue-600 mb-2"
                 contenteditable="true"
                 bind:textContent={post.teaser} />
-            <p class="text-sm">Volltext</p>
+            <p class="text-sm">{$_('fulltext')}:</p>
             <div
                 class="border border-sm border-blue-600 mb-2"
                 contenteditable="true"
@@ -61,13 +62,13 @@
         </div>
         <button
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
-            on:click={doSaveAll}>Speichern</button>
+            on:click={doSaveAll}>{$_('save')}</button>
         <button
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
-            on:click={doEdit}>Abbrechen</button>
+            on:click={doEdit}>{$_('cancel')}</button>
         <span
             class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md">
-            <span>Publiziert: </span>
+            <span>{$_('published')}: </span>
             <input
                 type="checkbox"
                 bind:checked={post.published}
@@ -75,18 +76,18 @@
         </span>
     {:else}
         <div
-            class="prose md:prose-lg max-w-none border-blue-600  rounded-md my-3 mx-5 p-5">
+            class="prose md:prose-lg max-w-none border-blue-600 rounded-md my-3 mx-5 p-5">
             <div class="text-sm font-light italic">({post.category})</div>
             <div class="text-blue-800 font-bold text-lg mb-4 text-center">
                 {post.heading}
             </div>
-            <div>{@html post.fulltext}</div> 
+            <div>{@html post.fulltext}</div>
         </div>
         {#if $currentUser.role == 'admin'}
-            <button class="btn" on:click={doDelete}>Löschen</button>
-            <button class="btn" on:click={doEdit}>Editieren</button>
+            <button class="btn" on:click={doDelete}>{$_('delete')}</button>
+            <button class="btn" on:click={doEdit}>{$_('edit')}</button>
             <span class="btn">
-                <span>Publiziert: </span>
+                <span>{$_('published')}: </span>
                 <input
                     type="checkbox"
                     bind:checked={post.published}
@@ -97,4 +98,4 @@
 {:else}
     <div>No Text</div>
 {/if}
-<button class="btn" on:click={back}>Zurück</button>
+<button class="btn" on:click={back}>{$_('back')}</button>

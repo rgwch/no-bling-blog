@@ -1,0 +1,17 @@
+{
+    "fromyear": "From year",
+    "untilyear": "Until year",
+    "category": "Category",
+    "summary": "Summary",
+    "fulltext": "Full text",
+    "title": "Title",
+    "save": "Save",
+    "cancel": "Cancel",
+    "published": "Published",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "username": "Username",
+    "password": "Password",
+    "login": "Login"
+}

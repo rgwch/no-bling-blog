@@ -1,0 +1,17 @@
+{
+    "fromyear": "Depuis l'an",
+    "untilyear": "Jusqu'à l'an",
+    "category": "Catégorie",
+    "summary": "Résumé",
+    "fulltext": "Texte complet",
+    "title": "Titre",
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "published": "Publié",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "login": "Connexion"
+}

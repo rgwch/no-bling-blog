@@ -1,26 +1,27 @@
 <script lang="ts">
-    import type { post } from "../types";
-    import Post from "../components/Post.svelte";
-    import Filter from "../components/Filter.svelte";
-    import Edit from "./Edit.svelte";
+    import type { post } from '../types';
+    import Post from '../components/Post.svelte';
+    import Filter from '../components/Filter.svelte';
+    import Edit from './Edit.svelte';
+    import { _ } from 'svelte-i18n';
     import {
         currentView,
         currentPost,
         currentJWT,
         currentUser,
-    } from "../store";
-    import { request } from "../io";
-    import Single from "../views/Single.svelte";
+    } from '../store';
+    import { request } from '../io';
+    import Single from '../views/Single.svelte';
     let categories: Array<string> = [];
     let posts: Array<post> = [];
     let years: Array<string> = [];
-    let filterSummary = "";
-    let currentCategory = "";
-    let currentYear = "";
-    let yearFrom = "";
-    let yearUntil = "";
-    let filterFulltext = "";
-    request("stats").then((result) => {
+    let filterSummary = '';
+    let currentCategory = '';
+    let currentYear = '';
+    let yearFrom = '';
+    let yearUntil = '';
+    let filterFulltext = '';
+    request('stats').then((result) => {
         const dt = new Date(result.startdate);
         const now = new Date().getTime();
         while (dt.getTime() <= now) {
@@ -28,9 +29,9 @@
             years.push(year.toString());
             dt.setFullYear(year + 1);
         }
-        years.push("");
+        years.push('');
         years = years;
-        categories = ["", ...result.categories];
+        categories = ['', ...result.categories];
     });
     doFilter();
     async function doFilter() {
@@ -42,21 +43,21 @@
         if (filterSummary.length) {
             filters.push(`summary=${filterSummary.toLocaleLowerCase()}`);
         }
-        if (currentCategory != "") {
+        if (currentCategory != '') {
             filters.push(`category=${currentCategory}`);
         }
-        if (yearFrom != "") {
-            if (yearUntil != "") {
+        if (yearFrom != '') {
+            if (yearUntil != '') {
                 filters.push(`between=${yearFrom},${yearUntil}`);
             } else {
                 filters.push(`from=${yearFrom}`);
             }
         } else {
-            if (yearUntil != "") {
+            if (yearUntil != '') {
                 filters.push(`until=${yearUntil}`);
             }
         }
-        posts = await request("summary", filters);
+        posts = await request('summary', filters);
     }
     function load(p: post) {
         $currentPost = p;
@@ -64,11 +65,11 @@
     }
     function createNew() {
         const np: post = {
-            heading: "",
-            teaser: "",
-            fulltext: "",
-            category: "",
-            author: "",
+            heading: '',
+            teaser: '',
+            fulltext: '',
+            category: '',
+            author: '',
             published: false,
         };
         $currentPost = np;
@@ -80,32 +81,35 @@
     class="flex flex-col justify-center content-stretch md:flex-row mx-5 m-2 p-1 text-sm">
     <div class="flex flex-row">
         <Filter
-            caption="Jahr von"
+            caption={$_('fromyear')}
             choices={years}
             bind:val={yearFrom}
             on:changed={doFilter} />
         <Filter
-            caption="Jahr bis"
+            caption={$_('untilyear')}
             choices={years}
             bind:val={yearUntil}
             on:changed={doFilter} />
+        <Filter
+            caption={$_('category')}
+            choices={categories}
+            bind:val={currentCategory}
+            on:changed={doFilter} />
     </div>
-    <Filter
-        caption="Kategorie"
-        choices={categories}
-        bind:val={currentCategory}
-        on:changed={doFilter} />
-    <Filter
-        caption="Zusammenfassung"
-        bind:val={filterSummary}
-        on:changed={doFilter} />
-    <Filter
-        caption="Volltext"
-        bind:val={filterFulltext}
-        on:changed={doFilter} />
-    {#if $currentUser?.role == "admin" || $currentUser?.role == "editor"}
-        <button class="btn" on:click={createNew}>Neu...</button>
-    {/if}
+    <div class="flex flex-row">
+        <Filter
+            caption={$_('summary')}
+            bind:val={filterSummary}
+            on:changed={doFilter} />
+        <Filter
+            caption={$_('fulltext')}
+            bind:val={filterFulltext}
+            on:changed={doFilter} />
+        {#if $currentUser?.role == 'admin' || $currentUser?.role == 'editor'}
+            <button on:click={createNew}
+                ><img src="/page_add.png" alt="add post" /></button>
+        {/if}
+    </div>
 </div>
 
 <div class="flex flex-row m-5 flex-wrap justify-center">
