@@ -5,12 +5,10 @@
  ************************************************/
 
 import fs from 'fs/promises'
-import { createReadStream, createWriteStream } from 'fs'
 import path from 'path'
 import { post } from './types'
 import { marked } from 'marked'
 import { MetaScraper, type imageObject } from './scrapers'
-import { getDatabase } from './database/db'
 import { IDatabase } from './database/db.interface'
 import { tokenizer } from './tokenizer'
 import { v4 as uuid } from 'uuid'
@@ -61,16 +59,18 @@ export class Documents {
      * @returns 
      */
     public async rescan() {
-        return this.db.find(docdb, {}).then((posts: Array<post>) => {
-            this.numEntries = posts.length
-            for (const p of posts) {
-                this.categories.add(p.category)
-                const d: Date = new Date(p.created)
-                if (d.getTime() < this.dateFrom.getTime()) {
-                    this.dateFrom = d
-                }
+        this.categories.clear()
+        this.numEntries = 0
+        this.dateFrom = new Date()
+        const posts = await this.db.find(docdb, {})
+        this.numEntries = posts.length
+        for (const p of posts) {
+            this.categories.add(p.category)
+            const d: Date = new Date(p.created)
+            if (d.getTime() < this.dateFrom.getTime()) {
+                this.dateFrom = d
             }
-        })
+        }
     }
 
     /**

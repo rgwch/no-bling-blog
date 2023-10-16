@@ -113,7 +113,7 @@ function showMenu() {
         break
       case "c":
         console.log("Cleanup, delete all data (destructive!)")
-        cleanup()
+        await cleanup()
         break
       case "5":
         showVersion();
@@ -153,10 +153,11 @@ function loadUsers(): Array<user> {
   return users
 }
 
-function cleanup() {
+async function cleanup() {
   for (let dir of [process.env.documents, process.env.nedb_datadir, process.env.index]) {
     remove(dir)
   }
+  await docs.rescan()
   console.log("All data deleted.")
 }
 

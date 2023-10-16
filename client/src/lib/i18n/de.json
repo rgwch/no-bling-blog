@@ -16,5 +16,6 @@
     "password": "Passwort",
     "login": "Anmelden",
     "created": "Erstellt",
-    "modified": "Geändert"
+    "modified": "Geändert",
+    "suredelete": "Wirklich unwiderruflich Löschen?"
 }

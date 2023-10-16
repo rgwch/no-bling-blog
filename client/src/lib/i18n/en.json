@@ -16,5 +16,6 @@
     "password": "Password",
     "login": "Login",
     "created": "Created",
-    "modified": "Modified"
+    "modified": "Modified",
+    "suredelete": "Really delete this post?"
 }

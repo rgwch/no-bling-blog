@@ -26,11 +26,13 @@
         $currentView = Summary;
     }
     async function doDelete() {
-        const result = await request("delete/" + $currentPost._id);
-        if (result) {
-            $currentView = Summary;
-        } else {
-            alert(result.message);
+        if (confirm($_("suredelete"))) {
+            const result = await request("delete/" + $currentPost._id);
+            if (result) {
+                $currentView = Summary;
+            } else {
+                alert(result.message);
+            }
         }
     }
     async function doEdit() {

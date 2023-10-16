@@ -16,5 +16,6 @@
     "password": "Mot de passe",
     "login": "Connexion",
     "created": "Créé",
-    "modified": "Modifié"
+    "modified": "Modifié",
+    "reallydelete": "Etes-vous sûr?"
 }
