@@ -237,8 +237,10 @@ export class Documents {
         let posts: Array<post> = await this.db.find(docdb, query)
         const keyword = q['text']
         if (keyword) {
-            const found = await this.db.get(indexdb, keyword)
-            posts = posts.filter(p => found.posts.includes(p._id))
+            const found = await this.db.get(indexdb, keyword, { nullIfMissing: true })
+            if (found) {
+                posts = posts.filter(p => found.posts.includes(p._id))
+            }
         }
         return posts
     }
