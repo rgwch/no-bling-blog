@@ -17,5 +17,6 @@
     "login": "Login",
     "created": "Created",
     "modified": "Modified",
-    "suredelete": "Really delete this post?"
+    "suredelete": "Really delete this post?",
+    "invaliddate": "Invalid date"
 }

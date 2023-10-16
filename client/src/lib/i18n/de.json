@@ -17,5 +17,6 @@
     "login": "Anmelden",
     "created": "Erstellt",
     "modified": "Geändert",
-    "suredelete": "Wirklich unwiderruflich Löschen?"
+    "suredelete": "Wirklich unwiderruflich Löschen?",
+    "invaliddate":"Das Datum ist ungültig"
 }

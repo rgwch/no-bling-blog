@@ -1,15 +1,13 @@
 <script lang="ts">
-    import env from "../environment";
     import { currentView, currentPost, currentUser } from "../store";
+    import { DateTime } from "luxon";
     import type { post } from "../types";
     import { request, write } from "../io";
     import Summary from "./Summary.svelte";
     import { _ } from "svelte-i18n";
     let post: post;
     let editmode = false;
-    let title = "";
-    let teaser = "";
-    let fulltext = "";
+    let date: string = "";
 
     reload();
 
@@ -18,6 +16,7 @@
             async (result) => {
                 if (result) {
                     post = result;
+                    date = result.created.toString();
                 }
             }
         );
@@ -40,6 +39,13 @@
         await reload();
     }
     async function doSaveAll() {
+        const dt = DateTime.fromISO(date);
+        if (dt.isValid) {
+            post.created = dt.toJSDate();
+        }else{
+            alert($_("invaliddate"));
+            return;
+        }
         await write("update", post);
         editmode = false;
         await reload();
@@ -85,7 +91,11 @@
                     contenteditable="true"
                     bind:textContent={post.author}
                     >{$_("author")}: {post.author}</span>
-                <span class="ml-5">{$_("created")}: {post.created}</span>
+                <span
+                    class="ml-5"
+                    contenteditable="true"
+                    bind:textContent={date}
+                    >{$_("created")}: {post.created}</span>
                 <span class="ml-5">{$_("modified")}: {post.modified}</span>
             </div>
         </div>

@@ -17,5 +17,6 @@
     "login": "Connexion",
     "created": "Créé",
     "modified": "Modifié",
-    "reallydelete": "Etes-vous sûr?"
+    "reallydelete": "Etes-vous sûr?",
+    "invaliddate": "Date invalide"
 }
