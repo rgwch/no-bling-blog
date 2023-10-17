@@ -15,13 +15,14 @@ import { logger } from './logger'
 import { createHash } from 'node:crypto'
 import { serve } from '@hono/node-server'
 import { promisify } from 'node:util';
-import { createGzip } from 'node:zlib';
+import { createGzip, deflate, gzip } from 'node:zlib';
 import { pipeline } from 'node:stream';
 import {
     createReadStream,
     createWriteStream,
 } from 'node:fs';
 const pipe = promisify(pipeline);
+const zip = promisify(gzip)
 
 
 const prefix = "/api/1.0/"
@@ -96,15 +97,21 @@ export class Server {
             }
         })
         /** zip a post for download */
-        this.hono.get(prefix + "download/:id", async (c) => {
+        this.hono.get(prefix + "export/:id", async (c) => {
             const params = c.req.param()
             if (params["id"]) {
                 const entry = await docs.get(params["id"], true)
-                c.header("Content-Type", "application/octet-stream")
-                
-                return c.stream(async outp => {
-                    await this.do_gzip(JSON.stringify(entry), outp)
-                })
+                if (entry) {
+                    const title=entry.heading.replace(/[^a-zA-Z0-9]/g,"_")
+                    c.header("Content-Type", "application/octet-stream")
+                    c.header("Content-Disposition", "attachment; filename=" + title + ".gz")
+                    const zipped = await zip(JSON.stringify(entry))
+                    return c.stream(async outp => {
+                        await outp.write(zipped)
+                    })
+                } else {
+                    throw new Error("no such entry")
+                }
             } else {
                 throw new Error("no id supplied")
             }
