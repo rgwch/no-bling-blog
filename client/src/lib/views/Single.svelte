@@ -5,6 +5,7 @@
     import { request, write } from "../io";
     import Summary from "./Summary.svelte";
     import { _ } from "svelte-i18n";
+    import { readable } from "svelte/store";
     let post: post;
     let editmode = false;
     let date: string = "";
@@ -55,7 +56,10 @@
     async function doSaveMeta() {
         await write("updatemeta", post);
     }
-    let canEdit = () => {
+    async function doExport(){
+        await request("export/" + $currentPost._id)
+    }
+    $: canEdit = () => {
         if ($currentUser.role == "admin") {
             return true;
         }
@@ -140,6 +144,7 @@
                     bind:checked={post.published}
                     on:change={doSaveMeta} />
             </span>
+            <button class="btn" on:click={doExport}>{$_("export")}</button>
         {/if}
     {/if}
 {:else}
