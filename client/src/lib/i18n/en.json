@@ -15,6 +15,7 @@
     "username": "Username",
     "password": "Password",
     "login": "Login",
+    "author": "Author",
     "created": "Created",
     "modified": "Modified",
     "suredelete": "Really delete this post?",

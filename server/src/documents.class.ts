@@ -240,6 +240,8 @@ export class Documents {
             const found = await this.db.get(indexdb, keyword, { nullIfMissing: true })
             if (found) {
                 posts = posts.filter(p => found.posts.includes(p._id))
+            }else{
+                posts=[]
             }
         }
         return posts

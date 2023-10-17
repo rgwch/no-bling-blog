@@ -15,6 +15,7 @@
     "username": "Nom d'utilisateur",
     "password": "Mot de passe",
     "login": "Connexion",
+    "author": "Auteur",
     "created": "Créé",
     "modified": "Modifié",
     "reallydelete": "Etes-vous sûr?",

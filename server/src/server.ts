@@ -14,6 +14,14 @@ import path from 'path'
 import { logger } from './logger'
 import { createHash } from 'node:crypto'
 import { serve } from '@hono/node-server'
+import { promisify } from 'node:util';
+import { createGzip } from 'node:zlib';
+import { pipeline } from 'node:stream';
+import {
+    createReadStream,
+    createWriteStream,
+} from 'node:fs';
+const pipe = promisify(pipeline);
 
 
 const prefix = "/api/1.0/"
@@ -87,7 +95,23 @@ export class Server {
                 throw new Error("no id supplied")
             }
         })
-
+        /** zip a post for download */
+        this.hono.get(prefix + "download/:id", async (c) => {
+            const params = c.req.param()
+            if (params["id"]) {
+                const entry = await docs.get(params["id"], true)
+                c.header("Content-Type", "application/octet-stream")
+                
+                return c.stream(async outp => {
+                    await this.do_gzip(JSON.stringify(entry), outp)
+                })
+            } else {
+                throw new Error("no id supplied")
+            }
+        })
+        /**
+         * Delete a post by its _id
+         */
         this.hono.get(prefix + "delete/:id", async (c) => {
             const params = c.req.param()
             if (params["id"]) {
@@ -235,6 +259,12 @@ export class Server {
 
         })
 
+    }
+    async do_gzip(input, output) {
+        const gzip = createGzip();
+        const source = createReadStream(input);
+        const destination = createWriteStream(output);
+        await pipe(source, gzip, destination);
     }
     /**
      * check if a user is banned. If ban is expired, remove them from ban list

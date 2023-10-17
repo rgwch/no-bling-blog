@@ -8,6 +8,7 @@
     let post: post;
     let editmode = false;
     let date: string = "";
+    let modified: string = "";
 
     reload();
 
@@ -16,7 +17,8 @@
             async (result) => {
                 if (result) {
                     post = result;
-                    date = result.created.toString();
+                    date = DateTime.fromJSDate(new Date(result.created)).toFormat($_("dateformat"));
+                    modified = DateTime.fromJSDate(new Date(result.modified)).toFormat($_("dateformat"));
                 }
             }
         );
@@ -39,7 +41,7 @@
         await reload();
     }
     async function doSaveAll() {
-        const dt = DateTime.fromISO(date);
+        const dt = DateTime.fromFormat(date, $_("dateformat"));
         if (dt.isValid) {
             post.created = dt.toJSDate();
         }else{
@@ -95,8 +97,8 @@
                     class="ml-5"
                     contenteditable="true"
                     bind:textContent={date}
-                    >{$_("created")}: {post.created}</span>
-                <span class="ml-5">{$_("modified")}: {post.modified}</span>
+                    >{$_("created")}: {date}</span>
+                <span class="ml-5">{$_("modified")}: {modified}</span>
             </div>
         </div>
         <button
@@ -113,19 +115,19 @@
                 bind:checked={post.published}
                 on:click={doSaveAll} />
         </span>
-    {:else}
+    {:else }     
         <div
-            class="prose md:prose-lg max-w-none border-blue-600 rounded-md my-3 mx-5 p-5">
+            class="mx-auto prose md:prose-lg border-blue-600 rounded-md my-3 mx-5 p-5">
             <div class="text-blue-800 font-bold text-lg mb-4 text-center">
                 {post.heading}
             </div>
             <div>{@html post.fulltext}</div>
-            <div class="text-sm font-light italic border border-t-blue-700">
-                {$_("category")}:
-                <span>{post.category}</span>
+            <div class="text-sm font-light italic border border-t-blue-700 flex">
+                <span>{$_("category")}:
+                {post.category}</span>
                 <span class="ml-5">{$_("author")}: {post.author}</span>
-                <span class="ml-5">{$_("created")}: {post.created}</span>
-                <span class="ml-5">{$_("modified")}: {post.modified}</span>
+                <span class="ml-5">{$_("created")}: {date}</span>
+                <span class="ml-5">{$_("modified")}: {modified}</span>
             </div>
         </div>
         {#if canEdit()}
