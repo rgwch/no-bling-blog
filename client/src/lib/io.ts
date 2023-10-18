@@ -5,7 +5,7 @@ let jwt = ""
 currentJWT.subscribe(n => {
     jwt = n
 })
-let api: string = env.prefix
+export let api: string = env.prefix
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     api = `http://localhost:${env.port}${env.prefix}`
 }

@@ -27,7 +27,7 @@ const expected = `<h1>Header</h1>
   code line 2
 </code></pre><p>simple text</p>
 <pre><code class="hljs language-javascript"><span class="hljs-keyword">const</span> test = <span class="hljs-string">&quot;test&quot;</span>;
-</code></pre>`.replace(/[\n\r]/g,"")
+</code></pre>`.replace(/[\n\r]/g, "")
 
 describe("process markdown", () => {
   let te: TestEnvironment
@@ -36,12 +36,17 @@ describe("process markdown", () => {
     await te.setup()
   })
   afterAll(async () => {
-     await te.teardown()
+    await te.teardown()
   })
-  
+
+  it("should expand code fences", async () => {
+    const processed = await processContents("-javascript\n-")
+    expect(processed).toEqual(`<pre><code class="hljs language-javascript">\n</code></pre>`)
+
+  })
   it("should return html", async () => {
     const processed = await processContents(testtext)
-    expect(processed.replace(/[\n\r]/g,"")).toEqual(expected)
+    expect(processed.replace(/[\n\r]/g, "")).toEqual(expected)
 
   })
 

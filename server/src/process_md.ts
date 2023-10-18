@@ -16,12 +16,12 @@ const marked = new Marked(
 );
 
 
-export async function processContents(text:string): Promise<string> {
+export async function processContents(text: string): Promise<string> {
   if (!text) {
     throw new Error("No fulltext supplied to processContents")
   }
   let processed = await processPartials(text)
-  processed=processed.replace(/^-([a-z]*)$/g, "~~~$1")
+  processed = processed.replace(/-([a-z]*)/g, "~~~$1")
   text = await marked.parse(processed)
   return text
 }
