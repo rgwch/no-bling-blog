@@ -21,7 +21,7 @@ export async function processContents(text: string): Promise<string> {
     throw new Error("No fulltext supplied to processContents")
   }
   let processed = await processPartials(text)
-  processed = processed.replace(/-([a-z]*)/g, "~~~$1")
+  processed = processed.replace(/^-([a-z]*)$/gm, "~~~$1")
   text = await marked.parse(processed)
   return text
 }

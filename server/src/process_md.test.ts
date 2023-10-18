@@ -40,8 +40,8 @@ describe("process markdown", () => {
   })
 
   it("should expand code fences", async () => {
-    const processed = await processContents("-javascript\n-")
-    expect(processed).toEqual(`<pre><code class="hljs language-javascript">\n</code></pre>`)
+    const processed = await processContents("The following dash should be expanded\n-javascript\n-\nbut not this - end")
+    expect(processed).toEqual(`<p>The following dash should be expanded</p>\n<pre><code class="hljs language-javascript">\n</code></pre><p>but not this - end</p>\n`)
 
   })
   it("should return html", async () => {
