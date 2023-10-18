@@ -7,15 +7,16 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { post } from './types'
-import { marked } from 'marked'
 import { MetaScraper, type imageObject } from './scrapers'
 import { IDatabase } from './database/db.interface'
 import { tokenizer } from './tokenizer'
 import { v4 as uuid } from 'uuid'
 import { NeDB } from './database/nedb.class'
 import { logger } from './logger'
+import { processContents } from './process_md'
 const docdb = "nbbdocs"
 const indexdb = "nbbindex"
+
 
 export type analyzed = {
     filename: string
@@ -240,8 +241,8 @@ export class Documents {
             const found = await this.db.get(indexdb, keyword, { nullIfMissing: true })
             if (found) {
                 posts = posts.filter(p => found.posts.includes(p._id))
-            }else{
-                posts=[]
+            } else {
+                posts = []
             }
         }
         return posts
@@ -258,7 +259,7 @@ export class Documents {
         if (entry) {
             let processed = await this.loadContents(entry)
             if (!raw) {
-                processed = (await this.processContents(processed)) as post
+                processed.fulltext = (await processContents(processed.fulltext))
             }
             return processed
         } else {
@@ -280,41 +281,6 @@ export class Documents {
         return entry
     }
 
-    public async processContents(entry: Partial<post>): Promise<Partial<post>> {
-        if (!entry?.fulltext) {
-            throw new Error("No fulltext supplied " + JSON.stringify(entry))
-        }
-        const processed = await this.process(entry.fulltext)
-        entry.fulltext = marked.parse(processed)
-        return entry
-    }
-    async process(text: string): Promise<string> {
-        const links = text.match(/\[\[[^\]]+\]\]/g)
-        if (!links) {
-            return text
-        }
-        for (const link of links) {
-            try {
-                const ref = JSON.parse(link.substring(2, link.length - 2))
-                let partial = await fs.readFile(path.join(process.env.partials, ref.template + ".html"), "utf-8")
-                const tokens = partial.match(/\[\[[^\]]+\]\]/g)
-                for (const token of tokens) {
-                    const repl = ref[token.substring(2, token.length - 2)]
-                    if (repl) {
-                        partial = partial.replace(token, repl)
-                    } else {
-                        partial = partial.replace(token, "")
-                    }
-                }
-                text = text.replace(link, partial)
-            } catch (err) {
-                text = text.replace(link, "error")
-            }
-
-        }
-
-        return text
-    }
 
     /**
      * generate a filepath from a title and the documents basedir. All non-alphanomeric characters are replaced with "_"

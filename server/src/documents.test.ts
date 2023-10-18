@@ -1,7 +1,5 @@
 import { Documents } from './documents.class';
-import fs from 'fs/promises'
 import { TestEnvironment } from './test_environment'
-import path from 'path'
 
 describe('Documents', () => {
 
@@ -18,13 +16,6 @@ describe('Documents', () => {
     await te.teardown()
   })
 
-  it("should process a partial", async () => {
-    const partial = "<div>This is a [[title]]</div>"
-    await fs.writeFile(path.join(process.env.partials, "test.html"), partial)
-    const post = { _id: "__test__", fulltext: `Replace the following: [[{"template":"test","title":"partial"}]] with the template` }
-    const processed = await documents.processContents(post)
-    expect(processed.fulltext.trim()).toEqual("<p>Replace the following: <div>This is a partial</div> with the template</p>")
-  })
   it('should add a document', async () => {
     const document = { _id: "__test__", heading: 'Test Document', fulltext: 'This is a test document.' };
     await documents.add(document);
