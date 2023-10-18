@@ -112,6 +112,8 @@
                 class="border border-sm border-blue-600 mb-2 p-1"
                 contenteditable="true"
                 on:keydown={notab}
+                role="textbox"
+                tabindex="-1"
                 bind:innerText={post.fulltext} />
             <div class="text-sm font-light italic">
                 {$_('category')}:

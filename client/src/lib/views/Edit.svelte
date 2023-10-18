@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { post } from '../types';
-    import { request, write } from '../io';
-    import { currentPost, currentView } from '../store';
+    import { request, write, api } from '../io';
+    import { currentPost, currentView, currentJWT } from '../store';
     import Summary from './Summary.svelte';
     import { _ } from 'svelte-i18n';
     let sayok: boolean = false;
@@ -10,6 +10,30 @@
             sayok = true;
             setTimeout(() => (sayok = false), 2000);
         });
+    }
+    async function doUpload(event: any) {
+        console.log('upload');
+        event.preventDefault();
+        const form = event.currentTarget;
+        const formData = new FormData(form);
+        const headers: any = {
+            // 'content-type': 'multipart/form-data',
+        };
+        headers['Authorization'] = 'Bearer ' + $currentJWT;
+
+        const options = {
+            method: 'POST',
+            headers,
+            body: formData,
+        };
+        try {
+            const result = await fetch(api + 'upload', options);
+            console.log(result.ok);
+            sayok = true;
+            setTimeout(() => (sayok = false), 2000);
+        } catch (err) {
+            alert(err);
+        }
     }
 </script>
 
@@ -38,6 +62,11 @@
         <p class:hidden={!sayok}>Ok!</p>
         <button class="btn" on:click={() => ($currentView = Summary)}
             >{$_('cancel')}</button>
+        <form on:submit={doUpload} method="post" enctype="multipart/form-data">
+            <input type="text" name="text" id="text" value="hello" />
+            <input type="file" name="file" id="file" />
+            <button>Upload</button>
+        </form>
     </div>
 </div>
 

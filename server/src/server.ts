@@ -102,7 +102,7 @@ export class Server {
             if (params["id"]) {
                 const entry = await docs.get(params["id"], true)
                 if (entry) {
-                    const title=entry.heading.replace(/[^a-zA-Z0-9]/g,"_")
+                    const title = entry.heading.replace(/[^a-zA-Z0-9]/g, "_")
                     c.header("Content-Type", "application/octet-stream")
                     c.header("Content-Disposition", "attachment; filename=" + title + ".gz")
                     const zipped = await zip(JSON.stringify(entry))
@@ -203,7 +203,17 @@ export class Server {
                 return c.json({ status: "fail", message: "not authorized" })
             }
         })
-
+        this.hono.post(prefix + "upload", async c => {
+            if (currentUser.role == "admin" || currentUser.role == "editor") {
+                const body = await c.req.parseBody()
+                const h = await (body['file'] as File).arrayBuffer()
+                fs.writeFile("test.gz",)
+                return c.json({ status: "ok", user: currentUser })
+            } else {
+                c.status(401)
+                return c.json({ status: "fail", message: "not authorized" })
+            }
+        })
         /**
          * Update post
          */
