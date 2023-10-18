@@ -121,7 +121,7 @@
         </span>
     {:else }     
         <div
-            class="mx-auto prose md:prose-lg border-blue-600 rounded-md my-3 mx-5 p-5">
+            class="mx-auto prose md:prose-lg border-blue-600 rounded-md my-3 p-5">
             <div class="text-blue-800 font-bold text-lg mb-4 text-center">
                 {post.heading}
             </div>
