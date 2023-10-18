@@ -15,15 +15,13 @@ import { logger } from './logger'
 import { createHash } from 'node:crypto'
 import { serve } from '@hono/node-server'
 import { promisify } from 'node:util';
-import { createGzip, deflate, gzip } from 'node:zlib';
-import { pipeline } from 'node:stream';
+import { gzip, gunzip } from 'node:zlib';
 import {
     createReadStream,
     createWriteStream,
 } from 'node:fs';
-const pipe = promisify(pipeline);
 const zip = promisify(gzip)
-
+const unzip = promisify(gunzip)
 
 const prefix = "/api/1.0/"
 
@@ -205,10 +203,19 @@ export class Server {
         })
         this.hono.post(prefix + "upload", async c => {
             if (currentUser.role == "admin" || currentUser.role == "editor") {
-                const body = await c.req.parseBody()
-                const h = await (body['file'] as File).arrayBuffer()
-                fs.writeFile("test.gz",)
-                return c.json({ status: "ok", user: currentUser })
+                try {
+                    const body = await c.req.parseBody()
+                    const h = await (body['file'] as File)
+                    const result = await this.loadFile(h)
+                    const unzipped = await unzip(result)
+                    const parsed = JSON.parse(unzipped.toString())
+                    delete parsed._id
+                    await docs.add(parsed)
+                    return c.json({ status: "ok", user: currentUser })
+                } catch (err) {
+                    logger.error(err)
+                    return c.json({ status: "fail", message: err })
+                }
             } else {
                 c.status(401)
                 return c.json({ status: "fail", message: "not authorized" })
@@ -277,12 +284,27 @@ export class Server {
         })
 
     }
-    async do_gzip(input, output) {
-        const gzip = createGzip();
-        const source = createReadStream(input);
-        const destination = createWriteStream(output);
-        await pipe(source, gzip, destination);
+    loadFile(h: File): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            const inp = h.stream()
+            const n = h.name
+            // const out = createWriteStream(outfile)
+            const b = Buffer.alloc(h.size)
+            const reader = inp.getReader()
+            let bytes = 0
+            return reader.read().then(function process({ done, value }) {
+                if (done) {
+                    console.log("done")
+                    resolve(b)
+                } else {
+                    bytes += Buffer.from(value).copy(b, bytes, 0, value.length)
+                    return reader.read().then(process)
+                }
+            })
+        })
     }
+
+
     /**
      * check if a user is banned. If ban is expired, remove them from ban list
      * @param user username
