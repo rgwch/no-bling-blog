@@ -1,7 +1,8 @@
 <script lang="ts">
     import type { post } from '../types';
     import { request, write, api } from '../io';
-    import { currentPost, currentView, currentJWT } from '../store';
+    import { currentPost, currentJWT } from '../store';
+    import {navigate} from 'svelte-routing';
     import Summary from './Summary.svelte';
     import { _ } from 'svelte-i18n';
     let sayok: boolean = false;
@@ -60,7 +61,7 @@
     <div class="flex flex-row">
         <button class="btn" on:click={doSave}>{$_('save')}</button>
         <p class:hidden={!sayok}>Ok!</p>
-        <button class="btn" on:click={() => ($currentView = Summary)}
+        <button class="btn" on:click={() => (navigate('/'))}
             >{$_('cancel')}</button>
         <form on:submit={doUpload} method="post" enctype="multipart/form-data">
             <input type="text" name="text" id="text" value="hello" />

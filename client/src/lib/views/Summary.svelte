@@ -1,17 +1,15 @@
 <script lang="ts">
     import type { post } from '../types';
     import Post from '../components/Post.svelte';
+    import {navigate} from 'svelte-routing';
     import Filter from '../components/Filter.svelte';
-    import Edit from './Edit.svelte';
     import { _ } from 'svelte-i18n';
     import {
-        currentView,
         currentPost,
         currentJWT,
         currentUser,
     } from '../store';
     import { request } from '../io';
-    import Single from '../views/Single.svelte';
     let categories: Array<string> = [];
     let posts: Array<post> = [];
     let years: Array<string> = [];
@@ -58,7 +56,7 @@
     }
     function load(p: post) {
         $currentPost = p;
-        $currentView = Single;
+        navigate('/post/'+p._id);
     }
     function createNew() {
         const np: post = {
@@ -70,7 +68,7 @@
             published: false,
         };
         $currentPost = np;
-        $currentView = Edit;
+        navigate('/new');
     }
 </script>
 

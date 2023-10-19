@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { currentView, currentPost, currentUser } from '../store';
+    import { currentPost, currentUser } from '../store';
+    import {navigate} from 'svelte-routing';
     import { DateTime } from 'luxon';
     import type { post } from '../types';
     import { request, write, api } from '../io';
     import Summary from './Summary.svelte';
     import { _ } from 'svelte-i18n';
-    import { readable } from 'svelte/store';
+    export let id: string;
     let post: post;
     let editmode = false;
     let date: string = '';
@@ -14,7 +15,7 @@
     reload();
 
     function reload() {
-        request('read/' + $currentPost._id, [`raw=${editmode}`]).then(
+        request('read/' + id, [`raw=${editmode}`]).then(
             async (result) => {
                 if (result) {
                     post = result;
@@ -29,13 +30,13 @@
         );
     }
     function back() {
-        $currentView = Summary;
+        navigate('/');
     }
     async function doDelete() {
         if (confirm($_('suredelete'))) {
             const result = await request('delete/' + $currentPost._id);
             if (result) {
-                $currentView = Summary;
+                navigate('/');
             } else {
                 alert(result.message);
             }
