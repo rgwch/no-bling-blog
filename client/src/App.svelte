@@ -29,7 +29,6 @@
     </div>
     <Router>
       <Route path="/" component={Summary} />
-      <Route path="/login" component={Login} />
       <Route path="/post/:id" let:params>
         <Single id={params.id} />
       </Route>

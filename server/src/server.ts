@@ -278,7 +278,7 @@ export class Server {
                 })
             } catch (err) {
                 c.status(404)
-                return c.json({ status: "fail", message: "not found" })
+                return c.json({ status: "fail", message: "not found: "+c.req.path })
             }
 
         })
