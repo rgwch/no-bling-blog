@@ -255,6 +255,10 @@ export class Server {
             if (filename == "/" || filename == "/index.html" || filename.startsWith("/post/")) {
                 filename = "index.html"
             }
+            if (filename.includes("..")) {
+                c.status(403)
+                return c.json({ status: "fail", message: "forbidden" })
+            }
             logger.debug("serving " + filename)
             let mime = 'text/html; charset="utf-8"'
             if (filename.endsWith('js')) {
