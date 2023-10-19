@@ -1,5 +1,4 @@
 import { logger } from '../logger'
-import { v4 as uuid } from 'uuid'
 import { IDatabase } from './db.interface'
 
 export class CouchDB implements IDatabase {
@@ -150,7 +149,7 @@ export class CouchDB implements IDatabase {
       const ndb = await this.createDatabase(this.using)
     }
     if (!obj._id) {
-      obj._id = obj._id || uuid()
+      obj._id = obj._id || new Date().getTime().toString(25)
     }
     const result = await this.request(obj._id, "put", obj)
     if (result.error) {

@@ -28,8 +28,6 @@
     "metascraper-title": "^5.37.1",
     "nedb": "^1.8.0",
     "prompt-sync": "^4.2.0",
-    "solr-client": "^0.10.0-rc10",
-    "uuid": "^9.0.1",
     "winston": "^3.10.0",
     "xmldom": "^0.6.0"
   },

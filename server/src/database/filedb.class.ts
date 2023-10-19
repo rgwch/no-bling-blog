@@ -2,7 +2,6 @@
 import { IDatabase } from "./db.interface";
 import fs from 'fs'
 import path from 'path'
-import { v4 as uuid } from 'uuid'
 import { logger } from '../logger'
 
 export class FileDB implements IDatabase {
@@ -88,7 +87,7 @@ export class FileDB implements IDatabase {
     create(db: string, element: any, params?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!element._id) {
-                element._id = uuid();
+                element._id = new Date().getTime().toString(25);
             }
             fs.writeFile(this.makepath(db, element._id), JSON.stringify(element), (err) => {
                 if (err) {

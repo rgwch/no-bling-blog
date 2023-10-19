@@ -10,7 +10,6 @@ import { post } from './types'
 import { MetaScraper, type imageObject } from './scrapers'
 import { IDatabase } from './database/db.interface'
 import { tokenizer } from './tokenizer'
-import { v4 as uuid } from 'uuid'
 import { NeDB } from './database/nedb.class'
 import { logger } from './logger'
 import { processContents } from './process_md'
@@ -103,7 +102,11 @@ export class Documents {
     public async add(entry: post): Promise<post> {
         let document = entry.fulltext
         if (!entry._id) {
-            entry._id = uuid()
+            let exists = null
+            do {
+                entry._id = (new Date().getTime()).toString(25)
+                exists = await this.db.get(docdb, entry._id, { nullIfMissing: true })
+            } while (exists)
         }
         delete entry.fulltext
         if (document?.length > 5) {

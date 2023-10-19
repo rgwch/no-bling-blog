@@ -33,4 +33,25 @@ describe("nedb", () => {
     expect(retr).toHaveLength(1)
 
   })
+
+  test("insert the same index twice", async () => {
+    const db = new NeDB(process.env.nedb_datadir);
+    await db.createDatabase(use)
+    const test = {
+      _id: "id",
+      a: "b",
+      b: "c",
+      c: {
+        e: "f"
+      }
+    }
+    await db.create(use, test)
+    try {
+      await db.create(use, test)
+
+    } catch (err:any) {
+      expect(err.message).toMatch("unique")
+    }
+
+  })
 })
