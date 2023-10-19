@@ -252,7 +252,7 @@ export class Server {
         this.hono.use("/*", async (c, next) => {
             const base = "../client/dist/"
             let filename = c.req.path
-            if (filename == "/") {
+            if (filename == "/" || filename == "/index.html" || filename.startsWith("/post/")) {
                 filename = "index.html"
             }
             logger.debug("serving " + filename)
@@ -278,7 +278,7 @@ export class Server {
                 })
             } catch (err) {
                 c.status(404)
-                return c.json({ status: "fail", message: "not found: "+c.req.path })
+                return c.json({ status: "fail", message: "not found: " + c.req.path })
             }
 
         })
