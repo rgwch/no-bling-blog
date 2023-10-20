@@ -1,7 +1,7 @@
 import { get, writable, type Writable } from 'svelte/store'
 import type { post, user } from './types'
 import {request} from './io'
-
+import jwtDecode from 'jwt-decode'
 // export const currentView: Writable<ConstructorOfATypedSvelteComponent> = writable()
 export const currentPost: Writable<post> = writable()
 // export const currentUser: Writable<user> = writable()

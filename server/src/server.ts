@@ -79,7 +79,7 @@ export class Server {
                 }
                 return post.published;
             })
-            return c.json({ status: "ok", user: currentUser, result: posts })
+            return c.json({ status: "ok", result: posts })
         })
 
         /**
@@ -89,7 +89,7 @@ export class Server {
             const params = c.req.param()
             if (params["id"]) {
                 const entry = await docs.get(params["id"], c.req.query("raw") == "true")
-                return c.json({ status: "ok", user: currentUser, result: entry })
+                return c.json({ status: "ok", result: entry })
             } else {
                 throw new Error("no id supplied")
             }
@@ -128,7 +128,7 @@ export class Server {
                 if (hasAccess(entry)) {
 
                     const deleted = await docs.remove(params["id"])
-                    return c.json({ status: "ok", user: currentUser, result: entry })
+                    return c.json({ status: "ok", result: entry })
                 }
                 else {
                     c.status(401)
@@ -195,7 +195,7 @@ export class Server {
                 }
                 const stored = await docs.add(contents)
                 c.status(201)
-                return c.json({ status: "ok", user: currentUser, result: stored })
+                return c.json({ status: "ok", result: stored })
             } else {
                 c.status(401)
                 return c.json({ status: "fail", message: "not authorized" })
@@ -211,7 +211,7 @@ export class Server {
                     const parsed = JSON.parse(unzipped.toString())
                     delete parsed._id
                     await docs.add(parsed)
-                    return c.json({ status: "ok", user: currentUser })
+                    return c.json({ status: "ok"})
                 } catch (err) {
                     logger.error(err)
                     return c.json({ status: "fail", message: err })
@@ -229,7 +229,7 @@ export class Server {
             const contents: post = await c.req.json()
             if (hasAccess(contents)) {
                 await docs.update(contents)
-                return c.json({ status: "ok", user: currentUser })
+                return c.json({ status: "ok"})
             } else {
                 c.status(401)
                 return c.json({ "status": "fail", message: " not authorized" })
@@ -243,7 +243,7 @@ export class Server {
             const contents: post = await c.req.json()
             if (hasAccess(contents)) {
                 await docs.updateMeta(contents)
-                return c.json({ status: "ok", user: currentUser })
+                return c.json({ status: "ok"})
             } else {
                 c.status(401)
                 return c.json({ "status": "fail", message: " not authorized" })

@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@types/luxon": "^3.3.2",
+    "jwt-decode": "^3.1.2",
     "luxon": "^3.4.3"
   }
 }
