@@ -1,17 +1,9 @@
-import type { user } from './types'
-import { expiration } from './store'
-
 import env from './environment'
 
 export let api: string = env.prefix
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     api = `http://localhost:${env.port}${env.prefix}`
 }
-
-let exp = 3600
-expiration.subscribe((value) => {
-    exp = value
-})
 
 
 

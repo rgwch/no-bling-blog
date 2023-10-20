@@ -1,7 +1,8 @@
 <script lang="ts">
     import type { post } from '../types';
     import { request, write, api } from '../io';
-    import { currentPost, currentUser } from '../store';
+    import { currentPost} from '../store';
+    import {currentUser} from '../user'
     import {navigate} from 'svelte-routing';
     import Summary from './Summary.svelte';
     import { _ } from 'svelte-i18n';

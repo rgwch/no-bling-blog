@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from 'svelte-i18n';
-    import { currentUser } from '../store';
+    import { currentUser } from '../user';
     let username = '';
     let password = '';
     let errmsg = '';

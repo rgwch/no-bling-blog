@@ -1,25 +1,21 @@
 <script lang="ts">
-    import type { post } from '../types';
-    import Post from '../components/Post.svelte';
-    import {navigate} from 'svelte-routing';
-    import Filter from '../components/Filter.svelte';
-    import { _ } from 'svelte-i18n';
-    import {
-        currentPost,
-        currentUser,
-        expiration
-    } from '../store';
-    import { request } from '../io';
+    import type { post } from "../types";
+    import Post from "../components/Post.svelte";
+    import { navigate } from "svelte-routing";
+    import Filter from "../components/Filter.svelte";
+    import { _ } from "svelte-i18n";
+    import { currentPost } from "../store";
+    import { currentUser } from "../user";
+    import { request } from "../io";
     let categories: Array<string> = [];
     let posts: Array<post> = [];
     let years: Array<string> = [];
-    let filterText = '';
-    let currentCategory = '';
-    let currentYear = '';
-    let yearFrom = '';
-    let yearUntil = '';
+    let filterText = "";
+    let currentCategory = "";
+    let yearFrom = "";
+    let yearUntil = "";
 
-    request('stats').then((result) => {
+    request("stats").then((result) => {
         const dt = new Date(result.startdate);
         const now = new Date().getTime();
         while (dt.getTime() <= now) {
@@ -27,10 +23,10 @@
             years.push(year.toString());
             dt.setFullYear(year + 1);
         }
-        years.push('');
+        years.push("");
         years = years;
-        categories = ['', ...result.categories];
-        expiration.set(result.expiration);
+        categories = ["", ...result.categories];
+        currentUser.setExpirationTime(result.expiration)
     });
     doFilter();
     async function doFilter() {
@@ -39,37 +35,37 @@
         if (filterText.length) {
             filters.push(`text=${filterText.toLocaleLowerCase()}`);
         }
-        if (currentCategory != '') {
+        if (currentCategory != "") {
             filters.push(`category=${currentCategory}`);
         }
-        if (yearFrom != '') {
-            if (yearUntil != '') {
+        if (yearFrom != "") {
+            if (yearUntil != "") {
                 filters.push(`between=${yearFrom},${yearUntil}`);
             } else {
                 filters.push(`from=${yearFrom}`);
             }
         } else {
-            if (yearUntil != '') {
+            if (yearUntil != "") {
                 filters.push(`until=${yearUntil}`);
             }
         }
-        posts = await request('summary', filters);
+        posts = await request("summary", filters);
     }
     function load(p: post) {
         $currentPost = p;
-        navigate('/post/'+p._id);
+        navigate("/post/" + p._id);
     }
     function createNew() {
         const np: post = {
-            heading: '',
-            teaser: '',
-            fulltext: '',
-            category: '',
+            heading: "",
+            teaser: "",
+            fulltext: "",
+            category: "",
             author: $currentUser.name,
             published: false,
         };
         $currentPost = np;
-        navigate('/new');
+        navigate("/new");
     }
 </script>
 
@@ -77,28 +73,28 @@
     class="flex flex-col justify-center content-stretch md:flex-row mx-5 m-2 p-1 text-sm">
     <div class="flex flex-row">
         <Filter
-            caption={$_('fromyear')}
+            caption={$_("fromyear")}
             choices={years}
             bind:val={yearFrom}
             on:changed={doFilter} />
         <Filter
-            caption={$_('untilyear')}
+            caption={$_("untilyear")}
             choices={years}
             bind:val={yearUntil}
             on:changed={doFilter} />
         <Filter
-            caption={$_('category')}
+            caption={$_("category")}
             choices={categories}
             bind:val={currentCategory}
             on:changed={doFilter} />
     </div>
     <div class="flex flex-row">
         <Filter
-            caption={$_('text')}
+            caption={$_("text")}
             bind:val={filterText}
             on:changed={doFilter} />
 
-        {#if $currentUser?.role == 'admin' || $currentUser?.role == 'editor'}
+        {#if $currentUser?.role == "admin" || $currentUser?.role == "editor"}
             <button class="pt-3 mt-2" on:click={createNew}
                 ><img src="/page_add.png" alt="add post" /></button>
         {/if}

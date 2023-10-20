@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currentUser } from '../store';
+    import { currentUser } from '../user';
     import {navigate} from 'svelte-routing';
     import { DateTime } from 'luxon';
     import type { post } from '../types';

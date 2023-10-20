@@ -12,9 +12,3 @@ export type post = {
     filename?: string
 }
 
-export type user = {
-    name: string
-    role: string
-    label?: string
-    exp: number
-}

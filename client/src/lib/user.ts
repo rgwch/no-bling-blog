@@ -29,9 +29,14 @@ export class User {
             }
             catch (e) {
                 console.log(e)
+                this.internal.set(nobody)
             }
+        } else {
+            this.internal.set(nobody)
         }
-        this.internal.set(nobody)
+    }
+    public setExpirationTime(time: number) {
+        this.exp = time
     }
     public subscribe(func: subscriber): unsubscriber {
         return this.internal.subscribe(func)
@@ -55,3 +60,5 @@ export class User {
     }
 
 }
+
+export const currentUser = new User()
