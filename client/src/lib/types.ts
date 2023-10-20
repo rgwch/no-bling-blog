@@ -16,4 +16,5 @@ export type user = {
     name: string
     role: string
     label?: string
+    exp: number
 }

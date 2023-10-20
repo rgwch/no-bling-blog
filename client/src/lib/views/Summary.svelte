@@ -7,6 +7,7 @@
     import {
         currentPost,
         currentUser,
+        expiration
     } from '../store';
     import { request } from '../io';
     let categories: Array<string> = [];
@@ -29,6 +30,7 @@
         years.push('');
         years = years;
         categories = ['', ...result.categories];
+        expiration.set(result.expiration);
     });
     doFilter();
     async function doFilter() {

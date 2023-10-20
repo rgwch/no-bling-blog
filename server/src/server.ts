@@ -160,7 +160,7 @@ export class Server {
             }
             if (user?.pass === hashed) {
                 // login ok
-                user.exp = Math.round(new Date().getTime() / 1000 + 3600)
+                user.exp = Math.round(new Date().getTime() / 1000 + (parseInt(process.env.jwt_expiration || "3600")))
                 if (!process.env.jwt_secret) {
                     logger.error("No JWT Secret found. ")
                 }
@@ -180,7 +180,8 @@ export class Server {
                 status: "ok",
                 result: {
                     startdate: docs.getFirstDate(),
-                    categories: docs.getCategoryList()
+                    categories: docs.getCategoryList(),
+                    expiration: parseInt(process.env.jwt_expiration || "3600")
                 }
             })
         })
@@ -211,7 +212,7 @@ export class Server {
                     const parsed = JSON.parse(unzipped.toString())
                     delete parsed._id
                     await docs.add(parsed)
-                    return c.json({ status: "ok"})
+                    return c.json({ status: "ok" })
                 } catch (err) {
                     logger.error(err)
                     return c.json({ status: "fail", message: err })
@@ -229,7 +230,7 @@ export class Server {
             const contents: post = await c.req.json()
             if (hasAccess(contents)) {
                 await docs.update(contents)
-                return c.json({ status: "ok"})
+                return c.json({ status: "ok" })
             } else {
                 c.status(401)
                 return c.json({ "status": "fail", message: " not authorized" })
@@ -243,7 +244,7 @@ export class Server {
             const contents: post = await c.req.json()
             if (hasAccess(contents)) {
                 await docs.updateMeta(contents)
-                return c.json({ status: "ok"})
+                return c.json({ status: "ok" })
             } else {
                 c.status(401)
                 return c.json({ "status": "fail", message: " not authorized" })

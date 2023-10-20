@@ -1,4 +1,5 @@
 import type { user } from './types'
+import { expiration } from './store'
 
 import env from './environment'
 
@@ -7,18 +8,13 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     api = `http://localhost:${env.port}${env.prefix}`
 }
 
-/*
-function setUser(user: user) {
-    if (!user || user.name == "visitor") {
-        currentUser.set({ name: "visitor", role: "visitor" })
-        console.log("no role")
-        // currentJWT.set("")
-    } else {
-        currentUser.set(user)
-    }
-}
+let exp = 3600
+expiration.subscribe((value) => {
+    exp = value
+})
 
-*/
+
+
 export function addJWT(headers?: Headers) {
     if (!headers) {
         headers = new Headers()
