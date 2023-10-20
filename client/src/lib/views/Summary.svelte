@@ -6,7 +6,6 @@
     import { _ } from 'svelte-i18n';
     import {
         currentPost,
-        currentJWT,
         currentUser,
     } from '../store';
     import { request } from '../io';

@@ -19,5 +19,6 @@
     "created": "Created",
     "modified": "Modified",
     "suredelete": "Really delete this post?",
-    "invaliddate": "Invalid date"
+    "invaliddate": "Invalid date",
+    "upload": "Upload"
 }

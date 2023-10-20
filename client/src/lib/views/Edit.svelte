@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { post } from '../types';
     import { request, write, api } from '../io';
-    import { currentPost, currentJWT } from '../store';
+    import { currentPost, currentUser } from '../store';
     import {navigate} from 'svelte-routing';
     import Summary from './Summary.svelte';
     import { _ } from 'svelte-i18n';
@@ -20,7 +20,7 @@
         const headers: any = {
             // 'content-type': 'multipart/form-data',
         };
-        headers['Authorization'] = 'Bearer ' + $currentJWT;
+        headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
 
         const options = {
             method: 'POST',
@@ -63,10 +63,9 @@
         <p class:hidden={!sayok}>Ok!</p>
         <button class="btn" on:click={() => (navigate('/'))}
             >{$_('cancel')}</button>
-        <form on:submit={doUpload} method="post" enctype="multipart/form-data">
-            <input type="text" name="text" id="text" value="hello" />
+        <form class="p-1 border border-blue-300" on:submit={doUpload} method="post" enctype="multipart/form-data">
             <input type="file" name="file" id="file" />
-            <button>Upload</button>
+            <button class="btn">{$_('upload')}</button>
         </form>
     </div>
 </div>

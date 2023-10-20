@@ -1,16 +1,11 @@
 <script lang="ts">
-    import { currentJWT, currentUser } from '../store';
     import { _ } from 'svelte-i18n';
-    import { login } from '../io';
+    import { currentUser } from '../store';
     let username = '';
     let password = '';
     let errmsg = '';
     let open = false;
-    async function doLogout() {
-        $currentJWT = '';
-        $currentUser = { name: 'visitor', role: 'visitor' };
-        open = false;
-    }
+  
 </script>
 
 <div class="flex flex-col md:flex-row">
@@ -31,7 +26,7 @@
                 bind:value={password} />
             <button
                 class="text-sm px-3 hover:text-blue-500"
-                on:click={() => login(username, password)}
+                on:click={() => currentUser.login(username, password)}
                 >{$_('login')}</button>
         {:else}
             <button
@@ -39,7 +34,7 @@
                 on:click={() => (open = true)}>{$_('login')}</button>
         {/if}
     {:else}
-        <button class="text-sm px-3 hover:text-blue-500" on:click={doLogout}
+        <button class="text-sm px-3 hover:text-blue-500" on:click={currentUser.logout}
             >{$currentUser.name}</button>
     {/if}
 </div>

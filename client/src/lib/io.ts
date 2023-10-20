@@ -1,15 +1,13 @@
-import { currentJWT, currentUser } from "./store";
 import type { user } from './types'
+
 import env from './environment'
-let jwt = ""
-currentJWT.subscribe(n => {
-    jwt = n
-})
+
 export let api: string = env.prefix
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     api = `http://localhost:${env.port}${env.prefix}`
 }
 
+/*
 function setUser(user: user) {
     if (!user || user.name == "visitor") {
         currentUser.set({ name: "visitor", role: "visitor" })
@@ -20,6 +18,18 @@ function setUser(user: user) {
     }
 }
 
+*/
+export function addJWT(headers?: Headers) {
+    if (!headers) {
+        headers = new Headers()
+    }
+    const jwt = localStorage.getItem("token")
+
+    if (jwt) {
+        headers.append("Authorization", "Bearer " + jwt)
+    }
+    return headers;
+}
 /**
  * Send a GET request to the server. Will enclose the user's JWT if available.
  * @param url url within the api (after the prefix)
@@ -27,27 +37,24 @@ function setUser(user: user) {
  * @returns 
  */
 export async function request(url: string, query: Array<string> = []): Promise<any> {
-    const headers = new Headers()
+    const headers = addJWT()
     headers.append("accept", "application/json")
-    if (jwt?.length > 5) {
-        headers.append("Authorization", "Bearer " + jwt)
-    }
 
     const answer = await fetch(api + url + "?" + query.join("&"), { headers })
     if (answer.ok) {
         const result = await answer.json()
         if (result.status == "ok") {
-            setUser(result.user)
+            // setUser(result.user)
             return result.result
         } else {
             alert(result.status + ": " + result.message)
-            setUser({ role: "visitor", name: "visitor" })
+            // setUser({ role: "visitor", name: "visitor" })
             return result.message
         }
     }
     alert(answer.status + ", " + answer.statusText)
     if (answer.status == 401) {
-        setUser({ role: "visitor", name: "visitor" })
+        // setUser({ role: "visitor", name: "visitor" })
     }
     return undefined
 }
@@ -59,12 +66,8 @@ export async function request(url: string, query: Array<string> = []): Promise<a
  * @returns 
  */
 export async function write(url: string, body: any): Promise<any> {
-    const headers: any = {
-        "content-type": "application/json",
-    }
-    if (jwt?.length > 5) {
-        headers["Authorization"] = "Bearer " + jwt
-    }
+    const headers = addJWT()
+    headers.append("content-type", "application/json")
 
     const options = {
         method: "POST",
@@ -74,12 +77,12 @@ export async function write(url: string, body: any): Promise<any> {
     const answer = await fetch(api + url, options)
     if (answer.ok) {
         const result = await answer.json()
-        setUser(result.user)
+        // setUser(result.user)
         return result
     } else {
         alert(answer.status + ", " + answer.statusText)
         if (answer.status == 401) {
-            setUser({ role: "visitor", name: "visitor" })
+            // setUser({ role: "visitor", name: "visitor" })
         }
         return undefined
     }
@@ -91,13 +94,19 @@ export async function write(url: string, body: any): Promise<any> {
  * @param user 
  * @param password 
  * @returns 
- */
+ 
 export async function login(user: string, password: string): Promise<boolean> {
     const result = await request(`login/${user}/${password}`)
     if (result) {
-        currentJWT.set(result.jwt)
-        currentUser.set(result.user)
+        localStorage.setItem("token", result.jwt)
+        // currentUser.set(result.user)
         return true
     }
     return false
 }
+
+export function logout(){
+    localStorage.removeItem("token")
+    // setUser({role: "visitor", name: "visitor"})
+}
+*/

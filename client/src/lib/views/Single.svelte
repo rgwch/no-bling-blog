@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { currentPost, currentUser } from '../store';
+    import { currentUser } from '../store';
     import {navigate} from 'svelte-routing';
     import { DateTime } from 'luxon';
     import type { post } from '../types';
     import { request, write, api } from '../io';
-    import Summary from './Summary.svelte';
     import { _ } from 'svelte-i18n';
     export let id: string;
     let post: post;
@@ -34,7 +33,7 @@
     }
     async function doDelete() {
         if (confirm($_('suredelete'))) {
-            const result = await request('delete/' + $currentPost._id);
+            const result = await request('delete/' + post._id);
             if (result) {
                 navigate('/');
             } else {
@@ -62,7 +61,7 @@
         await write('updatemeta', post);
     }
     async function doExport() {
-        await request('export/' + $currentPost._id);
+        await request('export/' + post._id);
     }
     $: canEdit = () => {
         if ($currentUser.role == 'admin') {
@@ -175,7 +174,7 @@
             </span>
             <a
                 class="btn"
-                href={api + 'export/' + $currentPost._id}
+                href={api + 'export/' + post._id}
                 target="_self">Export</a>
         {/if}
     {/if}
