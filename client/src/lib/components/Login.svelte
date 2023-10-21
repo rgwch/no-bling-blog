@@ -6,11 +6,16 @@
     let errmsg = "";
     let open = false;
     let actUser: userType;
-    let loggedIn: boolean = false;
+    let loggedIn = false;
     currentUser.subscribe((u: userType) => {
         actUser = u;
         loggedIn = currentUser.isLoggedIn();
     });
+    function logout(){
+        currentUser.logout();
+        loggedIn = false;
+        open=false
+    }
 </script>
 
 <div class="flex flex-col md:flex-row">
@@ -41,6 +46,6 @@
     {:else}
         <button
             class="text-sm px-3 hover:text-blue-500"
-            on:click={currentUser.logout}>{$currentUser.name}</button>
+            on:click={logout}>{$currentUser.name}</button>
     {/if}
 </div>

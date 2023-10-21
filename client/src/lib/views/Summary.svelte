@@ -26,7 +26,6 @@
         years.push("");
         years = years;
         categories = ["", ...result.categories];
-        currentUser.setExpirationTime(result.expiration)
     });
     doFilter();
     async function doFilter() {

@@ -1,4 +1,3 @@
-import { writable } from "svelte/store"
 import jwtDecode from 'jwt-decode'
 import { request } from './io'
 
@@ -14,18 +13,17 @@ export type userType = {
 const nobody: userType = { name: "visitor", role: "visitor", exp: 0 }
 export class User {
     private subscriptions: Set<subscriber> = new Set()
-    private act: userType = nobody
+    private actUser: userType = nobody
+    private timer: any
 
-    private exp: number = 3600
     constructor() {
         const jwt = localStorage.getItem("token")
         if (jwt) {
 
             try {
                 const decoded: userType = jwtDecode(jwt)
-                // console.log(JSON.stringify(decoded))
                 const now = new Date().getTime() / 1000
-                if (now + this.exp < decoded.exp || decoded.exp == 0) {
+                if (now <= decoded.exp || decoded.exp == 0) {
                     this.set(decoded)
                 } else {
                     this.set(nobody)
@@ -39,15 +37,12 @@ export class User {
             this.set(nobody)
         }
     }
-    public setExpirationTime(time: number) {
-        this.exp = time
-    }
     public isLoggedIn(): boolean {
-        if (this.act.role == "visitor") {
+        if (this.actUser.role == "visitor") {
             return false
         }
         const now = new Date().getTime() / 1000
-        if (now + this.exp < this.act.exp || this.act.exp == 0) {
+        if (now > this.actUser.exp || this.actUser.exp == 0) {
             this.set(nobody)
             return false
         }
@@ -56,7 +51,7 @@ export class User {
 
     public subscribe(func: subscriber): unsubscriber {
         this.subscriptions.add(func)
-        func(this.act)
+        func(this.actUser)
         return () => this.subscriptions.delete(func)
     }
 
@@ -66,7 +61,7 @@ export class User {
             const token = result.jwt
             localStorage.setItem("token", token)
             const decoded: userType = jwtDecode(token)
-            console.log(JSON.stringify(decoded))
+            // console.log(JSON.stringify(decoded))
             this.set(decoded)
             return true
         }
@@ -77,7 +72,13 @@ export class User {
         this.set(nobody)
     }
     public set(val: userType) {
-        this.act = val
+        this.actUser = val
+        if (this.timer) {
+            clearTimeout(this.timer)
+        }
+        if (this.actUser.exp != 0) {
+            this.timer = setTimeout(() => this.set(nobody), (this.actUser.exp - new Date().getTime() / 1000) * 1000)
+        }
         for (const func of this.subscriptions) {
             func(val)
         }
