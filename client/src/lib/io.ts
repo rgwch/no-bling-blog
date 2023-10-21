@@ -1,11 +1,16 @@
-import env from './environment'
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
 
-export let api: string = env.prefix
+const prefix= "/api/1.0/"
+let port= 3000
+
+export let api: string = prefix
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    api = `http://localhost:${env.port}${env.prefix}`
+    api = `http://localhost:${port}${prefix}`
 }
-
-
 
 export function addJWT(headers?: Headers) {
     if (!headers) {

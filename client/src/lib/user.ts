@@ -1,3 +1,9 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
+
 import jwtDecode from 'jwt-decode'
 import { request } from './io'
 
@@ -11,11 +17,17 @@ export type userType = {
 }
 
 const nobody: userType = { name: "visitor", role: "visitor", exp: 0 }
+/**
+ * This class represents the current user. It is a singleton. 
+ */
 export class User {
     private subscriptions: Set<subscriber> = new Set()
     private actUser: userType = nobody
     private timer: any
 
+    /**
+     *  Constructor. Will try to read the JWT from local storage and set the user accordingly.
+     */
     constructor() {
         const jwt = localStorage.getItem("token")
         if (jwt) {
@@ -37,6 +49,10 @@ export class User {
             this.set(nobody)
         }
     }
+    /**
+     * Returns true if the user is logged in and the JWT is valid.
+     * @returns 
+     */
     public isLoggedIn(): boolean {
         if (this.actUser.role == "visitor") {
             return false
@@ -48,13 +64,23 @@ export class User {
         }
         return true
     }
-
+    /**
+     * Implemention of the publisher/subscriber pattern for zhe Svelte store
+     * @param func the subscriber 
+     * @returns an unsubscriber function
+     */
     public subscribe(func: subscriber): unsubscriber {
         this.subscriptions.add(func)
         func(this.actUser)
         return () => this.subscriptions.delete(func)
     }
 
+    /**
+     * Send a Login request to the server. Will set the user and JWT if successful.
+     * @param user 
+     * @param password 
+     * @returns true if the login was successful
+     */
     public async login(user: string, password: string): Promise<boolean> {
         const result = await request(`login/${user}/${password}`)
         if (result) {
@@ -67,10 +93,17 @@ export class User {
         }
         return false
     }
+    /**
+     * Logout the user. Will remove the JWT from local storage and set the user to nobody.
+     */
     async logout() {
         localStorage.removeItem("token")
         this.set(nobody)
     }
+    /**
+     * Set Method from the Svelte Store
+     * @param val 
+     */
     public set(val: userType) {
         this.actUser = val
         if (this.timer) {

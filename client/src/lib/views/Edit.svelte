@@ -1,14 +1,21 @@
 <script lang="ts">
     import type { post } from '../types';
     import { request, write, api } from '../io';
-    import { currentPost} from '../store';
     import {currentUser} from '../user'
     import {navigate} from 'svelte-routing';
-    import Summary from './Summary.svelte';
     import { _ } from 'svelte-i18n';
     let sayok: boolean = false;
+    let current:post = {
+        heading: '',
+        teaser: '',
+        fulltext: '',
+        category: '',
+        created: new Date(),
+        published: false,
+        author:$currentUser.label ?? $currentUser.name 
+    };
     async function doSave() {
-        await write('add', $currentPost).then((result) => {
+        await write('add', current).then((result) => {
             sayok = true;
             setTimeout(() => (sayok = false), 2000);
         });
@@ -41,23 +48,23 @@
 
 <div class="flex flex-col">
     <input
-        class="m-1 p-2 border border-blue-300"
+        class="field"
         type="text"
         placeholder={$_('category')}
-        bind:value={$currentPost.category} />
+        bind:value={current.category} />
     <input
-        class="m-1 p-2 border border-blue-300"
+        class="field"
         type="text"
         placeholder={$_('title')}
-        bind:value={$currentPost.heading} />
+        bind:value={current.heading} />
     <textarea
-        class="m-1 p-2 border border-blue-300"
+        class="field"
         placeholder={$_('summary')}
-        bind:value={$currentPost.teaser} />
+        bind:value={current.teaser} />
     <textarea
-        class="m-2 p-3 border border-blue-300 h-96"
+        class="field h-96"
         placeholder={$_('fulltext')}
-        bind:value={$currentPost.fulltext} />
+        bind:value={current.fulltext} />
 
     <div class="flex flex-row">
         <button class="btn" on:click={doSave}>{$_('save')}</button>

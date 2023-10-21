@@ -4,7 +4,6 @@
     import { navigate } from "svelte-routing";
     import Filter from "../components/Filter.svelte";
     import { _ } from "svelte-i18n";
-    import { currentPost } from "../store";
     import { currentUser } from "../user";
     import { request } from "../io";
     let categories: Array<string> = [];
@@ -29,7 +28,6 @@
     });
     doFilter();
     async function doFilter() {
-        // console.log(new Date().toString()+":"+$currentJWT)
         let filters = [];
         if (filterText.length) {
             filters.push(`text=${filterText.toLocaleLowerCase()}`);
@@ -51,19 +49,9 @@
         posts = await request("summary", filters);
     }
     function load(p: post) {
-        $currentPost = p;
         navigate("/post/" + p._id);
     }
     function createNew() {
-        const np: post = {
-            heading: "",
-            teaser: "",
-            fulltext: "",
-            category: "",
-            author: $currentUser.name,
-            published: false,
-        };
-        $currentPost = np;
         navigate("/new");
     }
 </script>

@@ -1,3 +1,9 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
+
 export type post = {
     _id?: string
     heading: string
