@@ -82,24 +82,3 @@ export async function write(url: string, body: any): Promise<any> {
 
 }
 
-/**
- * Send a Login request to the server. Will set the user and JWT if successful.
- * @param user 
- * @param password 
- * @returns 
- 
-export async function login(user: string, password: string): Promise<boolean> {
-    const result = await request(`login/${user}/${password}`)
-    if (result) {
-        localStorage.setItem("token", result.jwt)
-        // currentUser.set(result.user)
-        return true
-    }
-    return false
-}
-
-export function logout(){
-    localStorage.removeItem("token")
-    // setUser({role: "visitor", name: "visitor"})
-}
-*/

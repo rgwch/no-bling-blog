@@ -25,12 +25,12 @@
                 <span class="text-red-600">{errmsg}</span>
             {/if}
             <input
-                class="text-sm"
+                class="input text-sm"
                 type="text"
                 placeholder={$_("username")}
                 bind:value={username} />
             <input
-                class="text-sm"
+                class="input text-sm"
                 type="password"
                 placeholder={$_("password")}
                 bind:value={password} />
