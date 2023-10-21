@@ -166,7 +166,7 @@ export class Server {
                 }
                 delete user.pass
                 const token = await sign(user, process.env.jwt_secret)
-                return c.json({ status: "ok", result: { jwt: token, user } })
+                return c.json({ status: "ok", result: { jwt: token } })
             } else {
                 logger.warn("Bad login attempt for user " + cred.user)
                 this.ban(cred.user)
