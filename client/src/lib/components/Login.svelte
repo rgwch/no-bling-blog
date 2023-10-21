@@ -35,7 +35,7 @@
                 placeholder={$_("password")}
                 bind:value={password} />
             <button
-                class="text-sm px-3 hover:text-blue-500"
+                class="text-2xl md:text-sm px-3 hover:text-blue-500"
                 on:click={() => currentUser.login(username, password)}
                 >{$_("login")}</button>
         {:else}
