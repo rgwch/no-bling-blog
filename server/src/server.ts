@@ -174,7 +174,20 @@ export class Server {
             c.status(401)
             return c.json({ status: "fail", message: "bad credentials" })
         })
-
+        /**
+         * Extend the validity of a JWT
+         */
+        this.hono.get(prefix+"revalidate", async c => {
+            if(currentUser){
+                currentUser.exp = Math.round(new Date().getTime() / 1000 + (parseInt(process.env.jwt_expiration || "3600")))
+                delete currentUser.pass
+                const token = await sign(currentUser, process.env.jwt_secret)
+                return c.json({ status: "ok", result: { jwt: token } })
+            }
+        })
+        /**
+         * Get some stats
+         */
         this.hono.get(prefix + "stats", async (c) => {
             return c.json({
                 status: "ok",
