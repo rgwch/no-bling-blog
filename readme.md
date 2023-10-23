@@ -42,7 +42,7 @@ This is a very simple Blog app with no bling-bling (hence the name).
     |  q) Quit                                    |
     '---------------------------------------------'
     ```
-    For your first experiments, hit 3 for "create dummy posts" and then "2 for create new user". Enter any username you like and "admin" when asked for the role. Then, launch the blog with 1 and navigate your favourite browser to `http://localhost:3000`. You'll have 100 fake posts to experiment. Login with your user name and any password (which will be set with your first login).
+    For your first experiments, hit d for "create dummy posts" and then "2 for create new user". Enter any username you like and "admin" when asked for the role. Then, launch the blog with 1 and navigate your favourite browser to `http://localhost:3000`. You'll have 100 fake posts to experiment. Login with your user name and any password (which will be set with your first login).
 
 ![Screenshot](screenshot.jpg)
 
