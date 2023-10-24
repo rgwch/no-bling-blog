@@ -90,10 +90,7 @@
         if (!date) return "";
         return DateTime.fromJSDate(new Date(date)).toFormat("yyyy");
     }
-    function link(date: string | Date | undefined) {
-        if (!date) return "";
-        return "/filter/" + year(date) + "/" + year(date);
-    }
+    
 </script>
 
 {#if post}

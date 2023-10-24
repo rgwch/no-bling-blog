@@ -6,14 +6,18 @@
     import { _ } from "svelte-i18n";
     import { currentUser } from "../user";
     import { request } from "../io";
-    let categories: Array<string> = [];
-    let posts: Array<post> = [];
-    let years: Array<string> = [];
-    let filterText = "";
+    import InfiniteScroll from "svelte-infinite-scroll";
     export let currentCategory = "";
     export let yearFrom = "";
     export let yearUntil = "";
 
+    let categories: Array<string> = [];
+    let posts: Array<post> = [];
+    let newBatch: Array<post> = [];
+    let years: Array<string> = [];
+    let filterText = "";
+    let offset = 0;
+    const BATCHSIZE = 36;
     request("stats").then((result) => {
         const dt = new Date(result.startdate);
         const now = new Date().getTime();
@@ -27,6 +31,11 @@
         categories = ["", ...result.categories];
     });
     doFilter();
+    function reset() {
+        posts = [];
+        offset = 0;
+        doFilter();
+    }
     async function doFilter() {
         let filters = [];
         if (filterText.length) {
@@ -46,8 +55,12 @@
                 filters.push(`until=${yearUntil}`);
             }
         }
-        posts = await request("summary", filters);
+        filters.push(`skip=${offset}`);
+        filters.push(`limit=${BATCHSIZE}`);
+        newBatch = await request("summary", filters);
+        offset = offset + newBatch.length;
     }
+    $: posts = [...posts, ...newBatch];
     function load(p: post) {
         navigate("/post/" + p._id);
     }
@@ -63,23 +76,23 @@
             caption={$_("fromyear")}
             choices={years}
             bind:val={yearFrom}
-            on:changed={doFilter} />
+            on:changed={reset} />
         <Filter
             caption={$_("untilyear")}
             choices={years}
             bind:val={yearUntil}
-            on:changed={doFilter} />
+            on:changed={reset} />
         <Filter
             caption={$_("category")}
             choices={categories}
             bind:val={currentCategory}
-            on:changed={doFilter} />
+            on:changed={reset} />
     </div>
     <div class="flex flex-row">
         <Filter
             caption={$_("text")}
             bind:val={filterText}
-            on:changed={doFilter} />
+            on:changed={reset} />
 
         {#if $currentUser?.role == "admin" || $currentUser?.role == "editor"}
             <button class="pt-3 mt-2" on:click={createNew}
@@ -88,8 +101,12 @@
     </div>
 </div>
 
-<div class="flex flex-row m-5 flex-wrap justify-center">
+<div class="flex flex-row m-5 flex-wrap justify-center overflow-y-scroll h-[80vh]">
     {#each posts as post}
         <Post item={post} on:load={() => load(post)} />
     {/each}
+    <InfiniteScroll
+        hasMore={newBatch.length > 0}
+        threshold={3}
+        on:loadMore={()=>doFilter()} />
 </div>

@@ -22,7 +22,7 @@ export type analyzed = {
     tokens: Array<string>
 }
 export class Documents {
-    private db: IDatabase
+    private db: NeDB
     private categories = new Set<string>()
     private dateFrom = new Date()
     private numEntries = 0
@@ -238,7 +238,9 @@ export class Documents {
             const cr = between.split(/[,\-]/)
             query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
         }
-        let posts: Array<post> = await this.db.find(docdb, query)
+        const skip=parseInt(q['skip'] || "0")
+        const limit=parseInt(q['limit'] || "1000")
+        let posts: Array<post> = await this.db.find(docdb, query,skip,limit)
         const keyword = q['text']
         if (keyword) {
             const found = await this.db.get(indexdb, keyword, { nullIfMissing: true })

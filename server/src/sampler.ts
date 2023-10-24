@@ -20,7 +20,7 @@ export async function createDummyPosts(docs: Documents, file: string, num: numbe
     for (let i = 0; i < num; i++) {
         const p = {
             heading: getWords(tokens, 5),
-            teaser: getWords(tokens, 20),
+            teaser: i+": "+getWords(tokens, 20),
             fulltext: getWords(tokens, 100),
             filename: "",
             keywords: "",
