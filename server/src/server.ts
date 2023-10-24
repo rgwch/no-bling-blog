@@ -266,7 +266,7 @@ export class Server {
         this.hono.use("/*", async (c, next) => {
             const base = "../client/dist/"
             let filename = c.req.path
-            if (filename == "/" || filename == "/index.html" || filename.startsWith("/post/")) {
+            if (filename == "/" || filename == "/index.html" || filename.startsWith("/post/") || filename.startsWith("/time/") || filename.startsWith("/cat/")) {
                 filename = "index.html"
             }
             if (filename.includes("..")) {
