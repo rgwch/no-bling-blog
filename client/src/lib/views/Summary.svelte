@@ -33,6 +33,7 @@
     doFilter();
     function reset() {
         posts = [];
+        newBatch = [];
         offset = 0;
         doFilter();
     }
