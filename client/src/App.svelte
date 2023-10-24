@@ -33,9 +33,13 @@
         <Single id={params.id} />
       </Route>
       <Route path="/new" component={Edit} />
-      <Route path="/filter/:from/:until" let:params>
-        <Summary yearFrom={params.from} yearUntil={params.until} />
+      <Route path="/time/:year" let:params>
+        <Summary yearFrom={params.year} yearUntil={params.year} />
       </Route>
+      <Route path="/cat/:category" let:params>
+        <Summary currentCategory={params.category} />
+      </Route>
+      
     </Router>
   </div>
 </main>

@@ -21,5 +21,6 @@
     "suredelete": "Wirklich unwiderruflich Löschen?",
     "invaliddate":"Das Datum ist ungültig",
     "dateformat":"dd.LL.yyyy",
-    "upload":"Hochladen"
+    "upload":"Hochladen",
+    "home":"Startseite"
 }

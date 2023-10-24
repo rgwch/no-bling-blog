@@ -98,8 +98,9 @@
 
 {#if post}
     <p class="text-sm text-gray-400">
-        <a href="/">Startseite</a>
-        <a href={link(post.created)}>{year(post.created)}</a>
+        <a href="/">{$_("home")}</a>
+        [<a href={`/time/${year(post.created)}`}>{year(post.created)}</a>]
+        [<a href={`/cat/${post.category}`}>{post.category}</a>]
     </p>
     {#if editmode}
         <div

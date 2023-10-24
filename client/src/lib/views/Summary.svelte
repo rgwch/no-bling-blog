@@ -10,7 +10,7 @@
     let posts: Array<post> = [];
     let years: Array<string> = [];
     let filterText = "";
-    let currentCategory = "";
+    export let currentCategory = "";
     export let yearFrom = "";
     export let yearUntil = "";
 
