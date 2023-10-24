@@ -11,8 +11,8 @@
     let years: Array<string> = [];
     let filterText = "";
     let currentCategory = "";
-    let yearFrom = "";
-    let yearUntil = "";
+    export let yearFrom = "";
+    export let yearUntil = "";
 
     request("stats").then((result) => {
         const dt = new Date(result.startdate);

@@ -86,9 +86,21 @@
             post.fulltext = event.target.innerText;
         }
     }
+    function year(date: string | Date | undefined) {
+        if (!date) return "";
+        return DateTime.fromJSDate(new Date(date)).toFormat("yyyy");
+    }
+    function link(date: string | Date | undefined) {
+        if (!date) return "";
+        return "/filter/" + year(date) + "/" + year(date);
+    }
 </script>
 
 {#if post}
+    <p class="text-sm text-gray-400">
+        <a href="/">Startseite</a>
+        <a href={link(post.created)}>{year(post.created)}</a>
+    </p>
     {#if editmode}
         <div
             class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-2">
