@@ -66,7 +66,10 @@
             return true;
         }
         if ($currentUser.role == "editor") {
-            return $currentUser.name == post.author;
+            return (
+                $currentUser.name == post.author ||
+                $currentUser.label == post.author
+            );
         }
         return false;
     };
@@ -90,14 +93,14 @@
         if (!date) return "";
         return DateTime.fromJSDate(new Date(date)).toFormat("yyyy");
     }
-    
 </script>
 
 {#if post}
     <p class="text-sm text-gray-400">
         <a href="/">{$_("home")}</a>
-        [<a href={`/time/${year(post.created)}`}>{year(post.created)}</a>]
-        [<a href={`/cat/${post.category}`}>{post.category}</a>]
+        [<a href={`/time/${year(post.created)}`}>{year(post.created)}</a>] [<a
+            href={`/cat/${post.category}`}>{post.category}</a
+        >]
     </p>
     {#if editmode}
         <div

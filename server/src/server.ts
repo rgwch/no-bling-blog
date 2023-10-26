@@ -64,6 +64,9 @@ export class Server {
                 if (post.author == currentUser.name) {
                     return true
                 }
+                if (post.author == currentUser.label) {
+                    return true
+                }
             }
             return false;
         }
@@ -177,8 +180,8 @@ export class Server {
         /**
          * Extend the validity of a JWT
          */
-        this.hono.get(prefix+"revalidate", async c => {
-            if(currentUser){
+        this.hono.get(prefix + "revalidate", async c => {
+            if (currentUser) {
                 currentUser.exp = Math.round(new Date().getTime() / 1000 + (parseInt(process.env.jwt_expiration || "3600")))
                 delete currentUser.pass
                 const token = await sign(currentUser, process.env.jwt_secret)
@@ -205,7 +208,7 @@ export class Server {
             if (currentUser.role == "admin" || currentUser.role == "editor") {
                 const contents: post = await c.req.json()
                 if (!contents.author) {
-                    contents.author = currentUser.name
+                    contents.author = currentUser.label ?? currentUser.name
                 }
                 const stored = await docs.add(contents)
                 c.status(201)
