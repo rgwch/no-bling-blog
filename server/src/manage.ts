@@ -16,31 +16,16 @@ import { Server } from './server'
 import { user } from './types'
 const { exec } = require('child_process');
 
-// Check mandatory environment variables
-let env_ok = true;
-if (!process.env.documents) {
-  console.log("Environment variable 'documents' not set.")
-  env_ok = false
-}
-if (!process.env.users) {
-  console.log("Environment variable 'users' not set.")
-  env_ok = false
-}
-
-if (!process.env.jwt_secret) {
-  console.log("Environment variable 'jwt_secret' not set.")
-  env_ok = false
-}
-if (!env_ok) {
-  console.log("Please set environment variables and try again.")
-  process.exit(1)
-}
-
 
 const ask = prompt({ sigint: true })
 const docs = new Documents(process.env.documents)
 
-
+console.log("NoBlingBlog Management Tool")
+console.log("Environment: " + process.env.NODE_ENV)
+console.log("basedir: " + process.env.basedir)
+console.log("Documents: " + process.env.documents)
+console.log("Users: " + process.env.users)
+console.log("nedb_datadir: " + process.env.nedb_datadir)
 const optionDefinitions = {
   alias: {
     config: "c"
@@ -132,8 +117,9 @@ function loadUsers(): Array<user> {
 }
 
 async function cleanup() {
-  for (let dir of [process.env.documents, process.env.nedb_datadir, process.env.index]) {
+  for (let dir of [process.env.documents, process.env.nedb_datadir]) {
     remove(dir)
+    fs.mkdirSync(dir, { recursive: true })
   }
   await docs.rescan()
   console.log("All data deleted.")
@@ -142,7 +128,7 @@ async function cleanup() {
 function remove(dir: string) {
   if (fs.existsSync(dir)) {
     console.log("Removing " + dir)
-    fs.rmSync(dir, { recursive: true })
+    fs.rmSync(dir, { recursive: true, force: true })
   } else {
     console.log("Directory " + dir + " does not exist.")
   }

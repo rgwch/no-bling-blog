@@ -15,11 +15,30 @@ import { processContents } from './process_md'
 const docdb = "nbbdocs"
 const indexdb = "nbbindex"
 
-
+if(!process.env.storage){
+    process.env.storage="nedb"
+}
+if(!process.env.basedir){
+    process.env.basedir="../data"
+}
+if(!process.env.documents){
+    process.env.documents=path.join(process.env.basedir,"documents")
+}
+if(!process.env.nedb_datadir){
+    process.env.nedb_datadir=process.env.documents
+}
+if(!process.env.partials){
+    process.env.partials=path.join(process.env.basedir,"partials")
+}
+if(!process.env.users){
+    process.env.users=path.join(process.env.basedir,"users.json")
+}
 export type analyzed = {
     filename: string
     tokens: Array<string>
 }
+logger.info("Using " + process.env.storage + " as storage engine")
+logger.info("Using " + process.env.documents + " as document directory")
 export class Documents {
     private db: NeDB
     private categories = new Set<string>()
