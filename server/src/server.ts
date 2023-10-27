@@ -226,7 +226,8 @@ export class Server {
                     const result = await this.loadFile(h)
                     const unzipped = await unzip(result)
                     const parsed = JSON.parse(unzipped.toString())
-                    delete parsed._id
+                    // delete parsed._id
+                    parsed.author = currentUser.label ?? currentUser.name
                     await docs.add(parsed)
                     return c.json({ status: "ok" })
                 } catch (err) {
