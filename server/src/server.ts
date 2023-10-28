@@ -291,6 +291,8 @@ export class Server {
                 mime = 'text/plain'
             } else if (filename.endsWith('png')) {
                 mime = 'image/png'
+            } else if (filename.endsWith('ico')) {
+                mime = 'image/x-icon'
             }
             c.header("Content-Type", mime)
             try {
