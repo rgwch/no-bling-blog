@@ -15,23 +15,23 @@ import { processContents } from './process_md'
 const docdb = "nbbdocs"
 const indexdb = "nbbindex"
 
-if(!process.env.storage){
-    process.env.storage="nedb"
+if (!process.env.storage) {
+    process.env.storage = "nedb"
 }
-if(!process.env.basedir){
-    process.env.basedir="../data"
+if (!process.env.basedir) {
+    process.env.basedir = "../data"
 }
-if(!process.env.documents){
-    process.env.documents=path.join(process.env.basedir,"documents")
+if (!process.env.documents) {
+    process.env.documents = path.join(process.env.basedir, "documents")
 }
-if(!process.env.nedb_datadir){
-    process.env.nedb_datadir=process.env.documents
+if (!process.env.nedb_datadir) {
+    process.env.nedb_datadir = process.env.documents
 }
-if(!process.env.partials){
-    process.env.partials=path.join(process.env.basedir,"partials")
+if (!process.env.partials) {
+    process.env.partials = path.join(process.env.basedir, "partials")
 }
-if(!process.env.users){
-    process.env.users=path.join(process.env.basedir,"users.json")
+if (!process.env.users) {
+    process.env.users = path.join(process.env.basedir, "users.json")
 }
 export type analyzed = {
     filename: string
@@ -139,7 +139,7 @@ export class Documents {
                                 url: scraper.getUrl(),
                                 title: scraper.getTitle(),
                                 text: scraper.getText(),
-                                imgurl: scraper.getImage().url
+                                imgurl: scraper.getImage()?.url
                             }
                             document = document.replace(link, "[[" + JSON.stringify(repl) + "]]")
                         }
@@ -256,9 +256,9 @@ export class Documents {
             const cr = between.split(/[,\-]/)
             query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
         }
-        const skip=parseInt(q['skip'] || "0")
-        const limit=parseInt(q['limit'] || "1000")
-        let posts: Array<post> = await this.db.find(docdb, query,skip,limit)
+        const skip = parseInt(q['skip'] || "0")
+        const limit = parseInt(q['limit'] || "1000")
+        let posts: Array<post> = await this.db.find(docdb, query, skip, limit)
         const keyword = q['text']
         if (keyword) {
             const found = await this.db.get(indexdb, keyword, { nullIfMissing: true })

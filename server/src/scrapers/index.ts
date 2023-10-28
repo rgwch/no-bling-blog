@@ -1,8 +1,3 @@
-import author from 'metascraper-author'
-import description from 'metascraper-description'
-import title from 'metascraper-title'
-import date from 'metascraper-date'
-import metaScraper from 'metascraper'
 import htmlmeta from 'html-metadata'
 
 // const metascraper = metaScraper([description(), title(), date(), author()])
@@ -50,7 +45,7 @@ type metadata = {
 }
 
 export class MetaScraper {
-    private metadata: metadata
+    // private metadata: metadata
     private author: string
     private image: imageObject
     private title: string
@@ -65,41 +60,49 @@ export class MetaScraper {
             if (meta.jsonLd) {
                 if (Array.isArray(meta.jsonLd)) {
                     for (const el of meta.jsonLd) {
-                        if (el["@type"] == "NewsArticle") {
-                            this.metadata = meta
-                            this.loadMeta(el)
+                        if (this.loadMeta(el)) {
                             return true
                         }
                     }
-
                 } else {
-                    this.metadata = meta
-                    this.loadMeta(meta.jsonLd)
-                    return true
+                    if (this.loadMeta(meta.jsonLd)) {
+                        return true
+                    }
                 }
-                return false
             }
+            return false
         } catch (err) {
             console.log(err)
             return false
         }
     }
-    private loadMeta(el) {
-        if (Array.isArray(this.author)) {
-            this.author = el.author[0].name
-        } else {
-            this.author = el.author.name || "anonymous"
+
+    private loadMeta(el): boolean {
+        if (el["@type"] === "NewsArticle") {
+            if (Array.isArray(el.author)) {
+                this.author = el.author[0].name || "anonymous"
+            } else {
+                this.author = el.author?.name || "anonymous"
+            }
+            if (Array.isArray(el.image)) {
+                this.image = this.loadImage(el.image[0])
+            } else {
+                this.image = this.loadImage(el.image)
+            }
+            this.title = el.title || el.headline
+            this.description = el.description || el.headline
+            if (this.title == this.description) {
+                this.description = ""
+            }
+            return true
+        } else if (el["@type"] === "BreadcrumbList") {
+            const elements: Array<any> = el.itemListElement
+            const last = elements[elements.length - 1]
+            this.title = last.item.name
+            this.description = "" // last.item["@id"]
+            return true
         }
-        if (Array.isArray(el.image)) {
-            this.image = this.loadImage(el.image[0])
-        } else {
-            this.image = this.loadImage(el.image)
-        }
-        this.title = el.title || el.headline
-        this.description = el.description || el.headline
-        if (this.title == this.description) {
-            this.description = ""
-        }
+        return false
 
     }
 
