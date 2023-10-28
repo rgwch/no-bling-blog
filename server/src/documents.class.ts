@@ -134,12 +134,22 @@ export class Documents {
                     if (link.startsWith("[[http")) {
                         const scraper = new MetaScraper(link.substring(2, link.length - 2))
                         if (await scraper.load()) {
-                            const repl = {
-                                template: "reference",
-                                url: scraper.getUrl(),
-                                title: scraper.getTitle(),
-                                text: scraper.getText(),
-                                imgurl: scraper.getImage()?.url
+                            const img = scraper.getImage()
+                            let repl
+                            if (img) {
+                                repl = {
+                                    template: "reference",
+                                    url: scraper.getUrl(),
+                                    title: scraper.getTitle(),
+                                    text: scraper.getText(),
+                                    imgurl: scraper.getImage()?.url
+                                }
+                            } else {
+                                repl = {
+                                    template: "link",
+                                    url: scraper.getUrl(),
+                                    title: scraper.getTitle()
+                                }
                             }
                             document = document.replace(link, "[[" + JSON.stringify(repl) + "]]")
                         }
