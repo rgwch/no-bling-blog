@@ -23,5 +23,6 @@
     "dateformat": "dd.LL.yyyy",
     "upload": "Senden",
     "home": "Startseite",
-    "newcat": "Neue Kategorie"
+    "newcat": "Neue Kategorie",
+    "draft": "Entwurf"
 }

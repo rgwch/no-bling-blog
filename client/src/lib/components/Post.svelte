@@ -1,23 +1,28 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import { DateTime } from "luxon";
-    import type { post } from "../types";
+    import { createEventDispatcher } from 'svelte';
+    import { DateTime } from 'luxon';
+    import type { post } from '../types';
+    import { _ } from 'svelte-i18n';
     export let item: post;
     const dispatch = createEventDispatcher();
     function formatTime(time?: string) {
         const dt = DateTime.fromISO(time ?? new Date().toISOString());
-        return dt.toFormat("yyyy-MM-dd - HH:mm");
+        if (dt.hour) {
+            return dt.toFormat('yyyy-MM-dd - HH:mm');
+        } else {
+            return dt.toFormat('yyyy-MM-dd');
+        }
     }
     function keypress(event: KeyboardEvent) {
-        if (event.key === "Enter") {
-            dispatch("load", item._id);
+        if (event.key === 'Enter') {
+            dispatch('load', item._id);
         }
     }
 </script>
 
 <div
     class="data"
-    on:click={() => dispatch("load", item._id)}
+    on:click={() => dispatch('load', item._id)}
     on:keypress={keypress}
     role="button"
     tabindex="0">
@@ -31,12 +36,15 @@
     <p class="mx-6 mb-2 w-full">{@html item.teaser}</p>
     <p class="text-xs mt-3 text-blue-400">
         {formatTime(item.created?.toString())}
+        {#if !item.published}
+            &nbsp;({$_('draft')})
+        {/if}
     </p>
 </div>
 
 <style>
     .data {
-        font-family: "Lato", sans-serif;
+        font-family: 'Lato', sans-serif;
         margin: 20px;
         padding: 20px;
         border-radius: 15px;
