@@ -16,5 +16,6 @@ export type post = {
     modified?: Date
     published: boolean
     filename?: string
+    featured?: boolean
 }
 

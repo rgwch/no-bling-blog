@@ -11,6 +11,7 @@ export type post = {
     published?: boolean
     filename?: string,
     reference?: any
+    featured?: boolean
 }
 export type user = {
     name: string
