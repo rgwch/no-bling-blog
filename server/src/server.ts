@@ -279,20 +279,15 @@ export class Server {
             }
             logger.debug("serving " + filename)
             let mime = 'text/html; charset="utf-8"'
-            if (filename.endsWith('js')) {
-                mime = 'text/javascript'
-            } else if (filename.endsWith('css')) {
-                mime = 'text/css'
-            } else if (filename.endsWith('svg')) {
-                mime = 'text/svg+xml'
-            } else if (filename.endsWith('jpg')) {
-                mime = 'image/jpeg'
-            } else if (filename.endsWith('txt')) {
-                mime = 'text/plain'
-            } else if (filename.endsWith('png')) {
-                mime = 'image/png'
-            } else if (filename.endsWith('ico')) {
-                mime = 'image/x-icon'
+            const ext = path.extname(filename)
+            switch (ext) {
+                case ('js'): mime = 'text/javascript'; break;
+                case ('css'): mime = 'text/css'; break;
+                case ('svg'): mime = 'text/svg+xml'; break;
+                case ('jpg'): mime = 'image/jpeg'; break;
+                case ('txt'): mime = 'text/plain'; break;
+                case ('png'): mime = 'image/png'; break;
+                case ('ico'): mime = 'image/x-icon'; break;
             }
             c.header("Content-Type", mime)
             try {

@@ -19,9 +19,9 @@
     "created": "Erstellt",
     "modified": "Geändert",
     "suredelete": "Wirklich unwiderruflich Löschen?",
-    "invaliddate":"Das Datum ist ungültig",
-    "dateformat":"dd.LL.yyyy",
-    "upload":"Hochladen",
-    "home":"Startseite",
-    "newcat":"Neue Kategorie"
+    "invaliddate": "Das Datum ist ungültig",
+    "dateformat": "dd.LL.yyyy",
+    "upload": "Senden",
+    "home": "Startseite",
+    "newcat": "Neue Kategorie"
 }

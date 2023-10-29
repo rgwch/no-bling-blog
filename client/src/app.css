@@ -16,7 +16,7 @@
 }
 
 .btn {
-  @apply mr-4 my-1 p-1 border-2 border-blue-800 bg-blue-200 rounded-md;
+  @apply mr-4 my-1 p-1 border border-blue-600 bg-blue-50 rounded-md;
 
 }
 
