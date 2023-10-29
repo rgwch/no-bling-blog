@@ -179,6 +179,13 @@
                     bind:checked={post.published}
                     on:change={doSaveMeta} />
             </span>
+            <span class="btn">
+                <span>{$_("featured")}</span>
+                <input
+                    type="checkbox"
+                    bind:checked={post.featured}
+                    on:change={doSaveMeta} />
+            </span>
             <a class="btn" href={api + "export/" + post._id} target="_self"
                 >Export</a>
         {/if}

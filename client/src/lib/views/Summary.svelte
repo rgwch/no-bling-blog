@@ -33,7 +33,7 @@
         years = years;
         categories = ["", ...result.categories];
     });
-    doFilter();
+    // doFilter();
     function reset() {
         posts = [];
         newBatch = [];
