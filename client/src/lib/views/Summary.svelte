@@ -18,6 +18,9 @@
     let filterText = "";
     let offset = 0;
     const BATCHSIZE = 36;
+    currentUser.subscribe((user) => {
+        reset();
+    });
     request("stats").then((result) => {
         const dt = new Date(result.startdate);
         const now = new Date().getTime();
@@ -85,15 +88,14 @@
             on:changed={reset} />
         <Filter
             caption={$_("category")}
-            choices={categories}
+            choices={categories.sort((a, b) =>
+                a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+            )}
             bind:val={currentCategory}
             on:changed={reset} />
     </div>
     <div class="flex flex-row">
-        <Filter
-            caption={$_("text")}
-            bind:val={filterText}
-            on:changed={reset} />
+        <Filter caption={$_("text")} bind:val={filterText} on:changed={reset} />
 
         {#if $currentUser?.role == "admin" || $currentUser?.role == "editor"}
             <button class="pt-3 mt-2" on:click={createNew}
@@ -102,12 +104,13 @@
     </div>
 </div>
 
-<div class="flex flex-row m-5 flex-wrap justify-center overflow-y-scroll h-[80vh]">
+<div
+    class="flex flex-row m-5 flex-wrap justify-center overflow-y-scroll h-[80vh]">
     {#each posts as post}
         <Post item={post} on:load={() => load(post)} />
     {/each}
     <InfiniteScroll
         hasMore={newBatch.length > 0}
         threshold={3}
-        on:loadMore={()=>doFilter()} />
+        on:loadMore={() => doFilter()} />
 </div>

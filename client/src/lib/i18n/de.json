@@ -22,5 +22,6 @@
     "invaliddate":"Das Datum ist ungültig",
     "dateformat":"dd.LL.yyyy",
     "upload":"Hochladen",
-    "home":"Startseite"
+    "home":"Startseite",
+    "newcat":"Neue Kategorie"
 }

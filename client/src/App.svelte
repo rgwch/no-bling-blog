@@ -3,7 +3,7 @@
   import Summary from "./lib/views/Summary.svelte";
   import Login from "./lib/components/Login.svelte";
   import Single from "./lib/views/Single.svelte";
-  import Edit from "./lib/views/Edit.svelte";
+  import Create from "./lib/views/Create.svelte";
   function key(event: any) {
     if (event.key === "Enter") {
       navigate("/");
@@ -32,7 +32,7 @@
       <Route path="/post/:id" let:params>
         <Single id={params.id} />
       </Route>
-      <Route path="/new" component={Edit} />
+      <Route path="/new" component={Create} />
       <Route path="/time/:year" let:params>
         <Summary yearFrom={params.year} yearUntil={params.year} />
       </Route>
