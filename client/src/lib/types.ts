@@ -17,5 +17,6 @@ export type post = {
     published: boolean
     filename?: string
     featured?: boolean
+    priority?: number
 }
 

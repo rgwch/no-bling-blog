@@ -25,6 +25,8 @@ export async function createDummyPosts(docs: Documents, file: string, num: numbe
             filename: "",
             keywords: "",
             category: getWords(tokens.slice(800, 810), 1),
+            priority: 0,
+            featured: false,
             author: "anonymous",
             created: getRandomDate(new Date('2018-02-12T01:57:45.271Z'), new Date('2023-09-30T01:57:45.271Z')),
             modified: new Date(),

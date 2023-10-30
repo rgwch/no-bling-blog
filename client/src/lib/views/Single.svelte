@@ -139,13 +139,13 @@
             </div>
         </div>
         <button
-            class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
+            class="btn"
             on:click={doSaveAll}>{$_("save")}</button>
         <button
-            class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md"
+            class="btn"
             on:click={doEdit}>{$_("cancel")}</button>
         <span
-            class="ml-5 my-2 p-2 border-2 border-blue-800 bg-blue-300 rounded-md">
+            class="btn">
             <span>{$_("published")}: </span>
             <input
                 type="checkbox"
@@ -179,11 +179,20 @@
                     bind:checked={post.published}
                     on:change={doSaveMeta} />
             </span>
-            <span class="btn">
+            <!-- span class="btn">
                 <span>{$_("featured")}</span>
                 <input
                     type="checkbox"
                     bind:checked={post.featured}
+                    on:change={doSaveMeta} />
+            </span -->
+            <span class="btn">
+                <span>{$_("priority")}</span>
+                <input
+                class="w-10"
+                    type="number"
+                    width="2"
+                    bind:value={post.priority}
                     on:change={doSaveMeta} />
             </span>
             <a class="btn" href={api + "export/" + post._id} target="_self"

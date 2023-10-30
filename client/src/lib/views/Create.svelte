@@ -18,6 +18,8 @@
         category: '',
         created: new Date(),
         published: false,
+        featured: false,
+        priority: 0,
         author: $currentUser.label ?? $currentUser.name,
     };
     async function doSave() {

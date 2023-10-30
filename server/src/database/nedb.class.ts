@@ -56,7 +56,7 @@ export class NeDB implements IDatabase {
   find(db: string, params: any, skip?: number, limit?: number): Promise<any[]> {
     return new Promise((resolve, reject) => {
       const cursor = this.dbs[db].find(params)
-      cursor.sort({ featured: -1, created: -1 })
+      cursor.sort({ priority: -1, created: -1 })
       if (skip) {
         cursor.skip(skip)
       }
