@@ -8,3 +8,5 @@ cd client
 npm run build
 cd ../server
 sudo systemctl start noblingblog
+sudo forever restart noblingblog
+sudo systemctl status noblingblog

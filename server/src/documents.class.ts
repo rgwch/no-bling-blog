@@ -24,6 +24,9 @@ if (!process.env.basedir) {
 if (!process.env.documents) {
     process.env.documents = path.join(process.env.basedir, "documents")
 }
+if(!process.env.backupdir)  {
+    process.env.backupdir = path.join(process.env.basedir, "backup")
+}
 if (!process.env.nedb_datadir) {
     process.env.nedb_datadir = process.env.documents
 }
