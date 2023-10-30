@@ -281,13 +281,13 @@ export class Server {
             let mime = 'text/html; charset="utf-8"'
             const ext = path.extname(filename)
             switch (ext) {
-                case ('js'): mime = 'text/javascript'; break;
-                case ('css'): mime = 'text/css'; break;
-                case ('svg'): mime = 'text/svg+xml'; break;
-                case ('jpg'): mime = 'image/jpeg'; break;
-                case ('txt'): mime = 'text/plain'; break;
-                case ('png'): mime = 'image/png'; break;
-                case ('ico'): mime = 'image/x-icon'; break;
+                case ('.js'): mime = 'text/javascript'; break;
+                case ('.css'): mime = 'text/css'; break;
+                case ('.svg'): mime = 'text/svg+xml'; break;
+                case ('.jpg'): mime = 'image/jpeg'; break;
+                case ('.txt'): mime = 'text/plain'; break;
+                case ('.png'): mime = 'image/png'; break;
+                case ('.ico'): mime = 'image/x-icon'; break;
             }
             c.header("Content-Type", mime)
             try {
