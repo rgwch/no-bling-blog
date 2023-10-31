@@ -145,7 +145,9 @@ export class Documents {
                                     url: scraper.getUrl(),
                                     title: scraper.getTitle(),
                                     text: scraper.getText(),
-                                    imgurl: scraper.getImage()?.url
+                                    imgurl: scraper.getImage()?.url,
+                                    publisherName: scraper.getPublisherName(),
+                                    publisherLogo: scraper.getPublisherLogo()?.url
                                 }
                             } else {
                                 repl = {

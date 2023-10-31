@@ -1,0 +1,291 @@
+{
+  "general": {
+    "appleTouchIcons": [
+      {
+        "href": "https://assets.static-nzz.ch/nzz/11.20.3/static/favicon/apple-touch-icon.png?v=5",
+        "sizes": "180x180"
+      }
+    ],
+    "icons": [
+      {
+        "href": "https://assets.static-nzz.ch/nzz/11.20.3/static/favicon/favicon-16x16.png?v=3",
+        "sizes": "16x16",
+        "type": "image/png"
+      },
+      {
+        "href": "https://assets.static-nzz.ch/nzz/11.20.3/static/favicon/favicon-32x32.png?v=3",
+        "sizes": "32x32",
+        "type": "image/png"
+      },
+      {
+        "href": "https://assets.static-nzz.ch/nzz/11.20.3/static/favicon/favicon-96x96.png?v=3",
+        "sizes": "96x96",
+        "type": "image/png"
+      },
+      {
+        "href": "https://assets.static-nzz.ch/nzz/11.20.3/static/favicon/favicon-128x128.png?v=3",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "href": "https://assets.static-nzz.ch/nzz/11.20.3/static/favicon/favicon-180x180.png?v=3",
+        "sizes": "180x180",
+        "type": "image/png"
+      },
+      {
+        "href": "https://assets.static-nzz.ch/nzz/11.20.3/static/favicon/favicon-512x512.png?v=3",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "author": "Rolf Dobelli",
+    "canonical": "https://www.nzz.ch/international/nahost-henry-kissinger-im-interview-zur-zweistaatenloesung-ld.1763165",
+    "description": "Der ehemalige amerikanische Aussenminister spricht über die Lage im Nahen Osten, den Umgang mit Iran sowie über die Notwendigkeit einer Aussöhnung zwischen den USA und China.",
+    "robots": "index, follow, noarchive, noodp, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+    "title": "Nahost: Henry Kissinger im Interview zur Zweistaatenlösung",
+    "lang": "de"
+  },
+  "jsonLd": [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Startseite",
+          "item": "https://www.nzz.ch/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "International",
+          "item": "https://www.nzz.ch/international"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Nahost: Henry Kissinger im Interview zur Zweistaatenlösung"
+        }
+      ]
+    },
+    {
+      "@context": "http://schema.org",
+      "@type": "NewsArticle",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.nzz.ch/international/nahost-henry-kissinger-im-interview-zur-zweistaatenloesung-ld.1763165"
+      },
+      "headline": "Nahost: Henry Kissinger im Interview zur Zweistaatenlösung",
+      "datePublished": "2023-10-31T06:30:00+02:00",
+      "dateModified": "2023-10-31T07:52:09+02:00",
+      "publisher": {
+        "@type": "NewsMediaOrganization",
+        "name": "Neue Zürcher Zeitung",
+        "url": "https://www.nzz.ch",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.nzz.ch/logo.png",
+          "width": 413,
+          "height": 60
+        },
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "telephone": "+41-44-2581000",
+            "contactType": "customer service"
+          }
+        ],
+        "sameAs": [
+          "https://www.facebook.com/nzz",
+          "https://www.twitter.com/nzz",
+          "https://www.youtube.com/channel/UCK1aTcR0AckQRLTlK0c4fuQ",
+          "https://www.linkedin.com/company/neue-zurcher-zeitung",
+          "https://www.instagram.com/nzz/",
+          "https://de.wikipedia.org/wiki/Neue_Z%C3%BCrcher_Zeitung",
+          "https://www.wikidata.org/wiki/Q658945",
+          "https://plus.google.com/+nzz/",
+          "http://www.freebase.com/m/041b43"
+        ],
+        "masthead": "https://www.nzz.ch/impressum/impressum-ld.148422",
+        "foundingDate": "1780"
+      },
+      "description": "Der ehemalige amerikanische Aussenminister spricht über die Lage im Nahen Osten, den Umgang mit Iran sowie über die Notwendigkeit einer Aussöhnung zwischen den USA und China.",
+      "isAccessibleForFree": false,
+      "hasPart": {
+        "@type": "WebPageElement",
+        "isAccessibleForFree": false,
+        "cssSelector": ".regwalled"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://img.nzz.ch/2023/10/30/f95efdc4-dbb3-4548-9aba-67fdd3741366.jpeg?width=1200&height=675&fit=bound&quality=75&auto=webp&crop=4944,2781,x0,y95&wmark=nzz",
+        "width": 1200,
+        "height": 675
+      },
+      "author": [
+        {
+          "@type": "Person",
+          "name": "Leon Igel  (igl)"
+        }
+      ],
+      "inLanguage": "de"
+    }
+  ],
+  "openGraph": {
+    "app_id": "138008459595436",
+    "pages": "143694099006529",
+    "admins": "1592685173",
+    "title": "Nahost: Henry Kissinger im Interview zur Zweistaatenlösung",
+    "image": {
+      "url": "https://img.nzz.ch/2023/10/30/f95efdc4-dbb3-4548-9aba-67fdd3741366.jpeg?width=1200&height=675&fit=bound&quality=75&auto=webp&crop=4944,2781,x0,y95&wmark=nzz",
+      "type": "image/jpeg",
+      "width": "1200",
+      "height": "675"
+    },
+    "description": "Der ehemalige amerikanische Aussenminister spricht über die Lage im Nahen Osten, den Umgang mit Iran sowie über die Notwendigkeit einer Aussöhnung zwischen den USA und China.",
+    "type": "article",
+    "url": "https://www.nzz.ch/international/nahost-henry-kissinger-im-interview-zur-zweistaatenloesung-ld.1763165",
+    "locale": "de-CH",
+    "site_name": "Neue Zürcher Zeitung"
+  },
+  "schemaOrg": {
+    "items": [
+      {
+        "id": "https://img.nzz.ch/2023/10/30/f95efdc4-dbb3-4548-9aba-67fdd3741366.jpeg?width=560&height=374&fit=crop&quality=75&auto=webp",
+        "properties": {},
+        "type": [
+          "http://schema.org/ImageObject"
+        ]
+      }
+    ]
+  },
+  "twitter": {
+    "title": "Nahost: Henry Kissinger im Interview zur Zweistaatenlösung",
+    "image": "https://img.nzz.ch/2023/10/30/f95efdc4-dbb3-4548-9aba-67fdd3741366.jpeg?width=1200&height=675&fit=bound&quality=75&auto=webp&crop=4944,2781,x0,y95&wmark=nzz",
+    "description": "Der ehemalige amerikanische Aussenminister spricht über die Lage im Nahen Osten, den Umgang mit Iran sowie über die Notwendigkeit einer Aussöhnung zwischen den USA und China.",
+    "card": "summary_large_image",
+    "site": "@NZZ"
+  }
+}
+
+{
+  "general": {
+    "appleTouchIcons": [
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-57x57.png",
+        "sizes": "57x57"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-60x60.png",
+        "sizes": "60x60"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-72x72.png",
+        "sizes": "72x72"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-76x76.png",
+        "sizes": "76x76"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-114x114.png",
+        "sizes": "114x114"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-120x120.png",
+        "sizes": "120x120"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-144x144.png",
+        "sizes": "144x144"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-152x152.png",
+        "sizes": "152x152"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/apple-icon-180x180.png",
+        "sizes": "180x180"
+      }
+    ],
+    "icons": [
+      {
+        "href": "/wp-content/themes/colormag-child/img/favicon.png",
+        "type": "image/x-icon"
+      },
+      {
+        "href": "/wp-content/themes/colormag-child/img/android-icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ],
+    "canonical": "https://www.infosperber.ch/medien/ueber-tv-radio/windschiefer-bericht-ueber-irak-auf-tv-srf/",
+    "description": "«10vor10» zeigt nach dem neusten Drohnen-Mord der USA bei Bagdad fast nur die eine Seite. Das ist stümperhaft und unprofessionell.",
+    "robots": "max-snippet:-1,max-image-preview:standard,max-video-preview:-1",
+    "title": "Windschiefer Bericht über Irak auf TV-SRF - infosperber",
+    "lang": "de-CH"
+  }
+  "jsonLd": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https://www.infosperber.ch/",
+          "name": "infosperber"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "item": {
+          "@id": "https://www.infosperber.ch/category/medien/",
+          "name": "Medien"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https://www.infosperber.ch/category/medien/ueber-tv-radio/",
+          "name": "Über TV/Radio"
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "item": {
+          "@id": "https://www.infosperber.ch/medien/ueber-tv-radio/windschiefer-bericht-ueber-irak-auf-tv-srf/",
+          "name": "Windschiefer Bericht über Irak auf TV-SRF"
+        }
+      }
+    ]
+  },
+  "openGraph": {
+    "image": {
+      "url": "https://www.infosperber.ch/wp-content/uploads/2021/01/sperber1000x500.png",
+      "width": "1000",
+      "height": "500"
+    },
+    "locale": "de_DE",
+    "type": "website",
+    "title": "Windschiefer Bericht über Irak auf TV-SRF - infosperber",
+    "description": "«10vor10» zeigt nach dem neusten Drohnen-Mord der USA bei Bagdad fast nur die eine Seite. Das ist stümperhaft und unprofessionell.",
+    "url": "https://www.infosperber.ch/medien/ueber-tv-radio/windschiefer-bericht-ueber-irak-auf-tv-srf/",
+    "site_name": "infosperber",
+    "app_id": "159492510740242"
+  },
+  "twitter": {
+    "image": {
+      "url": "https://www.infosperber.ch/wp-content/uploads/2021/01/sperber1000x500.png",
+      "width": "1000",
+      "height": "500"
+    },
+    "card": "summary_large_image",
+    "title": "Windschiefer Bericht über Irak auf TV-SRF - infosperber",
+    "description": "«10vor10» zeigt nach dem neusten Drohnen-Mord der USA bei Bagdad fast nur die eine Seite. Das ist stümperhaft und unprofessionell."
+  }
+}
