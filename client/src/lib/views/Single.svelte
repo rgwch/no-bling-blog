@@ -138,14 +138,9 @@
                 <span class="ml-5">{$_("modified")}: {modified}</span>
             </div>
         </div>
-        <button
-            class="btn"
-            on:click={doSaveAll}>{$_("save")}</button>
-        <button
-            class="btn"
-            on:click={doEdit}>{$_("cancel")}</button>
-        <span
-            class="btn">
+        <button class="btn" on:click={doSaveAll}>{$_("save")}</button>
+        <button class="btn" on:click={doEdit}>{$_("cancel")}</button>
+        <span class="btn">
             <span>{$_("published")}: </span>
             <input
                 type="checkbox"
@@ -170,36 +165,35 @@
             </div>
         </div>
         {#if canEdit()}
-            <button class="btn" on:click={doDelete}>{$_("delete")}</button>
-            <button class="btn" on:click={doEdit}>{$_("edit")}</button>
-            <span class="btn">
-                <span>{$_("published")}: </span>
-                <input
-                    type="checkbox"
-                    bind:checked={post.published}
-                    on:change={doSaveMeta} />
-            </span>
-            <!-- span class="btn">
-                <span>{$_("featured")}</span>
-                <input
-                    type="checkbox"
-                    bind:checked={post.featured}
-                    on:change={doSaveMeta} />
-            </span -->
-            <span class="btn">
-                <span>{$_("priority")}</span>
-                <input
-                class="w-10"
-                    type="number"
-                    width="2"
-                    bind:value={post.priority}
-                    on:change={doSaveMeta} />
-            </span>
-            <a class="btn" href={api + "export/" + post._id} target="_self"
-                >Export</a>
+            <div class="flex justify-center">
+                <button class="btn" on:click={doDelete}>{$_("delete")}</button>
+                <button class="btn" on:click={doEdit}>{$_("edit")}</button>
+                <span class="btn">
+                    <span>{$_("published")}: </span>
+                    <input
+                        type="checkbox"
+                        bind:checked={post.published}
+                        on:change={doSaveMeta} />
+                </span>
+                <span class="btn">
+                    <span>{$_("priority")}</span>
+                    <input
+                        class="w-10"
+                        type="number"
+                        width="2"
+                        bind:value={post.priority}
+                        on:change={doSaveMeta} />
+                </span>
+                <a class="btn" href={api + "export/" + post._id} target="_self"
+                    >Export</a>
+                <button class="btn" on:click={back}>{$_("back")}</button>
+            </div>
+        {:else}
+            <div class="flex justify-center">
+                <button class="btn" on:click={back}>{$_("back")}</button>
+            </div>
         {/if}
     {/if}
 {:else}
     <div>No Text</div>
 {/if}
-<button class="btn" on:click={back}>{$_("back")}</button>
