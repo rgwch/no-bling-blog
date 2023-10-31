@@ -3,10 +3,11 @@
 # and the service must have been installed with install-service.sh
 
 sudo systemctl stop noblingblog
+sudo forever stop noblingblog
 git pull
 cd client
 npm run build
 cd ../server
+/opt/node/bin/npx tsc
 sudo systemctl start noblingblog
-sudo forever restart noblingblog
 sudo systemctl status noblingblog
