@@ -50,14 +50,14 @@ No-Bling-Blog is made for a single author or a small group of authors who know e
 
 There are three different roles: admin, editor and visitor. 
 * Visitors do not need an account. They can only read published posts. 
-* Editors need an accouunt with the role set to 'editor'. They can read all published posts and their own unpublished posts. They can create new posts and edit, publish, or unpublish them.
+* Editors need an account with the role set to 'editor'. They can read all published posts and their own unpublished posts. They can create new posts and edit, publish, or unpublish them.
 * Admins need an account with the role set to 'admin'. They can read, edit, publish, unpublish and delete any post.
 
 ### Posts
 
-A post is initially unpublished when created. Its editor or the admin can edit, publish and unpublish it. If published, it's visible to all visitor. If unpublished, it's only visible to its editor and to admin(s).
+A post is initially unpublished when created. Its editor or the admin can edit, publish and unpublish it. If published, it's visible to all visitors. If unpublished, it's only visible to its editor and to admin(s).
 
-Posts can be written in the Markdown language. All standard markups are supported. Additionally, Metadata of news sites can be embedded with: [[https://some.news.site.somewhere/hot/article.html]]. No-Bling-Blog will read json-ld and openGraph metadata such as title, author, image, teaser fom such a page and provide these information as link to the original article in the post. Normal links to external websites are written as \[Title\](http://link/to/site). Internal links to other posts can be written as absolute links: \[Title\](/post/post/b36h7nhij).
+Posts can be written in the Markdown language. All standard markups are supported. Additionally, Metadata of news sites can be embedded with: [[https://some.news.site.somewhere/hot/article.html]]. No-Bling-Blog will read json-ld and openGraph metadata such as title, author, image, teaser fom such a page and provide these information as link to the original article in the post. Normal links to external websites are written as \[Title\](http://link/to/site). Internal links to other posts can be written as absolute links: \[Title\](/post/b36h7nhij).
 
 Note: Since posts are processed by Markdown, you'll have to insert blank lines for hard linebreaks. For a summary of markdown's features look [here](https://daringfireball.net/projects/markdown/syntax).
 
