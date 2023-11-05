@@ -24,7 +24,7 @@ if (!process.env.basedir) {
 if (!process.env.documents) {
     process.env.documents = path.join(process.env.basedir, "documents")
 }
-if(!process.env.backupdir)  {
+if (!process.env.backupdir) {
     process.env.backupdir = path.join(process.env.basedir, "backup")
 }
 if (!process.env.nedb_datadir) {
@@ -35,6 +35,9 @@ if (!process.env.partials) {
 }
 if (!process.env.users) {
     process.env.users = path.join(process.env.basedir, "users.json")
+}
+if (!process.env.uploads) {
+    process.env.uploads = path.join(process.env.basedir, "uploads")
 }
 export type analyzed = {
     filename: string

@@ -224,11 +224,16 @@ export class Server {
                     const body = await c.req.parseBody()
                     const h = await (body['file'] as File)
                     const result = await this.loadFile(h)
-                    const unzipped = await unzip(result)
-                    const parsed = JSON.parse(unzipped.toString())
-                    // delete parsed._id
-                    parsed.author = currentUser.label ?? currentUser.name
-                    await docs.add(parsed)
+                    if (h.name.endsWith(".gz")) {
+                        const unzipped = await unzip(result)
+                        const parsed = JSON.parse(unzipped.toString())
+                        // delete parsed._id
+                        parsed.author = currentUser.label ?? currentUser.name
+                        await docs.add(parsed)
+                    } else {
+                        await fs.mkdir(process.env.uploads, { recursive: true })
+                        await fs.writeFile(path.join(process.env.uploads, h.name), result)
+                    }
                     return c.json({ status: "ok" })
                 } catch (err) {
                     logger.error(err)
@@ -270,7 +275,10 @@ export class Server {
         this.hono.use("/*", async (c, next) => {
             const base = "../client/dist/"
             let filename = c.req.path
-            if (filename == "/" || filename == "/index.html" || filename.startsWith("/post/") || filename.startsWith("/time/") || filename.startsWith("/cat/")) {
+            if (filename == "/" || filename == "/index.html" ||
+                filename.startsWith("/post/") ||
+                filename.startsWith("/time/") ||
+                filename.startsWith("/cat/")) {
                 filename = "index.html"
             }
             if (filename.includes("..")) {
@@ -291,7 +299,8 @@ export class Server {
             }
             c.header("Content-Type", mime)
             try {
-                const cont = await fs.readFile(path.join(base, filename))
+                const dir = filename.startsWith("/") ? process.env.uploads : base
+                const cont = await fs.readFile(path.join(dir, filename))
                 return c.stream(async stream => {
                     await stream.write(cont)
                 })
