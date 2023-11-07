@@ -57,21 +57,32 @@ There are three different roles: admin, editor and visitor.
 
 A post is initially unpublished when created. Its editor or the admin can edit, publish and unpublish it. If published, it's visible to all visitors. If unpublished, it's only visible to its editor and to admin(s).
 
-Posts can be written in the Markdown language. All standard markups are supported. Additionally, Metadata of news sites can be embedded with: [[https://some.news.site.somewhere/hot/article.html]]. No-Bling-Blog will read json-ld and openGraph metadata such as title, author, image, teaser fom such a page and provide these information as link to the original article in the post. 
+Posts can be written in the Markdown language. Most standard markups are supported. 
+For a summary of markdown's features look [here](https://daringfireball.net/projects/markdown/syntax).
 
-#### Normal links to external websites are written as: 
+
+#### Normal links to external websites: 
 
 `[Title](http://link/to/site)`
 
-#### Internal links to other posts can be written as absolute links: 
+#### Internal links to other posts: 
 
 `[Title](/post/b36h7nhij)`
 
-#### To include an image, which is available online, use the following code:
+#### Image available online:
 
 `![Title](https://link.to.image)`
 
-Note: Since posts are processed by Markdown, you'll have to insert blank lines for hard linebreaks. For a summary of markdown's features look [here](https://daringfireball.net/projects/markdown/syntax).
+#### Image not yet available online:
+
+* Create a new post and upload the image using the "upload" button
+* reference the image as follows:
+
+`![title](/image)`
+
+(thus no http(s)://)
+
+#### Source code
 
 It is possible to have source code examples colorized. Under the hood,  [highlight.js](https://highlightjs.org/) is used, so the same languages are supported.
 
@@ -94,11 +105,21 @@ function sayHello(){
 
 ```
 
+#### Reference to news articles
 
+Metadata of articles found on news sites can be embedded with: [[https://some.news.site.somewhere/hot/article.html]]. No-Bling-Blog will read json-ld and openGraph metadata such as title, author, image, teaser fom such a page and provide these information as link to the original article in the post (using the partial `reference.html`). 
+
+
+#### Export and import
+
+It is possible to export a post with all its metadata, and to import such an exported post into the same or another instance of NoBlingBlog. yoi need to be an editor or an admin to export and import posts.
+
+* Cllick the "export" button to download a gzipped file
+* Create a new Post and use the "upload" button to import a file previously created by export.
 
 ## Design
 
-You can, of course, customize the design of NoBlingBlog. But you must do so in the source files. There's no bling-bling method...
+You can (and should), of course, customize the design of NoBlingBlog for your own needs. But you must do so in the source files. There's no bling-bling method...
 So:
 
 * Make a fork of this repository
@@ -106,6 +127,6 @@ So:
 
 ### Partials
 
-Special formattings can be applied through partials.
+Special formattings can be applied through partials. Partials are just html snippets, which are stored in the partials directory (by default ../data/partials). One example is `partial.html` which will be used to embed metadata of news articles in a post.
 
 

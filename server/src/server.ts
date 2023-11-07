@@ -19,6 +19,7 @@ import { gzip, gunzip } from 'node:zlib';
 import {
     createReadStream,
     createWriteStream,
+    existsSync
 } from 'node:fs';
 const zip = promisify(gzip)
 const unzip = promisify(gunzip)
@@ -299,8 +300,10 @@ export class Server {
             }
             c.header("Content-Type", mime)
             try {
-                const dir = filename.startsWith("/") ? process.env.uploads : base
-                const cont = await fs.readFile(path.join(dir, filename))
+                // const dir = filename.startsWith("/") ? process.env.uploads : base
+                const file=existsSync(path.join(base, filename)) ? path.join(base, filename) : path.join(process.env.uploads, filename)
+                // const cont = await fs.readFile(path.join(base, filename))
+                const cont = await fs.readFile(file)
                 return c.stream(async stream => {
                     await stream.write(cont)
                 })

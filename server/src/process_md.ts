@@ -22,10 +22,12 @@ export async function processContents(text: string): Promise<string> {
   }
   let processed = await processPartials(text)
   processed = processed.replace(/^-([a-z]*)$/gm, "~~~$1")
+  /*
   processed = processed.replace(/(!\[[^\]]*\])\((\/[^\)]*)\)/g, (match, p1, p2) => {
     const np = path.join(process.env.uploads, p2)
     return p1 + "(" + np + ")"
   })
+  */
   text = await marked.parse(processed)
   return text
 }
