@@ -82,6 +82,8 @@ For a summary of markdown's features look [here](https://daringfireball.net/proj
 
 (thus no http(s)://)
 
+Note: The image will not display in development mode.
+
 #### Source code
 
 It is possible to have source code examples colorized. Under the hood,  [highlight.js](https://highlightjs.org/) is used, so the same languages are supported.
@@ -109,6 +111,9 @@ function sayHello(){
 
 Metadata of articles found on news sites can be embedded with: [[https://some.news.site.somewhere/hot/article.html]]. No-Bling-Blog will read json-ld and openGraph metadata such as title, author, image, teaser fom such a page and provide these information as link to the original article in the post (using the partial `reference.html`). 
 
+#### Priorities
+
+You can assign a priority to a post. When created, a post has priority 0. Posts with higher priorities are displayd before posts with lower priorities. When posts have the same priority, newer posts are displayed first.
 
 #### Export and import
 
@@ -129,5 +134,7 @@ So:
 
 Special formattings can be applied through partials. Partials are just html snippets, which are stored in the partials directory (by default ../data/partials). One example is `reference.html` which will be used to embed metadata of news articles in a post.
 A simple example just to demonstrate the feature is `red.html`. Use it in a post like this:
-[[{"template":"red","text":"This will be rendered differently"}]].
-
+~~~
+[[{"template":"red","text":"This will be rendered differently"}]]
+~~~
+(The instructions inside the double square brackets must be valid json).
