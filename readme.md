@@ -34,7 +34,7 @@ This is a very simple Blog app with no bling-bling (hence the name).
     |  q) Quit                                    |
     '---------------------------------------------'
     ```
-    For your first experiments, hit d for "create dummy posts" and then "2 for create new user". Enter any username you like and "admin" when asked for the role. Then, launch the blog with 1 and navigate your favourite browser to `http://localhost:3000`. You'll have 100 fake posts to experiment. Login with your user name and any password (which will be set with your first login). Hit 'q' when you're done.
+    For your first experiments, hit d for "create dummy posts" and then 2 for "create new user". Enter any username you like and "admin" when asked for the role. Then, launch the blog with 1 and navigate your favourite browser to `http://localhost:3000`. You'll have 100 fake posts to experiment. Login with your user name and any password (which will be set with your first login). Hit 'q' when you're done.
 
 ![Screenshot](screenshot.jpg)
 
@@ -109,7 +109,7 @@ function sayHello(){
 
 #### Reference to news articles
 
-Metadata of articles found on news sites can be embedded with: [[https://some.news.site.somewhere/hot/article.html]]. No-Bling-Blog will read json-ld and openGraph metadata such as title, author, image, teaser fom such a page and provide these information as link to the original article in the post (using the partial `reference.html`). 
+Metadata of articles found on news sites can be embedded with: [[https://some.news.site.somewhere/hot/article.html]]. No-Bling-Blog will read json-ld and openGraph metadata such as title, author, image, teaser from such a page and provide these information as link to the original article in the post (using the partial `reference.html`). 
 
 #### Priorities
 
@@ -169,7 +169,7 @@ Here an example config for apache:
 
 ### Run as a process in apache
 
-Recommended: Use the [Passenger](https://www.phusionpassenger.com/) AppServer. Install according to the directions there.  
+Recommended: Use the [Passenger](https://www.phusionpassenger.com/) AppServer. Install according to the directions [there](https://www.phusionpassenger.com/docs/tutorials/installation/node/).  
 
 Add the following configuration to /etc/apache2/sites_available:
 

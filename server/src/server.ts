@@ -106,7 +106,7 @@ export class Server {
                 if (entry) {
                     const title = entry.heading.replace(/[^a-zA-Z0-9]/g, "_")
                     c.header("Content-Type", "application/octet-stream")
-                    c.header("Content-Disposition", "attachment; filename=" + title + ".gz")
+                    c.header("Content-Disposition", "attachment; filename=" + title + ".nbb")
                     const zipped = await zip(JSON.stringify(entry))
                     return c.stream(async outp => {
                         await outp.write(zipped)
@@ -225,7 +225,7 @@ export class Server {
                     const body = await c.req.parseBody()
                     const h = await (body['file'] as File)
                     const result = await this.loadFile(h)
-                    if (h.name.endsWith(".gz")) {
+                    if (h.name.endsWith(".nbb")) {
                         const unzipped = await unzip(result)
                         const parsed = JSON.parse(unzipped.toString())
                         // delete parsed._id
