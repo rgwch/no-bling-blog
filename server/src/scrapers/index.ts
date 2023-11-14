@@ -1,4 +1,5 @@
 import htmlmeta from 'html-metadata'
+import {logger} from '../logger'
 
 // const metascraper = metaScraper([description(), title(), date(), author()])
 
@@ -74,7 +75,7 @@ export class MetaScraper {
             }
             return false
         } catch (err) {
-            console.log(err)
+            logger.warn(err)
             return false
         }
     }

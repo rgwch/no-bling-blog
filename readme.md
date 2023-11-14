@@ -14,11 +14,11 @@ This is a very simple Blog app with no bling-bling (hence the name).
 1. create a file server/.env with the following properties:
    ```
    basedir=../data
-   jwt_secret=chose something different
+   jwt_secret=choose something else
    ```
    (Stay with these defaults for you first tests. For other possible entries, see server/env.sample)
 
-1.  `npm start` in the server directory will bring up the management interface:
+1.  `./run.sh` will bring up the management interface:
     ```
     .---------------------------------------------.
     | No-Bling-Blog Management                    |

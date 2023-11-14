@@ -34,7 +34,7 @@ export class Server {
         this.hono = new Hono()
         let currentUser;
         if (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "debug") {
-            console.log("Running in development mode")
+            logger.info("Running in development mode")
             this.hono.use(prefix + "*", cors())
         }
         this.hono.use(prefix + "*", async (c, next) => {
@@ -325,7 +325,7 @@ export class Server {
             let bytes = 0
             return reader.read().then(function process({ done, value }) {
                 if (done) {
-                    console.log("done")
+                    logger.debug("done")
                     resolve(b)
                 } else {
                     bytes += Buffer.from(value).copy(b, bytes, 0, value.length)
@@ -370,7 +370,7 @@ export class Server {
     public async start() {
         const port = parseInt(process.env.nbb_port || "3000")
         const result = await serve({ fetch: this.hono.fetch, port })
-        logger.info("Hono serving at port " + port)
+        logger.warn("Hono serving at port " + port)
 
     }
 }

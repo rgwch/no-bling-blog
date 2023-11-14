@@ -15,6 +15,7 @@ import { Documents } from './documents.class'
 import { Server } from './server'
 import { user } from './types'
 const { exec } = require('child_process');
+import {logger} from './logger'
 
 
 const ask = prompt({ sigint: true })
