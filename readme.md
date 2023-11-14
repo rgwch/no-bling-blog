@@ -112,7 +112,7 @@ Metadata of articles found on news sites can be embedded with: [[https://some.ne
 
 #### Export and import
 
-It is possible to export a post with all its metadata, and to import such an exported post into the same or another instance of NoBlingBlog. yoi need to be an editor or an admin to export and import posts.
+It is possible to export a post with all its metadata, and to import such an exported post into the same or another instance of NoBlingBlog. You need to be an editor or an admin to export and import posts.
 
 * Cllick the "export" button to download a gzipped file
 * Create a new Post and use the "upload" button to import a file previously created by export.
@@ -127,6 +127,7 @@ So:
 
 ### Partials
 
-Special formattings can be applied through partials. Partials are just html snippets, which are stored in the partials directory (by default ../data/partials). One example is `partial.html` which will be used to embed metadata of news articles in a post.
-
+Special formattings can be applied through partials. Partials are just html snippets, which are stored in the partials directory (by default ../data/partials). One example is `reference.html` which will be used to embed metadata of news articles in a post.
+A simple example just to demonstrate the feature is `red.html`. Use it in a post like this:
+[[{"template":"red","text":"This will be rendered differently"}]].
 
