@@ -138,3 +138,74 @@ A simple example just to demonstrate the feature is `red.html`. Use it in a post
 [[{"template":"red","text":"This will be rendered differently"}]]
 ~~~
 (The instructions inside the double square brackets must be valid json).
+
+## Deployment
+
+### Run as a service
+
+```
+npm i -g forever forever-service
+./install-service.sh
+```
+The service will be startet on system startup automatically
+
+see ./restart.sh to see how to stop and start the service manually.
+
+Then, you can contact directly with `http://your.server.url:3000`
+
+Or, you use a reverse proxy such as Apache or Nginx to map the public default port to your blog server.
+
+Here an example config for apache:
+
+```
+<VirtualHost *:80>
+        ServerName noblingblog.url.invalid
+        ServerAlias  coolblog.url.invalid
+        ProxyPass / http://internalServer:3000/
+        ProxyPassReverse / http://internalServer:3000/
+</VirtualHost>
+
+```
+
+### Run as a process in apache
+
+Recommended: Use the [Passenger](https://www.phusionpassenger.com/) AppServer. Install according to the directions there.  
+
+Add the following configuration to /etc/apache2/sites_available:
+
+nbb.conf:
+```
+<VirtualHost *:80>
+        ServerName noblingblog.url.invalid
+        DocumentRoot /var/www/blog/app/client/dist
+        PassengerAppRoot /var/www/blog/app/server
+
+        PassengerAppType node
+        PassengerStartupFile dest/index.js
+        PassengerStickySessions on
+
+        <Directory /var/www/blog/app/client/dist>
+                Allow from all
+                Options -MultiViews
+        </Directory>
+
+</VirtualHost>
+
+```
+(Of course, you must replace `noblingblog.url.invalid` with the real url of your blog site.)
+
+Then, enable the new site:
+
+```
+sudo a2enmod nbb
+sudo systemctl restart apache2
+```
+And try to connect to http://noblingblog.url.invalid.
+
+If everything works ok, obtain a letsencrypt certificate and create config for the https secure access:
+
+```
+sudo certbot --apache
+sudo systemctl restart apache2
+```
+
