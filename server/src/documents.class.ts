@@ -7,7 +7,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { post } from './types'
-import { MetaScraper, type imageObject } from './scrapers'
+import { MetaScraper } from './scrapers'
 import { tokenizer } from './tokenizer'
 import { NeDB } from './database/nedb.class'
 import { logger } from './logger'
@@ -15,6 +15,13 @@ import { processContents } from './process_md'
 const docdb = "nbbdocs"
 const indexdb = "nbbindex"
 
+/**
+ * This class manages the database of documents. It uses the NeDB class to store the documents and the index.
+ */
+
+/**
+ * Check environment variables and set defaults
+ */
 if (!process.env.storage) {
     process.env.storage = "nedb"
 }
@@ -119,12 +126,14 @@ export class Documents {
         return this.numEntries
     }
     /**
-     * add a new entry to the database. Fulltext will be tokenized and saved in a file in the fulltext directory. Tokens will be added to the index database
+     * add a new entry to the database. If the entry has no _id, generate one. Ensure that the _id is unique.
+     * Fulltext will be tokenized and saved in a file in the fulltext directory. 
+     * Special links ([[http...]] will be processed and replaced by metadata (if available]])
+     * Tokens will be added to the index database. 
      * @param entry 
-     * @returns 
+     * @returns the new entry
      */
     public async add(entry: post): Promise<post> {
-        let document = entry.fulltext
         if (!entry._id) {
             let exists = null
             do {
@@ -132,6 +141,7 @@ export class Documents {
                 exists = await this.db.get(docdb, entry._id, { nullIfMissing: true })
             } while (exists)
         }
+        let document = entry.fulltext
         delete entry.fulltext
         if (document?.length > 5) {
             const links = document.match(/\[\[[^\]]+\]\]/g)
@@ -175,6 +185,15 @@ export class Documents {
         return entry
     }
 
+    /**
+     * Create index entries and store the fulltext as a file in the fulltext directory
+     * @param contents fulltext
+     * @param summary teaser text
+     * @param title title
+     * @param id id
+     * @param overwrite true if entry with tge same title should be overwritten 
+     * @returns the full pathname of the newly created file
+     */
     async tokenizeAndSave(contents: string, summary: string, title: string, id: string, overwrite = false): Promise<string> {
         const tokens = tokenizer.process(contents + " " + summary + " " + title)
         for (const token of tokens) {
@@ -217,10 +236,10 @@ export class Documents {
     }
 
     /**
-     * Update a post. The fulltext will be new tokenized and saved in a file in the fulltext directory. 
+     * Update a post. The fulltext will be re-tokenized and saved in a file in the fulltext directory. 
      * Existing tokens will be removed and new tokens will be added to the index database
      * @param entry 
-     * @returns 
+     * @returns the new post
      */
     public async update(entry: post): Promise<post> {
         await this.remove(entry._id)
@@ -229,7 +248,7 @@ export class Documents {
     }
 
     /**
-     * Update the metadata of a post. The fulltext will not be changed
+     * Update the metadata of a post. The fulltext will not be changed.
      * @param entry 
      * @returns 
      */
@@ -293,7 +312,7 @@ export class Documents {
      * Get a post by id. Fulltext will be loaded and processed, and attached to the fulltext property of the post
      * @param id 
      * @param raw True: return fulltext as is, false: Link metadata will be processed and markdown will be compiled.
-     * @returns 
+     * @returns the post with fulltext-property set tu the fulltext
      */
     public async get(id: string, raw: boolean): Promise<post> {
         const entry = await this.db.get(docdb, id, { nullIfMissing: true })
@@ -327,7 +346,7 @@ export class Documents {
      * generate a filepath from a title and the documents basedir. All non-alphanomeric characters are replaced with "_"
      * @param title 
      * @param overwrite if true, the pathmame will returns as is. If false, the name will be modified, if a file with that name already exists.
-     * @returns 
+     * @returns the full filepath of the document
      */
     private async makeFilename(title: string, overwrite = false): Promise<string> {
         const fname = title.toLocaleLowerCase().replace(/[^\w]+/g, "_")

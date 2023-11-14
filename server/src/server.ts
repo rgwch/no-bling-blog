@@ -8,7 +8,7 @@ import { Hono } from 'hono'
 import { post } from './types'
 import { cors } from 'hono/cors'
 import { Documents } from './documents.class'
-import { decode, sign, verify } from 'hono/jwt'
+import { sign, verify } from 'hono/jwt'
 import fs from 'fs/promises'
 import path from 'path'
 import { logger } from './logger'
@@ -16,27 +16,31 @@ import { createHash } from 'node:crypto'
 import { serve } from '@hono/node-server'
 import { promisify } from 'node:util';
 import { gzip, gunzip } from 'node:zlib';
-import {
-    createReadStream,
-    createWriteStream,
-    existsSync
-} from 'node:fs';
+import { existsSync } from 'node:fs';
 const zip = promisify(gzip)
 const unzip = promisify(gunzip)
 
 const prefix = "/api/1.0/"
 
-
+/**
+ * Create and configure the web-server.
+ */
 export class Server {
     private hono: Hono
     private bans: any = {}
-    constructor(private docs: Documents) {
+    constructor(docs: Documents) {
         this.hono = new Hono()
         let currentUser;
+        /*
+            Allow CORS in development mode (so we can access localhost:3000 from localhost:5173)
+        */
         if (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "debug") {
             logger.info("Running in development mode")
             this.hono.use(prefix + "*", cors())
         }
+        /*
+            Check auth Header and set currentUser for every request
+        */
         this.hono.use(prefix + "*", async (c, next) => {
             currentUser = { name: "visitor", role: "visitor" }
             let jwt
@@ -57,6 +61,11 @@ export class Server {
             }
             await next()
         })
+        /**
+         * Check access for current user to a given post
+         * @param post post to check
+         * @returns true if currentUSser has write access to the post
+         */
         function hasAccess(post: post): boolean {
             if (currentUser.role == "admin") {
                 return true
@@ -98,7 +107,7 @@ export class Server {
                 throw new Error("no id supplied")
             }
         })
-        /** zip a post for download */
+        /** gzip a post for download */
         this.hono.get(prefix + "export/:id", async (c) => {
             const params = c.req.param()
             if (params["id"]) {
@@ -143,7 +152,8 @@ export class Server {
             }
         })
         /**
-         * log a user in
+         * log a user in. If username and password match an entry in users.json, return a JWT. 
+         * This JWT is used as a bearer token for all subsequent requests.
          */
         this.hono.get(prefix + "login/:user/:pwd", async (c) => {
             const cred: any = c.req.param()
@@ -180,6 +190,7 @@ export class Server {
         })
         /**
          * Extend the validity of a JWT
+         * Return a new JWT with extended expiration date
          */
         this.hono.get(prefix + "revalidate", async c => {
             if (currentUser) {
@@ -219,6 +230,10 @@ export class Server {
                 return c.json({ status: "fail", message: "not authorized" })
             }
         })
+        /**
+         * Upload a gzipped post or a file. If it's a post, it will be unzipped and entered as new Post. 
+         * If it's a file, it will be stored in the uploads folder.
+         */
         this.hono.post(prefix + "upload", async c => {
             if (currentUser.role == "admin" || currentUser.role == "editor") {
                 try {
@@ -273,6 +288,12 @@ export class Server {
                 return c.json({ "status": "fail", message: " not authorized" })
             }
         })
+        /**
+         * Serve static files from client/dist.
+         * Since NoBlingBlog is a WebApp, most requests are handled by the client. We handle here the very first call (which must serve the App itself),
+         * and subsequent calls which load resources (js, css, images) from the client/dist folder.
+         * Some special calls (to /post/*, /time/*, /cat/*) are directed to the client (by serving index.html again)
+         */
         this.hono.use("/*", async (c, next) => {
             const base = "../client/dist/"
             let filename = c.req.path
@@ -282,6 +303,7 @@ export class Server {
                 filename.startsWith("/cat/")) {
                 filename = "index.html"
             }
+            // Do not allow calls outside the client/dist folder
             if (filename.includes("..")) {
                 c.status(403)
                 return c.json({ status: "fail", message: "forbidden" })
@@ -299,10 +321,9 @@ export class Server {
                 case ('.ico'): mime = 'image/x-icon'; break;
             }
             c.header("Content-Type", mime)
+            /* Serve file from client/dist. If not found there, try uploads folder. */
             try {
-                // const dir = filename.startsWith("/") ? process.env.uploads : base
-                const file=existsSync(path.join(base, filename)) ? path.join(base, filename) : path.join(process.env.uploads, filename)
-                // const cont = await fs.readFile(path.join(base, filename))
+                const file = existsSync(path.join(base, filename)) ? path.join(base, filename) : path.join(process.env.uploads, filename)
                 const cont = await fs.readFile(file)
                 return c.stream(async stream => {
                     await stream.write(cont)
@@ -314,7 +335,13 @@ export class Server {
 
         })
 
-    }
+    } // end of constructor
+
+    /**
+     * Load a file from a File object
+     * @param h File object
+     * @returns a Buffer with the file content
+     */
     loadFile(h: File): Promise<Buffer> {
         return new Promise((resolve, reject) => {
             const inp = h.stream()
@@ -367,6 +394,9 @@ export class Server {
             this.bans[user] = { warned: 1 }
         }
     }
+    /**
+     * Start the server
+     */
     public async start() {
         const port = parseInt(process.env.nbb_port || "3000")
         const result = await serve({ fetch: this.hono.fetch, port })

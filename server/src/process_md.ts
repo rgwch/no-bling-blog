@@ -1,10 +1,18 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
+
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import hljs from "highlight.js";
-import type { post } from "./types"
 import path from "path"
 import fs from "fs/promises"
 
+/**
+ * Process embedded Meta-Ibnformation and compile Markdown
+ */
 const marked = new Marked(
   markedHighlight({
     langPrefix: 'hljs language-',
@@ -22,12 +30,6 @@ export async function processContents(text: string): Promise<string> {
   }
   let processed = await processPartials(text)
   processed = processed.replace(/^-([a-z]*)$/gm, "~~~$1")
-  /*
-  processed = processed.replace(/(!\[[^\]]*\])\((\/[^\)]*)\)/g, (match, p1, p2) => {
-    const np = path.join(process.env.uploads, p2)
-    return p1 + "(" + np + ")"
-  })
-  */
   text = await marked.parse(processed)
   return text
 }

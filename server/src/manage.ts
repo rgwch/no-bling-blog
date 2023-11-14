@@ -4,7 +4,7 @@
  * License: MIT
  ************************************************/
 
-// Management tool for NoBlingBlog
+// Management tool for NoBlingBlog. Run with "npm start" or "npm run manage"
 import 'dotenv/config'
 import fs from 'fs'
 import path from 'path'

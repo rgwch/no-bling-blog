@@ -1,5 +1,14 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
+
 import fs from "fs"
 import path from 'path'
+/**
+ *  Split a text into tokens for an index database
+ */
 export class Tokenizer {
     private stopWords: string[] = []
     public process(text: string): string[] {

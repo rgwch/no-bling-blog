@@ -1,3 +1,8 @@
+/************************************************
+ * This file is part of the NoBlingBlog project
+ * Copyright (c) 2023
+ * License: MIT
+ ************************************************/
 
 import winston from 'winston'
 /*
