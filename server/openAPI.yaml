@@ -15,12 +15,6 @@ paths:
           schema:
             type: string
           required: false
-        - name: summary
-          description: "filter for expression in the teaser/summary part"
-          in: query
-          schema:
-            type: string
-          required: false
         - name: from
           description: "filter for posts from a given date"
           in: query
@@ -39,12 +33,24 @@ paths:
           schema:
             type: string
           required: false
-        - name: fulltext
-          description: "filter for posts with the given expression in the full text"
+        - name: text
+          description: "filter for posts with the given expression in the full text, the teaser or the title"
           in: query
           schema:
             type: string
           required: false
+        - name: skip
+          description: "skip the first n posts"
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: limit
+          description: "limit the number of posts to n"
+          in: query
+          schema:
+            type: integer
+          required: false    
       responses:
         "200":
           description: OK
@@ -67,7 +73,7 @@ paths:
           description: Unauthorized
   "/export/{id}":
     get:
-      description: "Export a post as gzipped file"
+      description: "Export a post as gzipped file with extension .nbb"
       parameters:
         - name: id
           description: "ID of the post to export"
@@ -125,7 +131,7 @@ paths:
           description: OK
         "401":
           description: Unauthorized
-  /stats:
+  "/stats":
     get:
       description: "Get statistics about the blog"
       responses:
@@ -134,7 +140,7 @@ paths:
         "401":
           description: Unauthorized
 
-  /add:
+  "/add":
     post:
       summary: Add a new Post
       requestBody:
@@ -172,9 +178,9 @@ paths:
                   message:
                     type: string
                     example: not authorized
-  /upload: 
+  "/upload": 
     post:
-      summary: Upload a post from a gzipped file
+      summary: Upload a post from a gzipped .nbb file
       requestBody:
         required: true
         content:
@@ -214,7 +220,7 @@ paths:
                   message:
                     type: string
                     example: not authorized
-  /update:
+  "/update":
     post:
       summary: Update post
       requestBody:
@@ -252,7 +258,7 @@ paths:
                   message:
                     type: string
                     example: not authorized
-  /updatemeta:
+  "/updatemeta":
     post:
       summary: Update only metadata of a post
       requestBody:
