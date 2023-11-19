@@ -4,8 +4,9 @@
  * License: MIT
  ************************************************/
 
-const prefix= "/api/1.0/"
-let port= 3000
+import { currentUser } from "./user"
+const prefix = "/api/1.0/"
+let port = 3000
 
 export let api: string = prefix
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -41,13 +42,13 @@ export async function request(url: string, query: Array<string> = []): Promise<a
             return result.result
         } else {
             alert(result.status + ": " + result.message)
-            // setUser({ role: "visitor", name: "visitor" })
+            currentUser.logout()
             return result.message
         }
     }
     alert(answer.status + ", " + answer.statusText)
     if (answer.status == 401) {
-        // setUser({ role: "visitor", name: "visitor" })
+        currentUser.logout()
     }
     return undefined
 }
@@ -75,7 +76,7 @@ export async function write(url: string, body: any): Promise<any> {
     } else {
         alert(answer.status + ", " + answer.statusText)
         if (answer.status == 401) {
-            // setUser({ role: "visitor", name: "visitor" })
+            currentUser.logout()
         }
         return undefined
     }

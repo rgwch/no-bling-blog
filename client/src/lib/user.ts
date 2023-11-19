@@ -96,7 +96,7 @@ export class User {
     /**
      * Logout the user. Will remove the JWT from local storage and set the user to nobody.
      */
-    async logout() {
+    public async logout() {
         localStorage.removeItem("token")
         this.set(nobody)
     }
