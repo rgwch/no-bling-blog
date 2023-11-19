@@ -22,6 +22,10 @@ const indexdb = "nbbindex"
 /**
  * Check environment variables and set defaults
  */
+if (!process.env.jwt_secret) {
+    console.log("No JWT secret set. Please set the environment variable jwt_secret")
+    process.exit(1)
+}
 if (!process.env.storage) {
     process.env.storage = "nedb"
 }
