@@ -82,6 +82,9 @@ export class User {
      * @returns true if the login was successful
      */
     public async login(user: string, password: string): Promise<boolean> {
+        if (user == "" || password == "") {
+            return false
+        }
         const result = await request(`login/${user}/${password}`)
         if (result) {
             const token = result.jwt

@@ -25,5 +25,7 @@
     "newcat": "New category",
     "draft": "Draft",
     "featured": "Featured",
-    "priority": "Priority"
+    "priority": "Priority",
+    "empty_usr": "username and password must not be empty",
+    "wrong_usr": "wrong username or password"
 }

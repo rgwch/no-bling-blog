@@ -11,41 +11,56 @@
         actUser = u;
         loggedIn = currentUser.isLoggedIn();
     });
-    function logout(){
+    function logout() {
         currentUser.logout();
         loggedIn = false;
-        open=false
+        open = false;
+    }
+    async function login() {
+        if (username == "" || password == "") {
+            errmsg = $_("empty_usr");
+            return;
+        }
+        if (await currentUser.login(username, password)) {
+            loggedIn = true;
+            open = false;
+            errmsg=""
+        }else{
+            errmsg = $_("wrong_usr");
+        }
     }
 </script>
 
 <div class="flex flex-col md:flex-row">
     {#if !loggedIn}
         {#if open}
-            {#if errmsg}
-                <span class="text-red-600">{errmsg}</span>
-            {/if}
-            <input
-                class="input text-sm"
-                type="text"
-                placeholder={$_("username")}
-                bind:value={username} />
-            <input
-                class="input text-sm"
-                type="password"
-                placeholder={$_("password")}
-                bind:value={password} />
+            <div class="flex flex-col">
+                <div class="flex flex-row">
+                    <input
+                        class="input text-sm"
+                        type="text"
+                        placeholder={$_("username")}
+                        bind:value={username} />
+                    <input
+                        class="input text-sm"
+                        type="password"
+                        placeholder={$_("password")}
+                        bind:value={password} />
+                </div>
+                {#if errmsg}
+                    <span class="text-red-600">{errmsg}</span>
+                {/if}
+            </div>
             <button
                 class="text-2xl md:text-sm px-3 hover:text-blue-500"
-                on:click={() => currentUser.login(username, password)}
-                >{$_("login")}</button>
+                on:click={login}>{$_("login")}</button>
         {:else}
             <button
                 class="text-sm px-3 hover:text-blue-500"
                 on:click={() => (open = true)}>{$_("login")}</button>
         {/if}
     {:else}
-        <button
-            class="text-sm px-3 hover:text-blue-500"
-            on:click={logout}>{$currentUser.name}</button>
+        <button class="text-sm px-3 hover:text-blue-500" on:click={logout}
+            >{$currentUser.name}</button>
     {/if}
 </div>

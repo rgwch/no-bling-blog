@@ -25,5 +25,7 @@
     "mewcat": "Nouvelle catégorie",
     "draft": "Brouillon",
     "featured": "En vedette",
-    "priority": "Priorité"
+    "priority": "Priorité",
+    "empty_usr": "Nom ou mot de passe vide",
+    "wrong_usr": "Nom ou mot de passe incorrect"
 }
