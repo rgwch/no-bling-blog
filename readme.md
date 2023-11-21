@@ -16,7 +16,8 @@ This is a very simple Blog app with no bling-bling (hence the name).
    basedir=../data
    jwt_secret=choose something else
    ```
-   (Stay with these defaults for you first tests. For other possible entries, see server/env.sample)
+   Stay with these defaults for you first tests. For other possible entries, see server/env.sample
+   Of course, you can as well set the respective environment variables any other way as well.
 
 1.  `./run.sh` will bring up the management interface:
     ```
@@ -88,7 +89,7 @@ Note: The image will not display in development mode.
 
 It is possible to have source code examples colorized. Under the hood,  [highlight.js](https://highlightjs.org/) is used, so the same languages are supported.
 
-Use usual code fences (``` or ~~~) to declare code to highlight. Alternatively you can use a single dash followed by the language name:
+Use usual code fences (``` or ~~~) to declare code to highlight. Alternatively you can use a single dash at the beginning of a line, followed by the language name:
 
 <pre>
 -javascript
@@ -119,7 +120,7 @@ You can assign a priority to a post. When created, a post has priority 0. Posts 
 
 It is possible to export a post with all its metadata, and to import such an exported post into the same or another instance of NoBlingBlog. You need to be an editor or an admin to export and import posts.
 
-* Cllick the "export" button to download a gzipped file
+* Cllick the "export" button to download a gzipped file with the extension ".nbb".
 * Create a new Post and use the "upload" button to import a file previously created by export.
 
 ## Design
@@ -173,7 +174,6 @@ Recommended: Use the [Passenger](https://www.phusionpassenger.com/) AppServer. I
 
 Add the following configuration to /etc/apache2/sites_available:
 
-nbb.conf:
 ```
 <VirtualHost *:80>
         ServerName noblingblog.url.invalid
@@ -192,7 +192,7 @@ nbb.conf:
 </VirtualHost>
 
 ```
-(Of course, you must replace `noblingblog.url.invalid` with the real url of your blog site.)
+(Of course, you must replace `noblingblog.url.invalid` with the real url of your blog site, and of course you must have a DNS setup to direct calls to this url to your server.)
 
 Then, enable the new site:
 
