@@ -297,6 +297,14 @@ export class Documents {
             const cr = between.split(/[,\-]/)
             query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
         }
+        const prio = q["priority"]
+        if (prio) {
+            query.priority = parseInt(prio)
+        }
+        const featured = q["featured"]
+        if (featured) {
+            query.featured = featured == "true" ? true : false
+        }
         const skip = parseInt(q['skip'] || "0")
         const limit = parseInt(q['limit'] || "1000")
         let posts: Array<post> = await this.db.find(docdb, query, skip, limit)

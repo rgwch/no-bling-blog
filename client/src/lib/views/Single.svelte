@@ -176,6 +176,14 @@
                         on:change={doSaveMeta} />
                 </span>
                 <span class="btn">
+                    <span>{$_("featured")}: </span>
+                    <input
+                        type="checkbox"
+                        bind:checked={post.featured}
+                        on:change={doSaveMeta} />
+                </span>
+                
+                <span class="btn">
                     <span>{$_("priority")}</span>
                     <input
                         class="w-10"

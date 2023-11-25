@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Router, Link, Route, navigate } from 'svelte-routing';
   import Summary from './lib/views/Summary.svelte';
+  import Home from './lib/views/Home.svelte';
   import Login from './lib/components/Login.svelte';
   import Single from './lib/views/Single.svelte';
   import Create from './lib/views/Create.svelte';
@@ -14,7 +15,7 @@
 <main>
   <div class="container mx-auto">
     <div
-      class="bg-blue-200 flex flex-col md:flex-row flex-nowrap items-center mx-5 px-5">
+      class="bg-blue-200 flex flex-col md:flex-row flex-nowrap items-center px-5">
       <div
         class="py-1 mr-2"
         on:click={() => navigate('/')}
@@ -28,7 +29,7 @@
       <Login />
     </div>
     <Router>
-      <Route path="/" component={Summary} />
+      <Route path="/" component={Home} />
       <Route path="/post/:id" let:params>
         <Single id={params.id} />
       </Route>
