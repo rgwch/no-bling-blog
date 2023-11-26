@@ -12,9 +12,3 @@
   }
   reset();
 </script>
-
-<div class="m-1 p-2">
-  {#each posts as post}
-    <p class="mt-2 hover:text-blue-600"><a href="/post/{post._id}">{post.heading}</a></p>
-  {/each}
-</div>

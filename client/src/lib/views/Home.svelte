@@ -4,16 +4,25 @@
 </script>
 
 <div class="gridle">
-  <div class="bg-gray-200"><Featured /></div>
+  <div class="invisible md:visible md:bg-gray-200"><Featured /></div>
   <div><Summary /></div>
 </div>
 
 <style>
   .gridle {
-    display: grid;
-    grid-template: 1fr/1fr 6fr;
+   display: grid;
     gap: 0px 2px;
     justify-items: stretch;
     align-items: top;
   }
+  @media (min-width: 768px) {
+    .gridle {
+      display: grid;
+      grid-template: 1fr/1fr 6fr;
+      gap: 0px 2px;
+      justify-items: stretch;
+      align-items: top;
+    }
+  }
+  
 </style>

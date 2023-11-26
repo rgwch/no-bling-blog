@@ -5,6 +5,8 @@
     import type { post } from "../types";
     import { request, write, api } from "../io";
     import { _ } from "svelte-i18n";
+    import Featured from "./Featured.svelte";
+    import Blogposts from "./Blogposts.svelte";
     export let id: string;
     let post: post;
     let editmode = false;
@@ -95,113 +97,146 @@
     }
 </script>
 
-{#if post}
-    <p class="text-sm text-gray-400">
-        <a href="/">{$_("home")}</a>
-        [<a href={`/time/${year(post.created)}`}>{year(post.created)}</a>] [<a
-            href={`/cat/${post.category}`}>{post.category}</a
-        >]
-    </p>
-    {#if editmode}
-        <div
-            class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-2">
-            <div
-                contenteditable="true"
-                class="text-blue-800 font-bold text-lg mb-4 text-center"
-                bind:innerText={post.heading} />
-            <p class="text-sm">{$_("summary")}:</p>
-            <div
-                class="border border-sm border-blue-600 mb-2 p-1"
-                contenteditable="true"
-                bind:innerText={post.teaser} />
-            <p class="text-sm">{$_("fulltext")}:</p>
-            <div
-                class="border border-sm border-blue-600 mb-2 p-1"
-                contenteditable="true"
-                on:keydown={notab}
-                role="textbox"
-                tabindex="-1"
-                bind:innerText={post.fulltext} />
-            <div class="text-sm font-light italic">
-                {$_("category")}:
-                <span contenteditable="true" bind:textContent={post.category}
-                    >{post.category}</span>
-                <span
-                    class="ml-5"
-                    contenteditable="true"
-                    bind:textContent={post.author}
-                    >{$_("author")}: {post.author}</span>
-                <span
-                    class="ml-5"
-                    contenteditable="true"
-                    bind:textContent={date}>{$_("created")}: {date}</span>
-                <span class="ml-5">{$_("modified")}: {modified}</span>
-            </div>
-        </div>
-        <button class="btn" on:click={doSaveAll}>{$_("save")}</button>
-        <button class="btn" on:click={doEdit}>{$_("cancel")}</button>
-        <span class="btn">
-            <span>{$_("published")}: </span>
-            <input
-                type="checkbox"
-                bind:checked={post.published}
-                on:click={doSaveAll} />
-        </span>
-    {:else}
-        <div
-            class="mx-auto prose md:prose-lg border-blue-600 rounded-md my-3 p-5">
-            <div class="text-blue-800 font-bold text-lg mb-4 text-center">
-                {post.heading}
-            </div>
-            <div>{@html post.fulltext}</div>
-            <div
-                class="text-sm font-light italic border border-t-blue-700 flex">
-                <span
-                    >{$_("category")}:
-                    {post.category}</span>
-                <span class="ml-5">{$_("author")}: {post.author}</span>
-                <span class="ml-5">{$_("created")}: {date}</span>
-                <span class="ml-5">{$_("modified")}: {modified}</span>
-            </div>
-        </div>
-        {#if canEdit()}
-            <div class="flex justify-center">
-                <button class="btn" on:click={doDelete}>{$_("delete")}</button>
-                <button class="btn" on:click={doEdit}>{$_("edit")}</button>
+<div class="gridle">
+    <div class="invisible md:visible"><Featured /></div>
+    <div>
+        {#if post}
+            <p class="text-sm text-gray-400">
+                <a href="/">{$_("home")}</a>
+                [<a href={`/time/${year(post.created)}`}>{year(post.created)}</a
+                >] [<a href={`/cat/${post.category}`}>{post.category}</a>]
+            </p>
+            {#if editmode}
+                <div
+                    class="bg-blue-200 border-blue-600 border-2 rounded-md my-3 mx-5 p-2">
+                    <div
+                        contenteditable="true"
+                        class="text-blue-800 font-bold text-lg mb-4 text-center"
+                        bind:innerText={post.heading} />
+                    <p class="text-sm">{$_("summary")}:</p>
+                    <div
+                        class="border border-sm border-blue-600 mb-2 p-1"
+                        contenteditable="true"
+                        bind:innerText={post.teaser} />
+                    <p class="text-sm">{$_("fulltext")}:</p>
+                    <div
+                        class="border border-sm border-blue-600 mb-2 p-1"
+                        contenteditable="true"
+                        on:keydown={notab}
+                        role="textbox"
+                        tabindex="-1"
+                        bind:innerText={post.fulltext} />
+                    <div class="text-sm font-light italic">
+                        {$_("category")}:
+                        <span
+                            contenteditable="true"
+                            bind:textContent={post.category}
+                            >{post.category}</span>
+                        <span
+                            class="ml-5"
+                            contenteditable="true"
+                            bind:textContent={post.author}
+                            >{$_("author")}: {post.author}</span>
+                        <span
+                            class="ml-5"
+                            contenteditable="true"
+                            bind:textContent={date}
+                            >{$_("created")}: {date}</span>
+                        <span class="ml-5">{$_("modified")}: {modified}</span>
+                    </div>
+                </div>
+                <button class="btn" on:click={doSaveAll}>{$_("save")}</button>
+                <button class="btn" on:click={doEdit}>{$_("cancel")}</button>
                 <span class="btn">
                     <span>{$_("published")}: </span>
                     <input
                         type="checkbox"
                         bind:checked={post.published}
-                        on:change={doSaveMeta} />
+                        on:click={doSaveAll} />
                 </span>
-                <span class="btn">
-                    <span>{$_("featured")}: </span>
-                    <input
-                        type="checkbox"
-                        bind:checked={post.featured}
-                        on:change={doSaveMeta} />
-                </span>
-                
-                <span class="btn">
-                    <span>{$_("priority")}</span>
-                    <input
-                        class="w-10"
-                        type="number"
-                        width="2"
-                        bind:value={post.priority}
-                        on:change={doSaveMeta} />
-                </span>
-                <a class="btn" href={api + "export/" + post._id} target="_self"
-                    >Export</a>
-                <button class="btn" on:click={back}>{$_("back")}</button>
-            </div>
+            {:else}
+                <div
+                    class="mx-auto prose md:prose-lg border-blue-600 rounded-md my-3 p-5">
+                    <div
+                        class="text-blue-800 font-bold text-lg mb-4 text-center">
+                        {post.heading}
+                    </div>
+                    <div>{@html post.fulltext}</div>
+                    <div
+                        class="text-sm font-light italic border border-t-blue-700 flex">
+                        <span
+                            >{$_("category")}:
+                            {post.category}</span>
+                        <span class="ml-5">{$_("author")}: {post.author}</span>
+                        <span class="ml-5">{$_("created")}: {date}</span>
+                        <span class="ml-5">{$_("modified")}: {modified}</span>
+                    </div>
+                </div>
+                {#if canEdit()}
+                    <div class="flex justify-center">
+                        <button class="btn" on:click={doDelete}
+                            >{$_("delete")}</button>
+                        <button class="btn" on:click={doEdit}
+                            >{$_("edit")}</button>
+                        <span class="btn">
+                            <span>{$_("published")}: </span>
+                            <input
+                                type="checkbox"
+                                bind:checked={post.published}
+                                on:change={doSaveMeta} />
+                        </span>
+                        <span class="btn">
+                            <span>{$_("featured")}: </span>
+                            <input
+                                type="checkbox"
+                                bind:checked={post.featured}
+                                on:change={doSaveMeta} />
+                        </span>
+
+                        <span class="btn">
+                            <span>{$_("priority")}</span>
+                            <input
+                                class="w-10"
+                                type="number"
+                                width="2"
+                                bind:value={post.priority}
+                                on:change={doSaveMeta} />
+                        </span>
+                        <a
+                            class="btn"
+                            href={api + "export/" + post._id}
+                            target="_self">Export</a>
+                        <button class="btn" on:click={back}
+                            >{$_("back")}</button>
+                    </div>
+                {:else}
+                    <div class="flex justify-center">
+                        <button class="btn" on:click={back}
+                            >{$_("back")}</button>
+                    </div>
+                {/if}
+            {/if}
         {:else}
-            <div class="flex justify-center">
-                <button class="btn" on:click={back}>{$_("back")}</button>
-            </div>
+            <div>No Text</div>
         {/if}
-    {/if}
-{:else}
-    <div>No Text</div>
-{/if}
+    </div>
+    <div class="invisible md:visible"><Blogposts /></div>
+</div>
+
+<style>
+    .gridle {
+        display: grid;
+        gap: 0px 2px;
+        justify-items: stretch;
+        align-items: top;
+    }
+    @media (min-width: 768px) {
+        .gridle {
+            display: grid;
+            grid-template: 1fr/1fr 6fr 1fr;
+            gap: 0px 2px;
+            justify-items: stretch;
+            align-items: top;
+        }
+    }
+</style>
