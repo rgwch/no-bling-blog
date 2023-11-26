@@ -264,6 +264,13 @@ export class Documents {
         return entry
     }
 
+    private makedate(date: string, endOfYear: boolean): Date {
+        if (date.length == 4) {
+            return new Date(date + (endOfYear ? "-12-31" : "-01-01"))
+        } else {
+            return new Date(date)
+        }
+    }
     /**
      * Find posts matching given criteria
      * @param q [Category, from, until, between, text]
@@ -286,16 +293,16 @@ export class Documents {
         }
         const from = q["from"]
         if (from) {
-            query.created = { $gte: new Date(from + "-01-01") }
+            query.created = { $gte: this.makedate(from, false) }
         }
         const until = q["until"]
         if (until) {
-            query.created = { $lte: new Date(until + "-12-31") }
+            query.created = { $lte: this.makedate(until, true) }
         }
         const between = q["between"]
         if (between) {
-            const cr = between.split(/[,\-]/)
-            query.$and = [{ created: { $gte: new Date(cr[0] + "-01-01") } }, { created: { $lte: new Date(cr[1] + "-12-31") } }]
+            const cr = between.split(/,/)
+            query.$and = [{ created: { $gte: this.makedate(cr[0], false) } }, { created: { $lte: this.makedate(cr[1], true) } }]
         }
         const prio = q["priority"]
         if (prio) {
@@ -337,6 +344,11 @@ export class Documents {
         } else {
             return null
         }
+    }
+
+    public async getMeta(id: string): Promise<post> {
+        const entry = await this.db.get(docdb, id, { nullIfMissing: true })
+        return entry
     }
 
     /**

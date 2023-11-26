@@ -1,41 +1,41 @@
 <script lang="ts">
-    import { currentUser } from "../user";
-    import { navigate } from "svelte-routing";
-    import { DateTime } from "luxon";
-    import type { post } from "../types";
-    import { request, write, api } from "../io";
-    import { _ } from "svelte-i18n";
-    import Featured from "./Featured.svelte";
-    import Blogposts from "./Blogposts.svelte";
+    import { currentUser } from '../user';
+    import { navigate } from 'svelte-routing';
+    import { DateTime } from 'luxon';
+    import type { post } from '../types';
+    import { request, write, api } from '../io';
+    import { _ } from 'svelte-i18n';
+    import Featured from './Featured.svelte';
+    import Blogposts from './Blogposts.svelte';
     export let id: string;
     let post: post;
     let editmode = false;
-    let date: string = "";
-    let modified: string = "";
+    let date: string = '';
+    let modified: string = '';
 
     reload();
 
     function reload() {
-        request("read/" + id, [`raw=${editmode}`]).then(async (result) => {
+        request('read/' + id, [`raw=${editmode}`]).then(async (result) => {
             if (result) {
                 post = result;
                 date = DateTime.fromJSDate(new Date(result.created)).toFormat(
-                    $_("dateformat")
+                    $_('dateformat'),
                 );
                 modified = DateTime.fromJSDate(
-                    new Date(result.modified)
-                ).toFormat($_("dateformat"));
+                    new Date(result.modified),
+                ).toFormat($_('dateformat'));
             }
         });
     }
     function back() {
-        navigate("/");
+        navigate('/');
     }
     async function doDelete() {
-        if (confirm($_("suredelete"))) {
-            const result = await request("delete/" + post._id);
+        if (confirm($_('suredelete'))) {
+            const result = await request('delete/' + post._id);
             if (result) {
-                navigate("/");
+                navigate('/');
             } else {
                 alert(result.message);
             }
@@ -46,28 +46,28 @@
         await reload();
     }
     async function doSaveAll() {
-        const dt = DateTime.fromFormat(date, $_("dateformat"));
+        const dt = DateTime.fromFormat(date, $_('dateformat'));
         if (dt.isValid) {
             post.created = dt.toJSDate();
         } else {
-            alert($_("invaliddate"));
+            alert($_('invaliddate'));
             return;
         }
-        await write("update", post);
+        await write('update', post);
         editmode = false;
         await reload();
     }
     async function doSaveMeta() {
-        await write("updatemeta", post);
+        await write('updatemeta', post);
     }
     async function doExport() {
-        await request("export/" + post._id);
+        await request('export/' + post._id);
     }
     $: canEdit = () => {
-        if ($currentUser.role == "admin") {
+        if ($currentUser.role == 'admin') {
             return true;
         }
-        if ($currentUser.role == "editor") {
+        if ($currentUser.role == 'editor') {
             return (
                 $currentUser.name == post.author ||
                 $currentUser.label == post.author
@@ -82,27 +82,27 @@
         let range = selection?.getRangeAt(0);
         range?.deleteContents();
         range?.insertNode(node);
-        selection?.modify("move", "right", "character");
+        selection?.modify('move', 'right', 'character');
     }
     function notab(event: any) {
-        if (event.key == "Tab") {
+        if (event.key == 'Tab') {
             event.preventDefault();
-            insertTextAtCursor("\u00a0\u00a0\u00a0\u00a0");
+            insertTextAtCursor('\u00a0\u00a0\u00a0\u00a0');
             post.fulltext = event.target.innerText;
         }
     }
     function year(date: string | Date | undefined) {
-        if (!date) return "";
-        return DateTime.fromJSDate(new Date(date)).toFormat("yyyy");
+        if (!date) return '';
+        return DateTime.fromJSDate(new Date(date)).toFormat('yyyy');
     }
 </script>
 
 <div class="gridle">
-    <div class="invisible md:visible"><Featured /></div>
+    <div class="invisible h-0 md:visible md:bg-gray-200"><Featured /></div>
     <div>
         {#if post}
             <p class="text-sm text-gray-400">
-                <a href="/">{$_("home")}</a>
+                <a href="/">{$_('home')}</a>
                 [<a href={`/time/${year(post.created)}`}>{year(post.created)}</a
                 >] [<a href={`/cat/${post.category}`}>{post.category}</a>]
             </p>
@@ -113,12 +113,12 @@
                         contenteditable="true"
                         class="text-blue-800 font-bold text-lg mb-4 text-center"
                         bind:innerText={post.heading} />
-                    <p class="text-sm">{$_("summary")}:</p>
+                    <p class="text-sm">{$_('summary')}:</p>
                     <div
                         class="border border-sm border-blue-600 mb-2 p-1"
                         contenteditable="true"
                         bind:innerText={post.teaser} />
-                    <p class="text-sm">{$_("fulltext")}:</p>
+                    <p class="text-sm">{$_('fulltext')}:</p>
                     <div
                         class="border border-sm border-blue-600 mb-2 p-1"
                         contenteditable="true"
@@ -127,7 +127,7 @@
                         tabindex="-1"
                         bind:innerText={post.fulltext} />
                     <div class="text-sm font-light italic">
-                        {$_("category")}:
+                        {$_('category')}:
                         <span
                             contenteditable="true"
                             bind:textContent={post.category}
@@ -136,19 +136,19 @@
                             class="ml-5"
                             contenteditable="true"
                             bind:textContent={post.author}
-                            >{$_("author")}: {post.author}</span>
+                            >{$_('author')}: {post.author}</span>
                         <span
                             class="ml-5"
                             contenteditable="true"
                             bind:textContent={date}
-                            >{$_("created")}: {date}</span>
-                        <span class="ml-5">{$_("modified")}: {modified}</span>
+                            >{$_('created')}: {date}</span>
+                        <span class="ml-5">{$_('modified')}: {modified}</span>
                     </div>
                 </div>
-                <button class="btn" on:click={doSaveAll}>{$_("save")}</button>
-                <button class="btn" on:click={doEdit}>{$_("cancel")}</button>
+                <button class="btn" on:click={doSaveAll}>{$_('save')}</button>
+                <button class="btn" on:click={doEdit}>{$_('cancel')}</button>
                 <span class="btn">
-                    <span>{$_("published")}: </span>
+                    <span>{$_('published')}: </span>
                     <input
                         type="checkbox"
                         bind:checked={post.published}
@@ -165,28 +165,28 @@
                     <div
                         class="text-sm font-light italic border border-t-blue-700 flex">
                         <span
-                            >{$_("category")}:
+                            >{$_('category')}:
                             {post.category}</span>
-                        <span class="ml-5">{$_("author")}: {post.author}</span>
-                        <span class="ml-5">{$_("created")}: {date}</span>
-                        <span class="ml-5">{$_("modified")}: {modified}</span>
+                        <span class="ml-5">{$_('author')}: {post.author}</span>
+                        <span class="ml-5">{$_('created')}: {date}</span>
+                        <span class="ml-5">{$_('modified')}: {modified}</span>
                     </div>
                 </div>
                 {#if canEdit()}
                     <div class="flex justify-center">
                         <button class="btn" on:click={doDelete}
-                            >{$_("delete")}</button>
+                            >{$_('delete')}</button>
                         <button class="btn" on:click={doEdit}
-                            >{$_("edit")}</button>
+                            >{$_('edit')}</button>
                         <span class="btn">
-                            <span>{$_("published")}: </span>
+                            <span>{$_('published')}: </span>
                             <input
                                 type="checkbox"
                                 bind:checked={post.published}
                                 on:change={doSaveMeta} />
                         </span>
                         <span class="btn">
-                            <span>{$_("featured")}: </span>
+                            <span>{$_('featured')}: </span>
                             <input
                                 type="checkbox"
                                 bind:checked={post.featured}
@@ -194,7 +194,7 @@
                         </span>
 
                         <span class="btn">
-                            <span>{$_("priority")}</span>
+                            <span>{$_('priority')}</span>
                             <input
                                 class="w-10"
                                 type="number"
@@ -204,15 +204,15 @@
                         </span>
                         <a
                             class="btn"
-                            href={api + "export/" + post._id}
+                            href={api + 'export/' + post._id}
                             target="_self">Export</a>
                         <button class="btn" on:click={back}
-                            >{$_("back")}</button>
+                            >{$_('back')}</button>
                     </div>
                 {:else}
                     <div class="flex justify-center">
                         <button class="btn" on:click={back}
-                            >{$_("back")}</button>
+                            >{$_('back')}</button>
                     </div>
                 {/if}
             {/if}
@@ -220,7 +220,7 @@
             <div>No Text</div>
         {/if}
     </div>
-    <div class="invisible md:visible"><Blogposts /></div>
+    <div class="invisible h-0 md:visible"><Blogposts currentID={id} /></div>
 </div>
 
 <style>

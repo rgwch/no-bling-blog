@@ -96,6 +96,24 @@ export class Server {
         })
 
         /**
+         * Get Metadata of one post by its _id
+         */
+        this.hono.get(prefix + "meta/:id", async c => {
+            const params = c.req.param()
+            if (params["id"]) {
+                const entry = await docs.getMeta(params["id"])
+                if (entry) {
+                    return c.json({ status: "ok", result: entry })
+                } else {
+                    throw new Error("no such entry")
+                }
+            } else {
+                throw new Error("no id supplied")
+            }
+
+        })
+
+        /**
          * Retrieve one post by its _id
          */
         this.hono.get(prefix + "read/:id", async (c) => {

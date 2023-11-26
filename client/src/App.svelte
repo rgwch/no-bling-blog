@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Router, Link, Route, navigate } from 'svelte-routing';
   import Summary from './lib/views/Summary.svelte';
-  import Home from './lib/views/Home.svelte';
   import Login from './lib/components/Login.svelte';
   import Single from './lib/views/Single.svelte';
   import Create from './lib/views/Create.svelte';
@@ -29,7 +28,7 @@
       <Login />
     </div>
     <Router>
-      <Route path="/" component={Home} />
+      <Route path="/" component={Summary} />
       <Route path="/post/:id" let:params>
         <Single id={params.id} />
       </Route>
