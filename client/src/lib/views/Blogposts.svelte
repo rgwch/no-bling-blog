@@ -24,8 +24,14 @@
 <div class="bg-gray-200 mt-2 p-1 h-[75vh] overflow-auto">
   {#each posts as post}
     <div class="mt-2 hover:text-blue-600 text-sm">
-      <p class="text-gray-500 text-xs">{date(post.created)}:</p>
-      <a href="/post/{post._id}">{post.heading}</a>
+      <p class="text-gray-500 text-xs" >{date(post.created)}:</p>
+      <a class:bold={post._id==currentID} href="/post/{post._id}">{post.heading}</a>
     </div>
   {/each}
 </div>
+
+<style>
+  .bold{
+    font-weight: bold;  
+    }
+</style>
