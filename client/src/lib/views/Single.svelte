@@ -99,7 +99,7 @@
 
 <div class="gridle">
     <div class="invisible h-0 md:visible md:bg-gray-200"><Featured /></div>
-    <div>
+    <div class="h-[75vh] overflow-y-auto">
         {#if post}
             <p class="text-sm text-gray-400">
                 <a href="/">{$_('home')}</a>
