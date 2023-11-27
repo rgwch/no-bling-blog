@@ -12,7 +12,7 @@
 </script>
 
 <main>
-  <div class="container mx-auto">
+  <div class="container mx-auto min-h-screen max-h-screen">
     <div
       class="bg-blue-200 flex flex-col md:flex-row flex-nowrap items-center px-5">
       <div
