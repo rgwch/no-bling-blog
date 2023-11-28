@@ -1,5 +1,5 @@
 import htmlmeta from 'html-metadata'
-import {logger} from '../logger'
+import { logger } from '../logger'
 
 // const metascraper = metaScraper([description(), title(), date(), author()])
 
@@ -144,6 +144,8 @@ export class MetaScraper {
                 height: 0,
                 width: 0
             }
+        } else if (Array.isArray(el)) {
+            return this.loadImage(el[0])
         } else {
             return el
         }

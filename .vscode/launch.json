@@ -1,4 +1,3 @@
-
 {
     // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
     // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
@@ -12,8 +11,10 @@
                 "run-script",
                 "dev"
             ],
-            "cwd":"${workspaceFolder}/server",
-            "env":{ "NODE_ENV": "development"},
+            "cwd": "${workspaceFolder}/server",
+            "env": {
+                "NODE_ENV": "development"
+            },
             "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
@@ -23,7 +24,7 @@
         {
             "name": "Debug Tests",
             "request": "launch",
-            "cwd":"${workspaceFolder}/server",
+            "cwd": "${workspaceFolder}/server",
             "runtimeArgs": [
                 "run-script",
                 "test"
@@ -34,10 +35,11 @@
             ],
             "type": "node",
             "outputCapture": "std",
-        },       {
+        },
+        {
             "name": "Debug single test",
             "request": "launch",
-            "cwd":"${workspaceFolder}/server",
+            "cwd": "${workspaceFolder}/server",
             "runtimeArgs": [
                 "run-script",
                 "testdoc"
@@ -48,9 +50,21 @@
             ],
             "type": "node",
             "outputCapture": "std",
+        }, {
+            "name": "Debug scraper",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/server",
+            "runtimeArgs": [
+                "jest",
+                "src/scrapers/scraper.test.ts"
+            ],
+            "runtimeExecutable": "npx",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "outputCapture": "std",
         }
- 
-    
-        
+
     ]
 }
