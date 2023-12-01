@@ -17,6 +17,7 @@ import { serve } from '@hono/node-server'
 import { promisify } from 'node:util';
 import { gzip, gunzip } from 'node:zlib';
 import { existsSync } from 'node:fs';
+import pck from '../package.json'
 const zip = promisify(gzip)
 const unzip = promisify(gunzip)
 
@@ -80,6 +81,13 @@ export class Server {
             }
             return false;
         }
+
+        /**
+         * Get the version of the server
+         */
+        this.hono.get(prefix + "version", async c => {
+            return c.json({ status: "ok", result: pck.version })
+        })
 
         /**
          * Find all posts matching given criteria 

@@ -174,6 +174,9 @@ export class Documents {
                                 }
                             }
                             document = document.replace(link, "[[" + JSON.stringify(repl) + "]]")
+                        } else {
+                            document = document.replace(link, link.substring(2, link.length - 2))
+
                         }
                     }
                 }

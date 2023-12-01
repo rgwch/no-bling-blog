@@ -72,8 +72,16 @@ export class MetaScraper {
                         return true
                     }
                 }
+            } else if (this.meta.openGraph) {
+                this.title = this.meta.openGraph.title || this.meta.general?.title || ""
+                this.description = this.meta.openGraph.description || this.meta.general?.description || ""
+                this.image = this.loadImage(this.meta.openGraph.image)
+                this.author = this.meta.general?.author || "anonymous"
+                return this.title != "" || this.description != "" || this.image != null
+            } else {
+                return false
+
             }
-            return false
         } catch (err) {
             logger.warn(err)
             return false
