@@ -5,7 +5,13 @@ info:
 servers:
   - url: http://localhost:3000/api/1.0
 paths:
-  /summary:
+  "/version":
+    get:
+      description: "Get the version of the server and the client"
+      responses:
+        "200":
+          description: OK
+  "/summary":
     get:
       description: "Get a summary of posts with the given criteria (or all posts if no criteria)"
       parameters:
@@ -50,7 +56,7 @@ paths:
           in: query
           schema:
             type: integer
-          required: false    
+          required: false
       responses:
         "200":
           description: OK
@@ -86,7 +92,7 @@ paths:
           description: OK
         "401":
           description: Unauthorized
-  "/delete/{id}": 
+  "/delete/{id}":
     get:
       description: "Delete a post"
       parameters:
@@ -178,7 +184,7 @@ paths:
                   message:
                     type: string
                     example: not authorized
-  "/upload": 
+  "/upload":
     post:
       summary: Upload a post from a gzipped .nbb file
       requestBody:
