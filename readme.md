@@ -209,3 +209,16 @@ sudo certbot --apache
 sudo systemctl restart apache2
 ```
 
+### Run in Docker
+
+Create dockerfile with:
+
+`docker build . -t nbb:1.0`
+
+Then, run the file with:
+
+`docker run -p8080:3000 nbb:1.0 --name my_blog`
+
+And navigate to `http://localhost:8080`
+
+note: existing users.json will be used.
