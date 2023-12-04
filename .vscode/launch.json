@@ -34,7 +34,7 @@
                 "<node_internals>/**"
             ],
             "type": "node",
-            "outputCapture": "std",
+            "outputCapture": "std"
         },
         {
             "name": "Debug single test",
@@ -49,8 +49,9 @@
                 "<node_internals>/**"
             ],
             "type": "node",
-            "outputCapture": "std",
-        }, {
+            "outputCapture": "std"
+        },
+        {
             "name": "Debug scraper",
             "request": "launch",
             "cwd": "${workspaceFolder}/server",
@@ -63,8 +64,18 @@
                 "<node_internals>/**"
             ],
             "type": "node",
-            "outputCapture": "std",
+            "outputCapture": "std"
+        },
+        {
+            "name": "Docker Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node",
+            "node": {
+                "package": "${workspaceFolder}/server/package.json",
+                "localRoot": "${workspaceFolder}/server"
+            }
         }
-
     ]
 }

@@ -211,14 +211,8 @@ sudo systemctl restart apache2
 
 ### Run in Docker
 
-Create dockerfile with:
+Create container with `builddocker.sh` and/or run existing container with `rundocker.sh`.
 
-`docker build . -t nbb:1.0`
+Then, navigate to `http://localhost:8082`
 
-Then, run the file with:
-
-`docker run -p8080:3000 nbb:1.0 --name my_blog`
-
-And navigate to `http://localhost:8080`
-
-note: existing users.json will be used.
+note: existing data/users.json will be used.
