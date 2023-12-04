@@ -100,7 +100,11 @@
 
         {#if $currentUser?.role == 'admin' || $currentUser?.role == 'editor'}
             <button class="pt-3 mt-2" on:click={createNew}
-                ><img src="/page_add.png" alt="add post" /></button>
+                ><img src="/page_add.png" alt="add post" /></button>    
+        {/if}
+        {#if $currentUser?.role == 'admin'}
+            <button class="pt-3 mt-2" on:click={() => navigate('/users')}
+                ><img src="/system-users.png" alt="users" /></button>    
         {/if}
     </div>
 </div>

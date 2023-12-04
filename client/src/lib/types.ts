@@ -20,3 +20,8 @@ export type post = {
     priority?: number
 }
 
+export type user={
+    name: string
+    label: string
+    role: string
+}

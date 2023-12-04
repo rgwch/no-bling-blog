@@ -63,6 +63,14 @@ export class Server {
             }
             await next()
         })
+        this.hono.use(prefix + "admin/*", async (c, next) => {
+            if (currentUser.role == "admin") {
+                await next()
+            } else {
+                c.status(401)
+                return c.json({ status: "fail", message: "not authorized" })
+            }
+        })
         /**
          * Check access for current user to a given post
          * @param post post to check
@@ -91,6 +99,64 @@ export class Server {
             return c.json({ status: "ok", result: "Version Server:" + pck.version + "; client:" + cpck.version })
         })
 
+        /**
+         * Get the list of users (must be admin)
+         */
+        this.hono.get(prefix + "admin/users", async c => {
+            const usersfile = await fs.readFile(process.env.users, "utf-8")
+            const users = JSON.parse(usersfile)
+            return c.json({ status: "ok", result: users })
+        })
+
+        /**
+         * add a user to the users.json file (must be admin)
+         */
+        this.hono.get(prefix + "admin/adduser/:name/:role/:label?", async c => {
+            const params: any = c.req.param()
+            const usersfile = await fs.readFile(process.env.users, "utf-8")
+            const users = JSON.parse(usersfile)
+            const user = users.find(u => u.name == params.name)
+            if (user) {
+                return c.json({ status: "fail", message: "user already exists" })
+            }
+            users.push({ name: params.name, label: params.label || params.name, role: params.role })
+            await fs.writeFile(process.env.users, JSON.stringify(users))
+            return c.json({ status: "ok" })
+
+        })
+        /**
+         * delete a user from the users.json file (must be admin)
+         */
+        this.hono.get(prefix + "admin/deluser/:name", async c => {
+            const params: any = c.req.param()
+            const usersfile = await fs.readFile(process.env.users, "utf-8")
+            const users = JSON.parse(usersfile)
+            const user = users.find(u => u.name == params.name)
+            if (!user) {
+                return c.json({ status: "fail", message: "user not found" })
+            }
+            const index = users.indexOf(user)
+            users.splice(index, 1)
+            await fs.writeFile(process.env.users, JSON.stringify(users))
+            return c.json({ status: "ok" })
+
+        })
+        /**
+         * modify a user in the users.json file (must be admin)
+         */
+        this.hono.get(prefix + "admin/moduser/:name/:role/:label?", async c => {
+            const params: any = c.req.param()
+            const usersfile = await fs.readFile(process.env.users, "utf-8")
+            const users = JSON.parse(usersfile)
+            const user = users.find(u => u.name == params.name)
+            if (!user) {
+                return c.json({ status: "fail", message: "user not found" })
+            }
+            user.role = params.role
+            user.label = params.label || params.name
+            await fs.writeFile(process.env.users, JSON.stringify(users))
+            return c.json({ status: "ok" })
+        })
         /**
          * Find all posts matching given criteria 
          */
