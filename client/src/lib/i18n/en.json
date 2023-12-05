@@ -27,5 +27,9 @@
     "featured": "Featured",
     "priority": "Priority",
     "empty_usr": "username and password must not be empty",
-    "wrong_usr": "wrong username or password"
+    "wrong_usr": "wrong username or password",
+    "label": "Label",
+    "role": "Role",
+    "add": "Add",
+    "actions": "Actions"
 }

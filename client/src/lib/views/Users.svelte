@@ -1,6 +1,7 @@
 <script lang="ts">
     import { type user } from "../types";
     import { request } from "../io";
+    import { _ } from "svelte-i18n";
     let users: Array<user> = [];
     request("admin/users").then((result) => {
         users = result.map((u: user) => {
@@ -20,10 +21,10 @@
     <table>
         <thead>
             <tr class="text-left">
-                <th>Name</th>
-                <th>Label</th>
-                <th>Role</th>
-                <th>Actions</th>
+                <th>{$_('username')}</th>
+                <th>{$_('label')}</th>
+                <th>{$_('role')}</th>
+                <th>{$_('actions')}</th>
             </tr>
         </thead>
         <tbody>
@@ -38,16 +39,16 @@
                         </select>
                     </td>
                     <td class="p-4">
-                        <button class="btn">delete</button>
-                        <button class="btn">modify</button>
+                        <button class="btn">{$_('delete')}</button>
+                        <button class="btn">{$_('edit')}</button>
                     </td>
                 </tr>
             {/each}
             <tr>
-                <td><input type="text" placeholder="name" /></td>
-                <td><input type="text" placeholder="label" /></td>
-                <td><input type="text" placeholder="role" /></td>
-                <td><button class="btn mx-3">add</button></td>
+                <td><input type="text" placeholder={$_('username')} /></td>
+                <td><input type="text" placeholder={$_('label')} /></td>
+                <td><input type="text" placeholder={$_('role')} /></td>
+                <td><button class="btn mx-3">{$_('add')}</button></td>
             </tr>
         </tbody>
     </table>

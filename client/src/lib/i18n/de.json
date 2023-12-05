@@ -28,5 +28,9 @@
     "featured": "Gepinnt",
     "priority": "Priorität",
     "empty_usr": "Bitte geben Sie einen Namen und ein Passwort ein",
-    "wrong_usr": "Falscher Name oder Passwort"
+    "wrong_usr": "Falscher Name oder Passwort",
+    "label": "Bezeichnung",
+    "role": "Rolle",
+    "add": "Hinzufügen",
+    "actions": "Aktionen"
 }
