@@ -260,11 +260,18 @@ export class Server {
             const hash = createHash('sha256')
             hash.update(cred.pwd)
             const hashed = hash.digest().toString("base64")
-            const usersfile = await fs.readFile(process.env.users, "utf-8")
-            const users = JSON.parse(usersfile)
+            let users = []
+            // create users.json with default admin if it does not exist
+            if (existsSync(process.env.users) == false) {
+                users.push({ name: "admin", role: "admin", label: "Administrator" })
+                await fs.writeFile(process.env.users, JSON.stringify(users))
+            } else {
+                const usersfile = await fs.readFile(process.env.users, "utf-8")
+                users = JSON.parse(usersfile)
+            }
             const user = users.find(u => u.name == cred.user)
             if (user) {
-                if (!user.pass) {     // fist time login of a new user
+                if (!user.pass) {     // first time login of a new user
                     user.pass = hashed
                     await fs.writeFile(process.env.users, JSON.stringify(users))
                 }

@@ -14,7 +14,7 @@ This is a very simple Blog app with no bling-bling (hence the name).
 1. create a file server/.env with the following properties:
    ```
    basedir=../data
-   jwt_secret=choose something else
+   jwt_secret=choose_something_else
    ```
    Stay with these defaults for you first tests. For other possible entries, see server/env.sample
    Of course, you can as well set the respective environment variables any other way as well.
@@ -35,7 +35,8 @@ This is a very simple Blog app with no bling-bling (hence the name).
     |  q) Quit                                    |
     '---------------------------------------------'
     ```
-    For your first experiments, hit d for "create dummy posts" and then 2 for "create new user". Enter any username you like and "admin" when asked for the role. Then, launch the blog with 1 and navigate your favourite browser to `http://localhost:3000`. You'll have 100 fake posts to experiment. Login with your user name and any password (which will be set with your first login). Hit 'q' when you're done.
+    For your first experiments, hit d for "create dummy posts" and then 2 for "create new user". Enter any username you like and "admin" when asked for the role. (actually, this is not strictly necessary: If there's no user defined, nbb will create a default admin named "admin" on first login attempt).
+    Then, launch the blog with 1 and navigate your favourite browser to `http://localhost:3000`. You'll have 100 fake posts to experiment. Login with your user name and any password (which will be set with your first login). Hit 'q' when you're done.
 
 ![Screenshot](screenshot.jpg)
 
@@ -54,7 +55,7 @@ There are three different roles: admin, editor and visitor.
 * Editors need an account with the role set to 'editor'. They can read all published posts and their own unpublished posts. They can create new posts and edit, publish, or unpublish them.
 * Admins need an account with the role set to 'admin'. They can read, edit, publish, unpublish and delete any post.
 
-A user has a name (which must be unique) and optionally a label which is, what a visitor will see as the author name of a post. The label does not need to be unique, so several users can share an author name.
+A user has a name (which must be unique) and optionally a label which is, what a visitor will see as the author's name of a post. The label does not need to be unique, so several users can share an author name.
 
 If logged-in as an admin, the Users-management UI is accessible with this button: ![Users](client/public/system-users.png)
 
@@ -221,4 +222,10 @@ Create container with `builddocker.sh` and/or run existing container with `rundo
 
 Then, navigate to `http://localhost:8082`
 
-note: existing data/users.json will be used.
+note: on first start, there will be an Administrator user named "admin". The password is set on first login with that user name. It is recommended to create an administrator with a different name, log in as that user and delete the originial admin.
+
+## Localization
+
+No-Bling-Blog comes with german localization which should be quite ok, with english localization, which will have some errors, and with french localization, which will have many errors. Corrections are welcome. 
+
+Adding more languages is easy: Simply create a new language file, e.g. client/src/lib/i18n/it.json, and add the new language to client/src/lib/i18n/i18n.ts, like `addMessages('it', it);`. The language to use will be selected from the browser default, using the fallback locale, if no matching messages file is found.
