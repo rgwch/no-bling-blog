@@ -54,6 +54,8 @@ There are three different roles: admin, editor and visitor.
 * Editors need an account with the role set to 'editor'. They can read all published posts and their own unpublished posts. They can create new posts and edit, publish, or unpublish them.
 * Admins need an account with the role set to 'admin'. They can read, edit, publish, unpublish and delete any post.
 
+A user has a name (which must be unique) and optionally a label which is, what a visitor will see as the author name of a post. The label does not need to be unique, so several users can share an author name.
+
 If logged-in as an admin, the Users-management UI is accessible with this button: ![Users](client/public/system-users.png)
 
 ### Posts
