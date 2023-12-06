@@ -45,7 +45,7 @@ Launch `npm run dev` in the server directory and `npm run dev` in the client dir
 
 ## Concepts
 
-No-Bling-Blog is made for a single author or a small group of authors who know each other. So, creating new users happens only manually from the management console. The password is initially empty and will be whatever the newly created user enters the first time, they log in. Retrieval of a lost password ist not possible, but the admin can delete the pass property of a user entry in users.json so they can create a new password the next time, they log in.
+No-Bling-Blog is made for a single author or a small group of authors who know each other. So, creating new users happens only manually from the management console or from the admin UI. The password is initially empty and will be whatever the newly created user enters the first time, they log in. Retrieval of a lost password ist not possible, but admins can delete and re-create a user entry, so they can create a new password the next time, they log in.
 
 ### Users and roles
 
@@ -54,9 +54,13 @@ There are three different roles: admin, editor and visitor.
 * Editors need an account with the role set to 'editor'. They can read all published posts and their own unpublished posts. They can create new posts and edit, publish, or unpublish them.
 * Admins need an account with the role set to 'admin'. They can read, edit, publish, unpublish and delete any post.
 
+If logged-in as an admin, the Users-management UI is accessible with this button: ![Users](client/public/system-users.png)
+
 ### Posts
 
-A post is initially unpublished when created. Its editor or the admin can edit, publish and unpublish it. If published, it's visible to all visitors. If unpublished, it's only visible to its editor and to admin(s).
+if logged-in as an admin or as an editor, you can create a new post with this button: ![new Post](client/public/page_add.png)
+
+A post is initially unpublished when created. Its editor or an admin can edit, publish and unpublish it. If published, it's visible to all visitors. If unpublished, it's only visible to its editor and to admin(s).
 
 Posts can be written in the Markdown language. Most standard markups are supported. 
 For a summary of markdown's features look [here](https://daringfireball.net/projects/markdown/syntax).
