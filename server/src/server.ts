@@ -5,7 +5,7 @@
  ************************************************/
 
 import { Hono } from 'hono'
-import { post } from './types'
+import { Blogpost } from './types'
 import { cors } from 'hono/cors'
 import { Documents } from './documents.class'
 import { sign, verify } from 'hono/jwt'
@@ -76,7 +76,7 @@ export class Server {
          * @param post post to check
          * @returns true if currentUSser has write access to the post
          */
-        function hasAccess(post: post): boolean {
+        function hasAccess(post: Blogpost): boolean {
             if (currentUser.role == "admin") {
                 return true
             }
@@ -161,7 +161,7 @@ export class Server {
          * Find all posts matching given criteria 
          */
         this.hono.get(prefix + 'summary', async (c) => {
-            let posts = await docs.find(c.req.query())
+            let posts:Array<Blogpost> = await docs.find(c.req.query())
             posts = posts.filter(post => {
                 if (hasAccess(post)) {
                     return true
@@ -322,13 +322,13 @@ export class Server {
          */
         this.hono.post(prefix + "add", async c => {
             if (currentUser.role == "admin" || currentUser.role == "editor") {
-                const contents: post = await c.req.json()
+                const contents: Blogpost = await c.req.json()
                 if (!contents.author) {
                     contents.author = currentUser.label ?? currentUser.name
                 }
-                const stored = await docs.add(contents)
+                const stored:Blogpost = await docs.add(contents)
                 c.status(201)
-                return c.json({ status: "ok", result: stored })
+                return c.json({ status: "ok", result:  stored})
             } else {
                 c.status(401)
                 return c.json({ status: "fail", message: "not authorized" })
@@ -369,7 +369,7 @@ export class Server {
          */
         this.hono.post(prefix + "update", async c => {
 
-            const contents: post = await c.req.json()
+            const contents: Blogpost = await c.req.json()
             if (hasAccess(contents)) {
                 await docs.update(contents)
                 return c.json({ status: "ok" })
@@ -383,7 +383,7 @@ export class Server {
          * update only metadata of a post
          */
         this.hono.post(prefix + "updatemeta", async c => {
-            const contents: post = await c.req.json()
+            const contents: Blogpost = await c.req.json()
             if (hasAccess(contents)) {
                 await docs.updateMeta(contents)
                 return c.json({ status: "ok" })

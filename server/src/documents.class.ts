@@ -6,7 +6,7 @@
 
 import fs from 'fs/promises'
 import path from 'path'
-import { post } from './types'
+import { Blogpost } from './types'
 import { MetaScraper } from './scrapers'
 import { tokenizer } from './tokenizer'
 import { NeDB } from './database/nedb.class'
@@ -137,7 +137,7 @@ export class Documents {
      * @param entry 
      * @returns the new entry
      */
-    public async add(entry: post): Promise<post> {
+    public async add(entry: Blogpost): Promise<Blogpost> {
         if (!entry._id) {
             let exists = null
             do {
@@ -248,7 +248,7 @@ export class Documents {
      * @param entry 
      * @returns the new post
      */
-    public async update(entry: post): Promise<post> {
+    public async update(entry: Blogpost): Promise<Blogpost> {
         await this.remove(entry._id)
         entry.created = new Date(entry.created)
         return this.add(entry)
@@ -259,7 +259,7 @@ export class Documents {
      * @param entry 
      * @returns 
      */
-    public async updateMeta(entry: post): Promise<post> {
+    public async updateMeta(entry: Blogpost): Promise<Blogpost> {
         entry.created = new Date(entry.created)
         delete entry.fulltext
         entry.modified = new Date()
@@ -279,7 +279,7 @@ export class Documents {
      * @param q [Category, from, until, between, text]
      * @returns a (possibly empty) list of posts
      */
-    public async find(q: any): Promise<Array<post>> {
+    public async find(q: any): Promise<Array<Blogpost>> {
         const query: any = {}
         const id = q['id']
         if (id) {
@@ -317,7 +317,7 @@ export class Documents {
         }
         const skip = parseInt(q['skip'] || "0")
         const limit = parseInt(q['limit'] || "1000")
-        let posts: Array<post> = await this.db.find(docdb, query, skip, limit)
+        let posts: Array<Blogpost> = await this.db.find(docdb, query, skip, limit)
         const keyword = q['text']
         if (keyword) {
             const found = await this.db.get(indexdb, keyword, { nullIfMissing: true })
@@ -336,7 +336,7 @@ export class Documents {
      * @param raw True: return fulltext as is, false: Link metadata will be processed and markdown will be compiled.
      * @returns the post with fulltext-property set tu the fulltext
      */
-    public async get(id: string, raw: boolean): Promise<post> {
+    public async get(id: string, raw: boolean): Promise<Blogpost> {
         const entry = await this.db.get(docdb, id, { nullIfMissing: true })
         if (entry) {
             let processed = await this.loadContents(entry)
@@ -349,7 +349,7 @@ export class Documents {
         }
     }
 
-    public async getMeta(id: string): Promise<post> {
+    public async getMeta(id: string): Promise<Blogpost> {
         const entry = await this.db.get(docdb, id, { nullIfMissing: true })
         return entry
     }
@@ -359,7 +359,7 @@ export class Documents {
      * @param entry 
      * @returns 
      */
-    public async loadContents(entry: post): Promise<post> {
+    public async loadContents(entry: Blogpost): Promise<Blogpost> {
         const filename = entry.filename
         if (!filename) {
             throw new Error("No filename supplied " + JSON.stringify(entry))
@@ -401,7 +401,7 @@ export class Documents {
      * @param keyword keyword to match
      * @returns reduced list, can be empty
      */
-    public async filter(posts: Array<post>, keyword: string): Promise<Array<post>> {
+    public async filter(posts: Array<Blogpost>, keyword: string): Promise<Array<Blogpost>> {
         const found = await this.db.get(indexdb, keyword)
         const ret = posts.filter(p => found.posts.includes(p._id))
         return ret

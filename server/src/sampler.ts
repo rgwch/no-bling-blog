@@ -5,7 +5,7 @@
  ************************************************/
 
 
-import { post } from './types'
+import { Blogpost } from './types'
 import { Documents } from './documents.class'
 import { tokenizer } from './tokenizer'
 import fs from 'fs/promises'
@@ -32,7 +32,7 @@ export async function createDummyPosts(docs: Documents, file: string, num: numbe
             modified: new Date(),
             published: true
         }
-        await docs.add(p as post)
+        await docs.add(p as Blogpost)
     }
 }
 

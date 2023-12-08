@@ -1,4 +1,4 @@
-export type post = {
+export type Blogpost = {
     _id: string
     heading?: string
     teaser?: string
