@@ -18,7 +18,7 @@
     "console-menu": "^0.1.0",
     "dotenv": "^16.3.1",
     "highlight.js": "^11.9.0",
-    "hono": "^3.7.2",
+    "hono": "^3.11.3",
     "html-metadata": "^1.7.1",
     "marked": "^9.0.3",
     "marked-highlight": "^2.0.6",

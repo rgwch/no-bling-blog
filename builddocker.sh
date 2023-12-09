@@ -1,3 +1,3 @@
 #! /bin/bash
 
-docker build -t no-bling-blog:`cat VERSION` .
+docker build -t rgwch/no-bling-blog:`cat VERSION` .
