@@ -25,6 +25,8 @@ services:
      image: "rgwch/no-bling-blog:1.1.2"
      ports:
        - "3001:3000"
+     volumes:
+      - "./nbb-data:/opt/app/data"  
      labels:
        - "traefik.enable=true"
        - "traefik.http.routers.nbb.rule=Host(`localhost`)"
