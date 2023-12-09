@@ -17,6 +17,7 @@ import { serve } from '@hono/node-server'
 import { promisify } from 'node:util';
 import { gzip, gunzip } from 'node:zlib';
 import { existsSync } from 'node:fs';
+import tar from 'tar'
 const pck = require('../package.json')
 const cpck = require('../../client/package.json')
 const zip = promisify(gzip)
@@ -157,11 +158,28 @@ export class Server {
             await fs.writeFile(process.env.users, JSON.stringify(users))
             return c.json({ status: "ok" })
         })
+        this.hono.get(prefix + "admin/backup", async (c) => {
+            await tar.c(
+                {
+                    gzip: true,
+                    file: "backup.tar.gz"
+                },
+                [process.env.basedir]
+            )
+            const now = new Date().toISOString().substring(0, 10)
+            const title = now + "_" + "backup.tar.gz"
+            const buff = await fs.readFile("backup.tar.gz")
+            c.header("Content-Type", "application/octet-stream")
+            c.header("Content-Disposition", "attachment; filename=" + title)
+            return c.stream(async outp => {
+                await outp.write(buff)
+            })
+        })
         /**
          * Find all posts matching given criteria 
          */
         this.hono.get(prefix + 'summary', async (c) => {
-            let posts:Array<Blogpost> = await docs.find(c.req.query())
+            let posts: Array<any> = await docs.find(c.req.query())
             posts = posts.filter(post => {
                 if (hasAccess(post)) {
                     return true
@@ -180,7 +198,7 @@ export class Server {
         this.hono.get(prefix + "meta/:id", async c => {
             const params = c.req.param()
             if (params["id"]) {
-                const entry = await docs.getMeta(params["id"])
+                const entry: any = await docs.getMeta(params["id"])
                 if (entry) {
                     return c.json({ status: "ok", result: entry })
                 } else {
@@ -198,7 +216,7 @@ export class Server {
         this.hono.get(prefix + "read/:id", async (c) => {
             const params = c.req.param()
             if (params["id"]) {
-                const entry = await docs.get(params["id"], c.req.query("raw") == "true")
+                const entry: any = await docs.get(params["id"], c.req.query("raw") == "true")
                 return c.json({ status: "ok", result: entry })
             } else {
                 throw new Error("no id supplied")
@@ -224,6 +242,7 @@ export class Server {
                 throw new Error("no id supplied")
             }
         })
+
         /**
          * Delete a post by its _id
          */
@@ -234,7 +253,7 @@ export class Server {
                 if (entries.length == 0) {
                     throw new Error("no such entry")
                 }
-                const entry = entries[0]
+                const entry: any = entries[0]
                 if (hasAccess(entry)) {
 
                     const deleted = await docs.remove(params["id"])
@@ -315,7 +334,7 @@ export class Server {
                     categories: docs.getCategoryList(),
                     expiration: parseInt(process.env.jwt_expiration || "3600")
                 }
-            })
+            } as any)
         })
         /**
          * Add a new Post
@@ -326,9 +345,9 @@ export class Server {
                 if (!contents.author) {
                     contents.author = currentUser.label ?? currentUser.name
                 }
-                const stored:Blogpost = await docs.add(contents)
+                const stored: any = await docs.add(contents)
                 c.status(201)
-                return c.json({ status: "ok", result:  stored})
+                return c.json({ status: "ok", result: stored })
             } else {
                 c.status(401)
                 return c.json({ status: "fail", message: "not authorized" })
