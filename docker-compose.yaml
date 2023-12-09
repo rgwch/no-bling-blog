@@ -9,11 +9,17 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=weirich@elexis.ch" 
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json" 
     ports:
       - "80:80"
       - "8080:8080"
+      - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
 
   nbb:
      image: "rgwch/no-bling-blog:1.1.2"
@@ -22,4 +28,5 @@ services:
      labels:
        - "traefik.enable=true"
        - "traefik.http.routers.nbb.rule=Host(`localhost`)"
-       - "traefik.http.routers.nbb.entrypoints=web"
+       - "traefik.http.routers.nbb.entrypoints=web,websecure"
+       - "traefik.http.routers.nbb.tls.certresolver=myresolver"
