@@ -6,7 +6,7 @@
     import Filter from '../components/Filter.svelte';
     import { _ } from 'svelte-i18n';
     import { currentUser } from '../user';
-    import { request } from '../io';
+    import { request, api } from '../io';
     import InfiniteScroll from 'svelte-infinite-scroll';
     export let currentCategory = '';
     export let yearFrom = '';
@@ -18,6 +18,7 @@
     let years: Array<string> = [];
     let filterText = '';
     let offset = 0;
+    let dlink = '';
     const BATCHSIZE = 36;
     currentUser.subscribe((user) => {
         reset();
@@ -73,8 +74,7 @@
         navigate('/new');
     }
     async function backup() {
-        await request('admin/backup');
-        alert('ok');
+        dlink = await request('admin/backup');
     }
 </script>
 
@@ -110,6 +110,9 @@
             <button class="pt-3 mt-2" on:click={() => navigate('/users')}
                 ><img src="/system-users.png" alt="users" /></button>
             <button class="pt-3 mt-2" on:click={backup}>Backup</button>
+            {#if dlink}
+                <a href={'/' + dlink} download={dlink}>Download</a>
+            {/if}
         {/if}
     </div>
 </div>

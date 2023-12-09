@@ -158,23 +158,36 @@ export class Server {
             await fs.writeFile(process.env.users, JSON.stringify(users))
             return c.json({ status: "ok" })
         })
+        /** 
+         * Create a backup of the database and all files, 
+         * store it in uploads (as tar.gz) and return the filename
+         */
         this.hono.get(prefix + "admin/backup", async (c) => {
+            const now = new Date().toISOString().substring(0, 10)
+            const filename = now + "_" + "backup.tar.gz"
+            const filepath = path.join(process.env.uploads, filename)
             await tar.c(
                 {
                     gzip: true,
-                    file: "backup.tar.gz"
+                    file: filepath,
+                    cwd: process.env.basedir
                 },
-                [process.env.basedir]
+                ["."]
             )
-            const now = new Date().toISOString().substring(0, 10)
-            const title = now + "_" + "backup.tar.gz"
-            const buff = await fs.readFile("backup.tar.gz")
-            c.header("Content-Type", "application/octet-stream")
-            c.header("Content-Disposition", "attachment; filename=" + title)
-            return c.stream(async outp => {
-                await outp.write(buff)
-            })
+            return c.json({ status: "ok", result: filename })
         })
+        /*
+        this.hono.post(prefix + "admin/restore", async (c) => {
+            const body = await c.req.parseBody()
+            const h = await (body['file'] as File)
+            const result = await this.loadFile(h)
+            await tar.x({
+                cwd: process.env.basedir,
+                keep: true
+            })
+            return c.json({ status: "ok" })
+        })
+        */
         /**
          * Find all posts matching given criteria 
          */

@@ -24,6 +24,19 @@ export function addJWT(headers?: Headers) {
     }
     return headers;
 }
+
+export async function requestRaw(url: string): Promise<any> {
+    const headers = addJWT()
+    const answer = await fetch(api + url, { headers })
+    if (answer.ok) {
+        return await answer.blob()
+    }
+    alert(answer.status + ", " + answer.statusText)
+    if (answer.status == 401) {
+        currentUser.logout()
+    }
+    return undefined
+}
 /**
  * Send a GET request to the server. Will enclose the user's JWT if available.
  * @param url url within the api (after the prefix)
