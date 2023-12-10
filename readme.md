@@ -161,7 +161,7 @@ A simple example just to demonstrate the feature is `red.html`. Use it in a post
 npm i -g forever forever-service
 ./install-service.sh
 ```
-The service will be startet on system startup automatically
+The service will be started on system startup automatically
 
 see ./restart.sh to see how to stop and start the service manually.
 
@@ -227,7 +227,7 @@ If everything works ok, obtain a letsencrypt certificate and create config for t
 sudo certbot --apache
 sudo systemctl restart apache2
 ```
-It is recommended toopen only https - access on public sites to prevent transmission of unencrypted passwords.
+It is recommended to open only https - access on public sites to prevent transmission of unencrypted passwords.
 
 ### Run in Docker
 
@@ -236,6 +236,18 @@ Create container with `builddocker.sh` and/or run existing container with `rundo
 Then, navigate to `http://localhost:8082`
 
 Note: on first start, there will be an Administrator user named "admin". The password is set on first login with that user name. It is recommended to create an administrator with a different name, log in as that user and delete the originial admin.
+
+#### Docker-Compose
+
+`docker-compose.yaml` shows an example for a complete setup with a reverse proxy ([traefik](https://traefik.io/traefik/)) to access no-bling-blog on standard https:// port and obtain a letsencrypt-certificate automatically. Prepare as follows:
+
+* change the line "traefik.http.routers.nbb.rule=Host(`localhost`)" to your real public site name in place of localhost.
+
+* change the line "jwt_secret=you really should change this" tho something only you know.
+
+* Create a folder `nbb-data` in the same directory where docker-compose-yaml is, and copy the contents of the no-bling-blog data-directory there.
+
+ Then, run `docker-compose up -d`. Allow a minute or two to get the TLS Certificate and then browse to https://your-site.com.
 
 ## Localization
 

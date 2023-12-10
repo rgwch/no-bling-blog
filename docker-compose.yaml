@@ -5,7 +5,7 @@ services:
     image: "traefik:v2.6"
     command:
       #- "--log.level=DEBUG"
-      - "--api.insecure=true"
+      #- "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -15,7 +15,7 @@ services:
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json" 
     ports:
       - "80:80"
-      - "8080:8080"
+      #- "8080:8080"
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -25,6 +25,8 @@ services:
      image: "rgwch/no-bling-blog:1.1.2"
      ports:
        - "3001:3000"
+     environment:
+       - "jwt_secret=you really should change this"       
      volumes:
       - "./nbb-data:/opt/app/data"  
      labels:
