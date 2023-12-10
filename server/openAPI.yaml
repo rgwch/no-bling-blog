@@ -1,0 +1,331 @@
+openapi: 3.0.2
+info:
+  title: NoBlingBlog Server
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/1.0
+paths:
+  "/version":
+    get:
+      description: "Get the version of the server and the client"
+      responses:
+        "200":
+          description: OK
+  "/summary":
+    get:
+      description: "Get a summary of posts with the given criteria (or all posts if no criteria)"
+      parameters:
+        - name: category
+          description: "Category to filter by"
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: from
+          description: "filter for posts from a given date"
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: until
+          description: "filter for posts until a given date"
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: between
+          description: "filter for posts between two dates"
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: text
+          description: "filter for posts with the given expression in the full text, the teaser or the title"
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: skip
+          description: "skip the first n posts"
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: limit
+          description: "limit the number of posts to n"
+          in: query
+          schema:
+            type: integer
+          required: false
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  "/read/{id}":
+    get:
+      description: "Get the full text of a post"
+      parameters:
+        - name: id
+          description: "ID of the post to get"
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  "/export/{id}":
+    get:
+      description: "Export a post as gzipped file with extension .nbb"
+      parameters:
+        - name: id
+          description: "ID of the post to export"
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  "/delete/{id}":
+    get:
+      description: "Delete a post"
+      parameters:
+        - name: id
+          description: "ID of the post to delete"
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+
+  "/login/{user}/{pwd}":
+    get:
+      description: "Login with the given credentials"
+      parameters:
+        - name: user
+          description: "Username"
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: pwd
+          description: "Password"
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Bad credentials
+  "/revalidate":
+    get:
+      description: "Revalidate the current session, renew token"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+  "/stats":
+    get:
+      description: "Get statistics about the blog"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+
+  "/add":
+    post:
+      summary: Add a new Post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  role:
+                    type: string
+                    example: admin
+                  result:
+                    $ref: "#/components/schemas/PostResult"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: fail
+                  message:
+                    type: string
+                    example: not authorized
+  "/upload":
+    post:
+      summary: Upload a post from a gzipped .nbb file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  role:
+                    type: string
+                    example: admin
+                  result:
+                    $ref: "#/components/schemas/PostResult"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: fail
+                  message:
+                    type: string
+                    example: not authorized
+  "/update":
+    post:
+      summary: Update post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  role:
+                    type: string
+                    example: admin
+                  stored:
+                    $ref: "#/components/schemas/PostResult"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: fail
+                  message:
+                    type: string
+                    example: not authorized
+  "/updatemeta":
+    post:
+      summary: Update only metadata of a post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  role:
+                    type: string
+                    example: admin
+                  result:
+                    $ref: "#/components/schemas/PostResult"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: fail
+                  message:
+                    type: string
+                    example: not authorized
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 1234
+        heading:
+          type: string
+          example: My Post
+        category:
+          type: string
+          example: Technology
+        fulltext:
+          type: string
+          example: This is the full text of my post.
+      required:
+        - heading
+        - category
+        - fulltext
+    PostResult:
+      type: object
+      properties:
+        filename:
+          type: string
+          example: my-post.txt

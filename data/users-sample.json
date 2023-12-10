@@ -1,0 +1,15 @@
+[
+    {
+        "name": "admin",
+        "role": "admin",
+        "pass": "K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols="
+    },{
+        "name": "someone",
+        "role": "editor",
+        "pass": "..."
+    },{
+        "name": "johndoe",
+        "role": "editor",
+        "pass": "blah blah"
+    }
+]

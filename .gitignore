@@ -1,0 +1,7 @@
+data/solr
+data/test
+data/documents 
+data/uploads
+data/users.json
+backup
+nbb.log
