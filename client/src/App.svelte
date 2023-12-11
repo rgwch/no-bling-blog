@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { Router, Link, Route, navigate } from "svelte-routing";
-  import Summary from "./lib/views/Summary.svelte";
-  import Login from "./lib/components/Login.svelte";
-  import Single from "./lib/views/Single.svelte";
-  import Create from "./lib/views/Create.svelte";
-  import Users from "./lib/views/Users.svelte";
+  import { Router, Link, Route, navigate } from 'svelte-routing';
+  import Summary from './lib/views/Summary.svelte';
+  import Login from './lib/components/Login.svelte';
+  import Single from './lib/views/Single.svelte';
+  import Create from './lib/views/Create.svelte';
+  import Users from './lib/views/Users.svelte';
   function key(event: any) {
-    if (event.key === "Enter") {
-      navigate("/");
+    if (event.key === 'Enter') {
+      navigate('/');
     }
   }
 </script>
@@ -15,16 +15,16 @@
 <main>
   <div class="container mx-auto min-h-screen max-h-screen">
     <div
-      class="bg-blue-200 flex flex-col md:flex-row flex-nowrap items-center px-5">
+      class="bg-gray-800 text-gray-300 flex flex-col md:flex-row flex-nowrap items-center px-5">
       <div
         class="py-1 mr-2"
-        on:click={() => navigate("/")}
+        on:click={() => navigate('/')}
         on:keypress={key}
         tabindex="0"
         role="button">
-        <img src="/nbb_logo.png" alt="NBB Logo" width="64" />
+        <img src="/tagischau_logo.png" alt="Tagischau Logo" width="64" />
       </div>
-      <a href="/"><div class="text-2xl">The No Bling Blog</div></a>
+      <a href="/"><div class="text-2xl">Qualitätsmedien</div></a>
       <div class="flex-1" />
       <Login />
     </div>
