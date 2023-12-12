@@ -24,7 +24,7 @@
         role="button">
         <img src="/logo.png" alt="Site Logo" width="64" />
       </div>
-      <a href="/"><div class="text-2xl">The NoBlingBlog</div></a>
+      <a href="/"><div class="text-2xl">%BLOGNAME%</div></a>
       <div class="flex-1" />
       <Login />
     </div>
