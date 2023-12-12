@@ -15,7 +15,8 @@
 <main>
   <div class="container mx-auto min-h-screen max-h-screen">
     <div
-      class="bg-blue-200 flex flex-col md:flex-row flex-nowrap items-center px-5">
+      class="flex flex-col md:flex-row flex-nowrap items-center px-5"
+      style="background-color: #bfdbfe; color: #000000;">
       <div
         class="py-1 mr-2"
         on:click={() => navigate("/")}
