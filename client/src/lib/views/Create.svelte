@@ -1,21 +1,21 @@
 <script lang="ts">
-    import type { post } from '../types';
-    import { request, write, api } from '../io';
-    import { currentUser } from '../user';
-    import { navigate } from 'svelte-routing';
-    import { _ } from 'svelte-i18n';
+    import type { post } from "../types";
+    import { request, write, api } from "../io";
+    import { currentUser } from "../user";
+    import { navigate } from "svelte-routing";
+    import { _ } from "svelte-i18n";
     let sayok: boolean = false;
     let categories: Array<string> = [];
-    request('stats').then((result) => {
+    request("stats").then((result) => {
         categories = result.categories.sort((a: string, b: string) =>
-            a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+            a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()),
         );
     });
     let current: post = {
-        heading: '',
-        teaser: '',
-        fulltext: '',
-        category: '',
+        heading: "",
+        teaser: "",
+        fulltext: "",
+        category: "",
         created: new Date(),
         published: false,
         featured: false,
@@ -23,28 +23,34 @@
         author: $currentUser.label ?? $currentUser.name,
     };
     async function doSave() {
-        await write('add', current).then((result) => {
-            sayok = true;
-            setTimeout(() => (sayok = false), 2000);
+        await write("add", current).then((result) => {
+            if (result?.status == "ok") {
+                current = result.result;
+                sayok = true;
+                setTimeout(() => (sayok = false), 2000);
+                navigate("/post/" + current._id);
+            } else {
+                alert(result?.message);
+            }
         });
     }
     async function doUpload(event: any) {
-        console.log('upload');
+        console.log("upload");
         event.preventDefault();
         const form = event.currentTarget;
         const formData = new FormData(form);
         const headers: any = {
             // 'content-type': 'multipart/form-data',
         };
-        headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+        headers["Authorization"] = "Bearer " + localStorage.getItem("token");
 
         const options = {
-            method: 'POST',
+            method: "POST",
             headers,
             body: formData,
         };
         try {
-            const result = await fetch(api + 'upload', options);
+            const result = await fetch(api + "upload", options);
             console.log(result.ok);
             sayok = true;
             setTimeout(() => (sayok = false), 2000);
@@ -53,10 +59,10 @@
         }
     }
     function newCat() {
-        const newcat = prompt($_('newcat'));
+        const newcat = prompt($_("newcat"));
         if (newcat) {
             categories = [...categories, newcat].sort((a, b) =>
-                a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+                a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()),
             );
             current.category = newcat;
         }
@@ -70,27 +76,27 @@
                 <option value={choice}>{choice}</option>
             {/each}
         </select>
-        <button class="btn ml-2" on:click={newCat}>{$_('newcat')}</button>
+        <button class="btn ml-2" on:click={newCat}>{$_("newcat")}</button>
     </div>
     <input
         class="field"
         type="text"
-        placeholder={$_('title')}
+        placeholder={$_("title")}
         bind:value={current.heading} />
     <textarea
         class="field"
-        placeholder={$_('summary')}
+        placeholder={$_("summary")}
         bind:value={current.teaser} />
     <textarea
         class="field h-96"
-        placeholder={$_('fulltext')}
+        placeholder={$_("fulltext")}
         bind:value={current.fulltext} />
 
     <div class="flex flex-row">
-        <button class="btn" on:click={doSave}>{$_('save')}</button>
+        <button class="btn" on:click={doSave}>{$_("save")}</button>
         <p class:hidden={!sayok}>Ok!</p>
-        <button class="btn" on:click={() => navigate('/')}
-            >{$_('cancel')}</button>
+        <button class="btn" on:click={() => navigate("/")}
+            >{$_("cancel")}</button>
     </div>
     <form
         class="p-1 border border-blue-300"
@@ -98,7 +104,7 @@
         method="post"
         enctype="multipart/form-data">
         <input type="file" name="file" id="file" />
-        <button class="btn">{$_('upload')}</button>
+        <button class="btn">{$_("upload")}</button>
     </form>
 </div>
 
