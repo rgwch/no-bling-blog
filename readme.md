@@ -138,7 +138,23 @@ It is possible to export a post with all its metadata, and to import such an exp
 
 ## Design
 
-You can (and should), of course, customize the design of NoBlingBlog for your own needs. But you must do so in the source files. There's no bling-bling method...
+You can (and should), of course, customize the design of NoBlingBlog for your own needs.
+
+### Rebranding
+If a simple rebranding is sufficient (different title, colors and site logo), there's a simple way:
+
+* create a folder named after your new theme within client/branding, e.g. "myblog"
+* create a file `branding.json` in that folder, containing the properties "name", "short_name", "background_color", and "text_color".
+* copy a `logo.png` into that folder, which should be a square image with a size of at least 640x640 pixels.
+* run `node branding/branding.cjs myblog`
+* run `npm run build`
+
+(See branding/demo as an example, which happens to be the default design of no-bling-blog and can be (re)activated enytime with `node branding/branding.cjs demo`)
+
+### Redesign
+
+If you need more of a redesign, you must do so in the source files. There's no bling-bling method...
+
 So:
 
 * Make a fork of this repository
