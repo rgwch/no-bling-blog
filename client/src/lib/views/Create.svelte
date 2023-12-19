@@ -25,10 +25,7 @@
     async function doSave() {
         await write("add", current).then((result) => {
             if (result?.status == "ok") {
-                current = result.result;
-                sayok = true;
-                setTimeout(() => (sayok = false), 2000);
-                navigate("/post/" + current._id);
+                navigate("/post/" + result.result._id);
             } else {
                 alert(result?.message);
             }

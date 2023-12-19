@@ -1,29 +1,29 @@
 <script lang="ts">
-    import type { post } from '../types';
-    import Post from '../components/Post.svelte';
-    import { navigate } from 'svelte-routing';
-    import Featured from './Featured.svelte';
-    import Filter from '../components/Filter.svelte';
-    import { _ } from 'svelte-i18n';
-    import { currentUser } from '../user';
-    import { request, api } from '../io';
-    import InfiniteScroll from 'svelte-infinite-scroll';
-    export let currentCategory = '';
-    export let yearFrom = '';
-    export let yearUntil = '';
+    import type { post } from "../types";
+    import Post from "../components/Post.svelte";
+    import { navigate } from "svelte-routing";
+    import Featured from "./Featured.svelte";
+    import Filter from "../components/Filter.svelte";
+    import { _ } from "svelte-i18n";
+    import { currentUser } from "../user";
+    import { request, api } from "../io";
+    import InfiniteScroll from "svelte-infinite-scroll";
+    export let currentCategory = "";
+    export let yearFrom = "";
+    export let yearUntil = "";
 
     let categories: Array<string> = [];
     let posts: Array<post> = [];
     let newBatch: Array<post> = [];
     let years: Array<string> = [];
-    let filterText = '';
+    let filterText = "";
     let offset = 0;
-    let dlink = '';
+    let dlink = "";
     const BATCHSIZE = 36;
     currentUser.subscribe((user) => {
         reset();
     });
-    request('stats').then((result) => {
+    request("stats").then((result) => {
         const dt = new Date(result.startdate);
         const now = new Date().getTime();
         while (dt.getTime() <= now) {
@@ -31,9 +31,9 @@
             years.push(year.toString());
             dt.setFullYear(year + 1);
         }
-        years.push('');
+        years.push("");
         years = years;
-        categories = ['', ...result.categories];
+        categories = ["", ...result.categories];
     });
     // doFilter();
     function reset() {
@@ -47,34 +47,34 @@
         if (filterText.length) {
             filters.push(`text=${filterText.toLocaleLowerCase()}`);
         }
-        if (currentCategory != '') {
+        if (currentCategory != "") {
             filters.push(`category=${currentCategory}`);
         }
-        if (yearFrom != '') {
-            if (yearUntil != '') {
+        if (yearFrom != "") {
+            if (yearUntil != "") {
                 filters.push(`between=${yearFrom},${yearUntil}`);
             } else {
                 filters.push(`from=${yearFrom}`);
             }
         } else {
-            if (yearUntil != '') {
+            if (yearUntil != "") {
                 filters.push(`until=${yearUntil}`);
             }
         }
         filters.push(`skip=${offset}`);
         filters.push(`limit=${BATCHSIZE}`);
-        newBatch = await request('summary', filters);
+        newBatch = await request("summary", filters);
         offset = offset + newBatch.length;
     }
     $: posts = [...posts, ...newBatch];
     function load(p: post) {
-        navigate('/post/' + p._id);
+        navigate("/post/" + p._id);
     }
     function createNew() {
-        navigate('/new');
+        navigate("/new");
     }
     async function backup() {
-        dlink = await request('admin/backup');
+        dlink = await request("admin/backup");
     }
 </script>
 
@@ -82,17 +82,17 @@
     class="flex flex-col justify-center content-stretch md:flex-row mx-5 m-2 p-1 text-sm">
     <div class="flex flex-row">
         <Filter
-            caption={$_('fromyear')}
+            caption={$_("fromyear")}
             choices={years}
             bind:val={yearFrom}
             on:changed={reset} />
         <Filter
-            caption={$_('untilyear')}
+            caption={$_("untilyear")}
             choices={years}
             bind:val={yearUntil}
             on:changed={reset} />
         <Filter
-            caption={$_('category')}
+            caption={$_("category")}
             choices={categories.sort((a, b) =>
                 a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()),
             )}
@@ -100,19 +100,24 @@
             on:changed={reset} />
     </div>
     <div class="flex flex-row">
-        <Filter caption={$_('text')} bind:val={filterText} on:changed={reset} />
+        <Filter caption={$_("text")} bind:val={filterText} on:changed={reset} />
 
-        {#if $currentUser?.role == 'admin' || $currentUser?.role == 'editor'}
+        {#if $currentUser?.role == "admin" || $currentUser?.role == "editor"}
             <button class="pt-3 mt-2" on:click={createNew}
                 ><img src="/page_add.png" alt="add post" /></button>
         {/if}
-        {#if $currentUser?.role == 'admin'}
-            <button class="pt-3 mt-2" on:click={() => navigate('/users')}
+        {#if $currentUser?.role == "admin"}
+            <button class="pt-3 mt-2" on:click={() => navigate("/users")}
                 ><img src="/system-users.png" alt="users" /></button>
-            <button class="pt-3 mt-2" on:click={backup}>Backup</button>
-            {#if dlink}
-                <a href={'/' + dlink} download={dlink}>Download</a>
-            {/if}
+            <div class="ml-8 flex flex-row items-center pt-2">
+                {#if dlink}
+                    <a class="btn" href={"/" + dlink} download={dlink}
+                        >Download</a>
+                {:else}
+                    <button class="btn" on:click={backup}
+                        >Backup</button>
+                {/if}
+            </div>
         {/if}
     </div>
 </div>
