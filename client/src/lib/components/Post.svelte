@@ -30,7 +30,7 @@
         {item.category}
     </p>
 
-    <h1 class="text-blue-300 font-semibold text-2xl mx-5 capitalize w-full">
+    <h1 class="text-blue-300 font-semibold text-2xl mx-5 w-full">
         {item.heading}
     </h1>
     <p class="mx-6 mb-2 w-full">{@html item.teaser}</p>

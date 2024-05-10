@@ -198,7 +198,7 @@ export class Documents {
      * @param summary teaser text
      * @param title title
      * @param id id
-     * @param overwrite true if entry with tge same title should be overwritten 
+     * @param overwrite true if entry with the same title should be overwritten 
      * @returns the full pathname of the newly created file
      */
     async tokenizeAndSave(contents: string, summary: string, title: string, id: string, overwrite = false): Promise<string> {
