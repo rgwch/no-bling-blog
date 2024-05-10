@@ -16,7 +16,7 @@
   <div class="container mx-auto min-h-screen max-h-screen">
     <div
       class="flex flex-col md:flex-row flex-nowrap items-center px-5"
-      style="background-color: #bfdbfe; color: #000000;">
+      style="background-color: %BACKGROUND%; color: %TEXT%;">
       <div
         class="py-1 mr-2"
         on:click={() => navigate("/")}
@@ -25,7 +25,7 @@
         role="button">
         <img src="/logo.png" alt="Site Logo" width="64" />
       </div>
-      <a href="/"><div class="text-2xl">The NoBlingBlog</div></a>
+      <a href="/"><div class="text-2xl">%BLOGNAME%</div></a>
       <div class="flex-1" />
       <Login />
     </div>
