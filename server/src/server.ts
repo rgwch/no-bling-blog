@@ -163,9 +163,6 @@ export class Server {
          * store it in uploads (as tar.gz) and return the filename
          */
         this.hono.get(prefix + "admin/backup", async (c) => {
-            if(!existsSync(process.env.uploads)){
-                await fs.mkdir(process.env.uploads, { recursive: true })
-            }
             const now = new Date().toISOString().substring(0, 10)
             const filename = now + "_" + "backup.tar.gz"
             const filepath = path.join(process.env.uploads, filename)
@@ -177,7 +174,6 @@ export class Server {
                 },
                 ["."]
             )
-            logger.info("Backup created: " + filepath)
             return c.json({ status: "ok", result: filename })
         })
         /*

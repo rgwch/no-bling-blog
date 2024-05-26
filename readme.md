@@ -16,7 +16,7 @@ This is a very simple Blog app with no bling-bling (hence the name).
    basedir=../data
    jwt_secret=choose_something_else
    ```
-   Stay with these defaults for you first tests. For other possible entries, see server/env.sample.
+   Stay with these defaults for you first tests. For other possible entries, see server/env.sample
    Of course, you can set the respective environment variables with any other method as well.
 
 1.  `./run.sh` will bring up the management console:
@@ -35,7 +35,7 @@ This is a very simple Blog app with no bling-bling (hence the name).
     |  q) Quit                                    |
     '---------------------------------------------'
     ```
-    For your first experiments, hit d for "create dummy posts" and then 2 for "create new user". Enter any username you like and "admin" when asked for the role. (Actually, this is not strictly necessary: If there's no user defined, nbb will create a default admin named "admin" on first login attempt).
+    For your first experiments, hit d for "create dummy posts" and then 2 for "create new user". Enter any username you like and "admin" when asked for the role. (actually, this is not strictly necessary: If there's no user defined, nbb will create a default admin named "admin" on first login attempt).
 
     Then, launch the blog with 1 and navigate your favourite browser to `http://localhost:3000`. You'll have 100 fake posts to experiment. Login with your user name and any password (which will be set with your first login). Hit 'q' when you're done.
 
@@ -123,7 +123,7 @@ Metadata of articles found on news sites can be embedded with: [[https://some.ne
 
 #### Priorities
 
-You can assign a priority to a post. When created, a post has priority 0. Posts with higher priorities are displayed before posts with lower priorities. When posts have the same priority, newer posts are displayed first.
+You can assign a priority to a post. When created, a post has priority 0. Posts with higher priorities are displayd before posts with lower priorities. When posts have the same priority, newer posts are displayed first.
 
 #### Featured
 
@@ -138,23 +138,7 @@ It is possible to export a post with all its metadata, and to import such an exp
 
 ## Design
 
-You can (and should), of course, customize the design of NoBlingBlog for your own needs.
-
-### Rebranding
-If a simple rebranding is sufficient (different title, colors and site logo), there's a simple way:
-
-* create a folder named after your new theme within client/branding, e.g. "myblog"
-* create a file `branding.json` in that folder, containing the properties "name", "short_name", "background_color", and "text_color". The colors must be valid css color descriptions, e.g. "blue", or "#23c6f0", or "rgb(20,30,50)".
-* copy a `logo.png` into that folder, which should be a square image with a size of at least 640x640 pixels.
-* run `node branding/branding.cjs myblog`
-* run `npm run build`
-
-(See branding/demo as an example, which happens to be the default design of no-bling-blog and can be (re)activated anytime with `node branding/branding.cjs demo`)
-
-### Redesign
-
-If you need more of a redesign, you must do so in the source files. There's no bling-bling method...
-
+You can (and should), of course, customize the design of NoBlingBlog for your own needs. But you must do so in the source files. There's no bling-bling method...
 So:
 
 * Make a fork of this repository
@@ -177,15 +161,15 @@ A simple example just to demonstrate the feature is `red.html`. Use it in a post
 npm i -g forever forever-service
 ./install-service.sh
 ```
-The service will be started on system startup automatically.
+The service will be startet on system startup automatically
 
-See ./restart.sh to see how to stop and start the service manually.
+see ./restart.sh to see how to stop and start the service manually.
 
-Then, you can contact directly with `http://your.server.url:3000`.
+Then, you can contact directly with `http://your.server.url:3000`
 
 Or, you use a reverse proxy such as Apache or Nginx to map the public default port to your blog server.
 
-Here's an example config for apache:
+Here an example config for apache:
 
 ```
 <VirtualHost *:80>
@@ -205,7 +189,7 @@ If everything works ok, obtain a certificate, e.g. from [letsencrypt](https://le
 
 ### Run as a process in apache
 
-Recommended for busy sites: Use the [Passenger](https://www.phusionpassenger.com/) AppServer. Install according to the directions [there](https://www.phusionpassenger.com/docs/tutorials/installation/node/). This way, Passenger will handle spin up and shut down of the noblingblog-server as needed, and can even run multiple server instances on higher demand.
+Recommended for busy sites: Use the [Passenger](https://www.phusionpassenger.com/) AppServer. Install according to the directions [there](https://www.phusionpassenger.com/docs/tutorials/installation/node/). This way, Passenger will handle spin up and shut down of the noblingblog-server as needed, and can even run multiple server instances on higer demand.
 
 Add the following configuration to /etc/apache2/sites_available:
 
@@ -243,27 +227,15 @@ If everything works ok, obtain a letsencrypt certificate and create config for t
 sudo certbot --apache
 sudo systemctl restart apache2
 ```
-It is recommended to open only https - access on public sites to prevent transmission of unencrypted passwords.
+It is recommended toopen only https - access on public sites to prevent transmission of unencrypted passwords.
 
 ### Run in Docker
 
-Create a container with `builddocker.sh` and/or run an existing container with `rundocker.sh`.
+Create container with `builddocker.sh` and/or run existing container with `rundocker.sh`.
 
-Then, navigate to `http://localhost:8082`.
+Then, navigate to `http://localhost:8082`
 
 Note: on first start, there will be an Administrator user named "admin". The password is set on first login with that user name. It is recommended to create an administrator with a different name, log in as that user and delete the originial admin.
-
-#### Docker-Compose
-
-`docker-compose.yaml` shows an example for a complete setup with a reverse proxy ([traefik](https://traefik.io/traefik/)) to access no-bling-blog on standard https:// port and obtain a letsencrypt-certificate automatically. Prepare as follows:
-
-* change the line "traefik.http.routers.nbb.rule=Host(`localhost`)" to your real public site name in place of localhost. The public site name must be set up on a public name server to point to your site.
-
-* change the line "jwt_secret=you really should change this" tho something only you know.
-
-* Create a folder `nbb-data` in the same directory where docker-compose-yaml is, and copy the contents of the no-bling-blog data-directory there.
-
- Then, run `docker-compose up -d`. Allow a minute or two to get the TLS Certificate and then browse to https://your-site.com.
 
 ## Localization
 
