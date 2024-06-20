@@ -376,6 +376,9 @@ export class Documents {
      * @returns the full filepath of the document
      */
     private async makeFilename(title: string, overwrite = false): Promise<string> {
+        if(!title) {
+            title=new Date().toISOString()+Math.random().toString(36).substring(2, 15)
+        }
         const fname = title.toLocaleLowerCase().replace(/[^\w]+/g, "_")
         let fullpath = path.join(this.fulltextDir, fname)
         if (fullpath.endsWith("_")) {
